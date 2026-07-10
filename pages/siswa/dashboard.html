@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dashboard Siswa – EduPortal SMP Pelita Bangsa Pamulang." />
+  <title>Dashboard Siswa – EduPortal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../css/dashboard.css?v=2.1" />
+  <style>
+    @keyframes timerPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.08); }
+    }
+    .notif-dropdown {
+      position: absolute; top: 48px; right: 0;
+      width: 300px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      z-index: 200;
+      display: none;
+      overflow: hidden;
+    }
+    .notif-dropdown.open { display: block; animation: fadeInContent 0.2s ease; }
+    .notif-header { padding: 14px 16px; font-size: 0.82rem; font-weight: 700; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+    .notif-item { display: flex; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); align-items: flex-start; transition: background 0.15s; }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item:hover { background: rgba(129,140,248,0.05); }
+    .notif-dot-blue { width:8px; height:8px; border-radius:50%; background:var(--primary-light); margin-top:4px; flex-shrink:0; }
+    .notif-dot-green { width:8px; height:8px; border-radius:50%; background:var(--success); margin-top:4px; flex-shrink:0; }
+    .notif-dot-amber { width:8px; height:8px; border-radius:50%; background:var(--accent); margin-top:4px; flex-shrink:0; }
+    .notif-title { font-size:0.82rem; font-weight:600; color:var(--text-primary); }
+    .notif-sub   { font-size:0.73rem; color:var(--text-muted); margin-top:2px; }
+    .topbar-notif-wrap { position: relative; }
+    .mapel-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .mapel-row:last-child { border-bottom: none; }
+    .mapel-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+    .mapel-info { flex: 1; min-width: 0; }
+    .mapel-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); }
+    .mapel-score { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+    .mapel-val { font-size: 0.82rem; font-weight: 700; color: var(--primary-light); }
+    .exam-item { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .exam-item:last-child { border-bottom: none; }
+    .exam-date-box { min-width: 46px; text-align: center; background: rgba(79,70,229,0.12); border: 1px solid rgba(79,70,229,0.2); border-radius: var(--radius-md); padding: 6px 4px; }
+    .exam-day  { font-size: 1rem; font-weight: 800; color: var(--primary-light); line-height: 1; }
+    .exam-mon  { font-size: 0.6rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .exam-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+    .exam-meta { font-size: 0.73rem; color: var(--text-muted); margin-top: 2px; }
+    @media (max-width: 768px) {
+      #pdfExamSplitLayout {
+        flex-direction: column !important;
+        height: auto !important;
+      }
+      #pdfViewerContainer {
+        height: 380px !important;
+        flex: none !important;
+      }
+    }
+    .exam-no-select, .exam-no-select * {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <img src="../../images/logo-sekolah.png" alt="Logo" class="sidebar-logo-img" />
+      <div class="sidebar-logo-text">
+        <span class="sidebar-logo-title" style="font-size: 1.1rem; line-height: 1.2; white-space: normal;">SMP Pelita Bangsa</span>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" data-user-avatar>?</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" data-user-name>Nama Siswa</div>
+        <div class="sidebar-user-role">Siswa</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu Utama</div>
+      <div class="nav-item active" id="navDashboard" data-page="dashboard">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </span>
+        <span class="nav-label">Dashboard</span>
+      </div>
+      <div class="nav-item" id="navCBT" data-page="cbt">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </span>
+        <span class="nav-label">Ujian CBT</span>
+      </div>
+      <div class="nav-item" id="navExam" data-page="exam" style="display:none;">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+        </span>
+        <span class="nav-label">Sedang Ujian</span>
+        <span class="nav-badge" style="background:var(--danger);">●</span>
+      </div>
+
+      <div class="nav-section-label">Lainnya</div>
+      <div class="nav-item" id="navJadwal" data-page="jadwal">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </span>
+        <span class="nav-label">Jadwal Pelajaran</span>
+      </div>
+      <div class="nav-item" id="navPengumuman" data-page="pengumuman">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </span>
+        <span class="nav-label">Pengumuman</span>
+      </div>
+      <div class="nav-item" id="navProfil" data-page="profil">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </span>
+        <span class="nav-label">Profil Saya</span>
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="nav-item" onclick="logout()" id="navLogout">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </span>
+        <span class="nav-label">Keluar</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="page-title">Dashboard Siswa</div>
+          <div class="page-breadcrumb" data-date-now>Memuat...</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn theme-toggle-btn" title="Ganti tema">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <div class="topbar-notif-wrap">
+          <button class="topbar-btn" id="notifBell" aria-label="Notifikasi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <!-- dot muncul kalau ada notif -->
+          </button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-header">Notifikasi</div>
+            <div class="empty-state" style="padding:24px;">
+              <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><path d="M13.73 21a2 2 0 0 1-3.46 0"></path><path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path><path d="M18 8a6 6 0 0 0-9.33-5M1 1l22 22"></path></svg>
+              </div>
+              <div class="empty-state-text">Belum ada notifikasi</div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-avatar sm" data-user-avatar style="cursor:default;">?</div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- ═══ PAGE: DASHBOARD ═══ -->
+      <section class="page-section" data-page="dashboard">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+          <div>
+            <div class="welcome-title">Halo, <span data-user-name>Siswa</span>!</div>
+            <div class="welcome-sub">Selamat datang di EduPortal &nbsp;|&nbsp; <span data-date-now></span></div>
+            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="badge badge-muted">Belum ada data</span>
+            </div>
+          </div>
+          <div class="welcome-emoji" style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 80px; height: 80px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+
+          <div class="stat-card green">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <div class="stat-value">0</div>
+            <div class="stat-label">Ujian CBT Selesai</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+            </div>
+            <div class="stat-value">0</div>
+            <div class="stat-label">Ujian Mendatang</div>
+          </div>
+        </div>
+
+        <!-- Row 1: Jadwal + Ujian -->
+        <div class="grid-2" style="margin-bottom:20px;">
+
+          <!-- Jadwal Hari Ini -->
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Jadwal Hari Ini</div>
+                <div class="section-subtitle"><span data-date-now></span></div>
+              </div>
+            </div>
+            <div class="empty-state">
+              <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              </div>
+              <div class="empty-state-text">Belum ada jadwal pelajaran</div>
+            </div>
+          </div>
+
+          <!-- Ujian Mendatang -->
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Ujian Mendatang</div>
+                <div class="section-subtitle">CBT &amp; Ulangan Harian</div>
+              </div>
+            </div>
+            <div class="empty-state">
+              <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+              </div>
+              <div class="empty-state-text">Belum ada ujian terjadwal</div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div style="text-align:center;padding:12px 0;font-size:0.75rem;color:var(--text-muted);">
+          © 2026 EduPortal · SMP Pelita Bangsa Pamulang &nbsp;|&nbsp; v1.0.0
+        </div>
+      </section><!-- /dashboard -->
+
+      <!-- ═══ PAGE: CBT ═══ -->
+      <section class="page-section" data-page="cbt" style="display:none;">
+        <div class="welcome-banner" style="background:linear-gradient(120deg,rgba(245,158,11,0.14),rgba(79,70,229,0.07));border-color:rgba(245,158,11,0.22);margin-bottom:24px;">
+          <div><div class="welcome-title">Ujian CBT Saya</div><div class="welcome-sub">Computer Based Testing – Semester ini</div></div>
+          <div class="welcome-emoji" style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 80px; height: 80px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+          </div>
+        </div>
+
+        <!-- Ujian Aktif -->
+        <div class="card" style="margin-bottom:20px;">
+          <div class="section-header" style="margin-bottom:16px;">
+            <div><div class="section-title">Ujian Aktif & Mendatang</div><div class="section-subtitle">Ujian CBT yang tersedia untuk kelas Anda</div></div>
+          </div>
+          <div id="studentActiveCbtContainer">
+            <div class="empty-state">
+              <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              </div>
+              <div class="empty-state-text">Belum ada ujian CBT yang dijadwalkan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Riwayat CBT -->
+        <div class="card">
+          <div class="section-header"><div><div class="section-title">Riwayat Ujian CBT</div><div class="section-subtitle">Hasil ujian yang telah Anda selesaikan</div></div></div>
+          <div id="studentHistoryCbtContainer">
+            <div class="empty-state">
+              <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              </div>
+              <div class="empty-state-text">Belum ada riwayat ujian</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ PAGE: EXAM (dikerjakan) ═══ -->
+      <section class="page-section" data-page="exam" style="display:none;">
+        <div style="background:linear-gradient(120deg,rgba(239,68,68,0.15),rgba(245,158,11,0.08));border:1px solid rgba(239,68,68,0.25);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div id="examTitle" style="font-size:1rem;font-weight:800;color:var(--text-primary);">Memuat ujian...</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:3px;">
+              <span id="examSubtitle" style="font-size:.78rem;color:var(--text-muted);"></span>
+              <span id="examViolationBadge" style="display:none;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;font-size:0.68rem;font-weight:800;padding:3px 8px;border-radius:6px;align-items:center;gap:4px;vertical-align:middle;line-height:1;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>Anti-Cheat Aktif</span>
+              </span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="text-align:center;">
+              <div style="font-size:.7rem;color:var(--text-muted);font-weight:600;">WAKTU TERSISA</div>
+              <div id="examTimer" style="font-size:1.4rem;font-weight:900;color:var(--danger);letter-spacing:2px;">00:00</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:.7rem;color:var(--text-muted);font-weight:600;">SOAL</div>
+              <div id="examProgress" style="font-size:1rem;font-weight:800;color:var(--primary-light);">0/0</div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="submitExam()">Selesai</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 200px;gap:16px;align-items:start;">
+          <div class="card" id="examCard">
+            <div id="examQuestionArea">
+              <div class="empty-state">
+                <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </div>
+                <div class="empty-state-text">Memuat soal...</div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="position:sticky;top:16px;">
+            <div style="font-size:.78rem;font-weight:700;color:var(--text-muted);margin-bottom:10px;">NAVIGASI SOAL</div>
+            <div id="examNav" style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:14px;"></div>
+            <div style="font-size:.7rem;color:var(--text-muted);display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:4px;background:rgba(16,185,129,0.3);border:1px solid var(--success);"></div> Dijawab</div>
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:4px;background:rgba(245,158,11,0.2);border:1px solid var(--warning);"></div> Ragu-ragu</div>
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:14px;height:14px;border-radius:4px;background:var(--bg-input);border:1px solid var(--border);"></div> Belum</div>
+            </div>
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px;">
+              <button class="btn btn-ghost btn-sm" onclick="markDoubt()">Ragu-ragu</button>
+              <button class="btn btn-primary btn-sm" onclick="nextQuestion()">Lanjut →</button>
+              <button class="btn btn-ghost btn-sm" onclick="prevQuestion()">← Kembali</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- ═══ PAGE: JADWAL ═══ -->
+      <section class="page-section" data-page="jadwal" style="display:none;">
+        <div class="welcome-banner" style="background:linear-gradient(120deg,rgba(16,185,129,0.14),rgba(79,70,229,0.07));border-color:rgba(16,185,129,0.22);margin-bottom:24px;">
+          <div><div class="welcome-title">Jadwal Pelajaran</div><div class="welcome-sub">Semester ini – diatur oleh Admin</div></div>
+          <div class="welcome-emoji" style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 80px; height: 80px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-header"><div><div class="section-title">Jadwal Mingguan</div><div class="section-subtitle">Senin – Jumat</div></div></div>
+          <div id="siswaJadwalContent">
+            <div class="empty-state">
+              <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 32px; height: 32px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              </div>
+              <div class="empty-state-text">Belum ada jadwal pelajaran.<br><small style="color:var(--text-muted)">Jadwal akan muncul setelah Admin menginputnya.</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ PAGE: PENGUMUMAN ═══ -->
+      <section class="page-section" data-page="pengumuman" style="display:none;">
+        <div class="welcome-banner" style="background:linear-gradient(120deg,rgba(59,130,246,0.14),rgba(79,70,229,0.07));border-color:rgba(59,130,246,0.22);margin-bottom:24px;">
+          <div><div class="welcome-title">Pengumuman Sekolah</div><div class="welcome-sub">Informasi terbaru dari SMP Pelita Bangsa Pamulang</div></div>
+          <div class="welcome-emoji" style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 80px; height: 80px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><path d="M16 8h2m-2 4h2m-10-4h4m-4 4h4m-4 4h8"></path></svg>
+          </div>
+        </div>
+        <div class="card">
+          <div id="siswaPengumumanContent">
+            <div class="empty-state">
+              <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 32px; height: 32px;"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              </div>
+              <div class="empty-state-text">Belum ada pengumuman yang dipublikasikan</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ PAGE: PROFIL ═══ -->
+      <section class="page-section" data-page="profil" style="display:none;">
+        <div class="welcome-banner" style="background:linear-gradient(120deg,rgba(79,70,229,0.14),rgba(16,185,129,0.07));border-color:rgba(79,70,229,0.22);margin-bottom:24px;">
+          <div><div class="welcome-title">Profil Saya</div><div class="welcome-sub">Kelola informasi akun siswa</div></div>
+          <div class="welcome-emoji" style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 80px; height: 80px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-bottom:20px;">
+          <div class="card" style="text-align:center;">
+            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:white;margin:0 auto 14px;box-shadow:0 0 0 4px rgba(79,70,229,0.2);" data-user-avatar>?</div>
+            <div style="font-size:1rem;font-weight:800;color:var(--text-primary);" data-user-name>Nama Siswa</div>
+            <div style="font-size:.78rem;color:var(--text-muted);margin-top:4px;">Siswa</div>
+            <div style="margin:16px 0;display:flex;flex-direction:column;gap:8px;">
+               <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:8px 12px;background:var(--bg-input);border-radius:var(--radius-md);"><span style="color:var(--text-muted);">NIS</span><span style="color:var(--text-muted);">202611029</span></div>
+               <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:8px 12px;background:var(--bg-input);border-radius:var(--radius-md);"><span style="color:var(--text-muted);">Kelas</span><span style="color:var(--text-primary); font-weight:700;" id="userProfileKelasText">VII</span></div>
+               <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:8px 12px;background:var(--bg-input);border-radius:var(--radius-md);"><span style="color:var(--text-muted);">NISN</span><span style="color:var(--text-muted);">0123456789</span></div>
+               <div style="display:flex;justify-content:space-between;font-size:.8rem;padding:8px 12px;background:var(--bg-input);border-radius:var(--radius-md);"><span style="color:var(--text-muted);">Status</span><span class="badge badge-success">Aktif</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:16px;">Edit Informasi Kontak</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama Lengkap</label><input type="text" placeholder="Nama lengkap..." id="userProfileNameInput" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+              <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Email</label><input type="email" placeholder="Email..." id="userProfileEmailInput" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+              <div>
+                <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Kelas</label>
+                <select id="userProfileKelasInput" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                  <option value="VII">Kelas VII</option>
+                  <option value="VIII">Kelas VIII</option>
+                  <option value="IX">Kelas IX</option>
+                </select>
+              </div>
+              <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">No. HP Orang Tua</label><input type="tel" placeholder="No. HP..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+              <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Alamat</label><textarea placeholder="Alamat lengkap..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:70px;resize:vertical;font-family:inherit;"></textarea></div>
+              <button class="btn btn-primary" onclick="updateProfileData()" style="width:100%;">Simpan Perubahan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script src="../../js/dashboard.js"></script>
+<script>
+'use strict';
+// State ujian
+let currentQ = 0, answers = {}, doubts = new Set(), timerInterval = null, timeLeft = 0;
+let examQs = [];
+let currentExamId = '';
+let activeExams = [];
+
+// Anti-Cheat State
+let violationCount = 0;
+const maxViolations = 3;
+let antiCheatActive = false;
+let isHandlingViolation = false;
+let isCurrentExamPdf = false;
+let currentExamPdfData = null;
+
+function loadStudentCBT() {
+  let allExams = [];
+  let allHasil = [];
+  try {
+    allExams = JSON.parse(localStorage.getItem('cbt_soal')) || [];
+    if (!Array.isArray(allExams)) allExams = [];
+  } catch (e) {
+    allExams = [];
+  }
+  try {
+    allHasil = JSON.parse(localStorage.getItem('cbt_hasil')) || [];
+    if (!Array.isArray(allHasil)) allHasil = [];
+  } catch (e) {
+    allHasil = [];
+  }
+  
+  const studentEmail = sessionStorage.getItem('edu_email') || 'siswa@pelitabangsa.sch.id';
+  const studentKelas = localStorage.getItem('edu_profile_kelas') || 'VII';
+  
+  // Filter hasil ujian milik siswa ini
+  const myHasil = allHasil.filter(h => h && h.emailSiswa === studentEmail);
+  const myCompletedExamIds = myHasil.map(h => h.examId);
+  
+  // Filter ujian aktif: untuk kelas siswa ini & belum dikerjakan
+  activeExams = allExams.filter(ex => ex && ex.kelas === studentKelas && !myCompletedExamIds.includes(ex.id));
+  
+  // Render Ujian Aktif
+  const activeContainer = document.getElementById('studentActiveCbtContainer');
+  if (activeContainer) {
+    if (activeExams.length === 0) {
+      activeContainer.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          </div>
+          <div class="empty-state-text">Belum ada ujian CBT baru yang dijadwalkan untuk kelas Anda.</div>
+        </div>`;
+    } else {
+      activeContainer.innerHTML = activeExams.map((ex, idx) => {
+        const totalSoal = ex.soal ? ex.soal.length : 0;
+        return `
+          <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div>
+              <div style="font-weight:800; color:var(--text-primary); font-size:0.95rem;">${ex.judul || 'Tanpa Judul'}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Durasi: ${ex.durasi || 0} Menit · ${totalSoal} Soal · Target Kelas: ${ex.kelas || '-'}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="startExamByIndex(${idx})">Mulai Ujian</button>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // Render Riwayat CBT
+  const historyContainer = document.getElementById('studentHistoryCbtContainer');
+  if (historyContainer) {
+    if (myHasil.length === 0) {
+      historyContainer.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <div class="empty-state-text">Belum ada riwayat ujian yang Anda selesaikan.</div>
+        </div>`;
+    } else {
+      historyContainer.innerHTML = myHasil.map(h => {
+        const isLulus = (h.skor || 0) >= 75;
+        return `
+          <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div>
+              <div style="font-weight:800; color:var(--text-primary); font-size:0.95rem;">${h.examTitle || 'Ujian'}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Selesai pada: ${h.tanggal || '-'}</div>
+            </div>
+            <span class="badge badge-success" style="padding:6px 12px; font-weight:700;">SELESAI</span>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+}
+
+function startExamByIndex(idx) {
+  const ex = activeExams[idx];
+  if (!ex) return;
+  startExam(ex.soal, ex.durasi, ex.judul, `Ujian Kelas ${ex.kelas}`, ex.id);
+}
+
+function startExam(questions, durasi, judul, subjudul, examId) {
+  examQs = questions || [];
+  currentExamId = examId || '';
+  
+  // Deteksi Ujian PDF
+  const ex = activeExams.find(e => e.id === examId);
+  isCurrentExamPdf = ex ? !!ex.isPdfExam : false;
+  currentExamPdfData = ex ? ex.pdfData : null;
+  
+  currentQ = 0; answers = {}; doubts.clear();
+  timeLeft = (durasi || 60) * 60;
+  document.getElementById('examTitle').textContent = judul || 'Ujian CBT';
+  document.getElementById('examSubtitle').textContent = subjudul || '';
+  const navExam = document.getElementById('navExam');
+  if(navExam) navExam.style.display = '';
+  document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
+  const examSec = document.querySelector('.page-section[data-page="exam"]');
+  if(examSec) { examSec.style.display = ''; examSec.style.animation = 'fadeInContent 0.35s ease'; }
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nExam = document.getElementById('navExam');
+  if(nExam) nExam.classList.add('active');
+  const pTitle = document.querySelector('.page-title');
+  if(pTitle) pTitle.textContent = 'Sedang Ujian';
+  
+  const area = document.getElementById('examQuestionArea');
+  if (isCurrentExamPdf && area) {
+    area.innerHTML = `
+      <div id="pdfExamSplitLayout" style="display:flex;gap:20px;height:620px;align-items:stretch;margin-top:10px;">
+        <div id="pdfViewerContainer" style="flex:1.4;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box;">
+          <div style="text-align:center;padding:24px;color:var(--text-muted);">Memuat PDF soal...</div>
+        </div>
+        <div id="pdfAnswerArea" style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box;overflow-y:auto;">
+          <!-- dynamic answer options sheet -->
+        </div>
+      </div>
+    `;
+    renderPdfExamSheets(currentExamPdfData);
+  }
+  
+  renderQuestion(); renderNav(); startTimer(); enableAntiCheat();
+}
+
+function renderQuestion() {
+  const q = examQs[currentQ];
+  const area = document.getElementById('examQuestionArea');
+  if(!area) return;
+  if(!q) { 
+    area.innerHTML = '<div class="empty-state"><div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div><div class="empty-state-text">Tidak ada soal</div></div>'; 
+    return; 
+  }
+  const chosen = answers[currentQ];
+
+  if (isCurrentExamPdf) {
+    const answerArea = document.getElementById('pdfAnswerArea');
+    if (answerArea) {
+      answerArea.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+          <div style="font-size:.78rem;font-weight:700;color:var(--text-muted);">Soal ${currentQ+1} dari ${examQs.length}</div>
+          <div style="display:flex;gap:6px;">
+            ${doubts.has(currentQ) ? '<span class="badge badge-warning" style="display:inline-flex;align-items:center;gap:4px;font-size:0.68rem;padding:3px 8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Ragu</span>' : ''}
+            ${chosen !== undefined ? '<span class="badge badge-success" style="display:inline-flex;align-items:center;gap:4px;font-size:0.68rem;padding:3px 8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Terjawab</span>' : '<span class="badge badge-muted" style="font-size:0.68rem;padding:3px 8px;">Belum</span>'}
+          </div>
+        </div>
+        <div style="font-size:0.95rem;font-weight:800;color:var(--text-primary);margin-bottom:6px;">Lembar Jawab Soal ${currentQ + 1}</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;line-height:1.4;">
+          Bacalah pertanyaan nomor ${currentQ + 1} pada lembar soal PDF di sebelah kiri, kemudian pilih salah satu opsi jawaban di bawah ini:
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          ${q.opsi.map((op, i) => `
+            <label onclick="selectAnswer(${i})" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:2px solid ${chosen===i ? 'var(--primary)' : 'var(--border)'};border-radius:var(--radius-md);cursor:pointer;background:${chosen===i ? 'rgba(79,70,229,0.1)' : 'var(--bg-input)'};transition:all .18s;">
+              <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${chosen===i ? 'var(--primary)' : 'var(--border)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;background:${chosen===i ? 'var(--primary)' : 'transparent'};">
+                ${chosen===i ? '<div style="width:8px;height:8px;border-radius:50%;background:white;"></div>' : ''}
+              </div>
+              <span style="font-size:.88rem;font-weight:${chosen===i?'700':'400'};color:var(--text-primary);">${String.fromCharCode(65+i)}. Pilihan ${String.fromCharCode(65+i)}</span>
+            </label>`).join('')}
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:16px;border-top:1px solid var(--border);padding-top:14px;gap:10px;">
+          <button onclick="prevQuestion()" class="btn btn-ghost btn-sm" style="flex:1;font-size:0.75rem;padding:6px 10px;" ${currentQ === 0 ? 'disabled' : ''}>← Sebelumnya</button>
+          <button onclick="nextQuestion()" class="btn btn-primary btn-sm" style="flex:1;font-size:0.75rem;padding:6px 10px;" ${currentQ === examQs.length - 1 ? 'disabled' : ''}>Selanjutnya →</button>
+        </div>
+      `;
+    }
+  } else {
+    area.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px;">
+        <div style="font-size:.78rem;font-weight:700;color:var(--text-muted);">Soal ${currentQ+1} dari ${examQs.length}</div>
+        <div style="display:flex;gap:6px;">
+          ${doubts.has(currentQ) ? '<span class="badge badge-warning" style="display:inline-flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Ragu-ragu</span>' : ''}
+          ${chosen !== undefined ? '<span class="badge badge-success" style="display:inline-flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Terjawab</span>' : '<span class="badge badge-muted">Belum dijawab</span>'}
+        </div>
+      </div>
+      <div style="font-size:1rem;font-weight:700;color:var(--text-primary);line-height:1.6;margin-bottom:20px;">${q.soal}</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${q.opsi.map((op, i) => `
+          <label onclick="selectAnswer(${i})" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:2px solid ${chosen===i ? 'var(--primary)' : 'var(--border)'};border-radius:var(--radius-md);cursor:pointer;background:${chosen===i ? 'rgba(79,70,229,0.1)' : 'var(--bg-input)'};transition:all .18s;">
+            <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${chosen===i ? 'var(--primary)' : 'var(--border)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;background:${chosen===i ? 'var(--primary)' : 'transparent'};">
+              ${chosen===i ? '<div style="width:8px;height:8px;border-radius:50%;background:white;"></div>' : ''}
+            </div>
+            <span style="font-size:.88rem;font-weight:${chosen===i?'700':'400'};color:var(--text-primary);">${String.fromCharCode(65+i)}. ${op}</span>
+          </label>`).join('')}
+      </div>`;
+  }
+  const prog = document.getElementById('examProgress');
+  if(prog) prog.textContent = `${currentQ+1}/${examQs.length}`;
+}
+
+// Render PDF pages sequentially vertically inside container
+function renderPdfExamSheets(base64Pdf) {
+  const container = document.getElementById('pdfViewerContainer');
+  if (!container || !base64Pdf) return;
+  container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);">Memuat PDF soal...</div>';
+
+  try {
+    const base64Data = base64Pdf.includes(',') ? base64Pdf.split(',')[1] : base64Pdf;
+    const binaryString = atob(base64Data);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    pdfjsLib.getDocument({ data: bytes }).promise.then(pdf => {
+      container.innerHTML = '';
+      const numPages = pdf.numPages;
+
+      for (let i = 1; i <= numPages; i++) {
+        const pageContainer = document.createElement('div');
+        pageContainer.style.marginBottom = '14px';
+        pageContainer.style.background = '#ffffff';
+        pageContainer.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        pageContainer.style.borderRadius = '8px';
+        pageContainer.style.display = 'flex';
+        pageContainer.style.justifyContent = 'center';
+        pageContainer.style.padding = '8px';
+        pageContainer.style.overflow = 'hidden';
+
+        const canvas = document.createElement('canvas');
+        pageContainer.appendChild(canvas);
+        container.appendChild(pageContainer);
+
+        pdf.getPage(i).then(page => {
+          const viewport = page.getViewport({ scale: 1.3 });
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          canvas.style.width = '100%';
+          canvas.style.height = 'auto';
+
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          page.render(renderContext);
+        });
+      }
+    }).catch(err => {
+      console.error(err);
+      container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--danger);">Gagal memuat PDF soal.</div>';
+    });
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--danger);">Gagal memproses file PDF.</div>';
+  }
+}
+
+function selectAnswer(idx) { answers[currentQ] = idx; doubts.delete(currentQ); renderQuestion(); renderNav(); }
+function markDoubt() { if(doubts.has(currentQ)) doubts.delete(currentQ); else doubts.add(currentQ); renderQuestion(); renderNav(); }
+function nextQuestion() { if(currentQ < examQs.length-1) { currentQ++; renderQuestion(); renderNav(); } else showToast('Ini soal terakhir!','info'); document.querySelector('.content')?.scrollTo(0,0); }
+function prevQuestion() { if(currentQ > 0) { currentQ--; renderQuestion(); renderNav(); } document.querySelector('.content')?.scrollTo(0,0); }
+function goToQuestion(idx) { currentQ = idx; renderQuestion(); renderNav(); document.querySelector('.content')?.scrollTo(0,0); }
+
+function renderNav() {
+  const nav = document.getElementById('examNav');
+  if(!nav) return;
+  nav.innerHTML = examQs.map((_, i) => {
+    let bg = 'var(--bg-input)', border = 'var(--border)', color = 'var(--text-muted)';
+    if(answers[i] !== undefined) { bg = 'rgba(16,185,129,0.25)'; border = 'var(--success)'; color = 'var(--success)'; }
+    if(doubts.has(i)) { bg = 'rgba(245,158,11,0.22)'; border = 'var(--warning)'; color = 'var(--accent)'; }
+    if(i === currentQ) { border = 'var(--primary)'; }
+    return `<button onclick="goToQuestion(${i})" style="width:100%;aspect-ratio:1;border-radius:6px;font-size:.72rem;font-weight:700;border:2px solid ${border};background:${bg};color:${color};cursor:pointer;transition:all .15s;${i===currentQ?'box-shadow:0 0 0 2px rgba(79,70,229,0.3);':''}">${i+1}</button>`;
+  }).join('');
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const el = document.getElementById('examTimer');
+    if (el) {
+      const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+      el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (timeLeft <= 300 && timeLeft > 60) {
+        el.style.color = 'var(--danger)';
+        el.style.animation = 'none';
+      }
+      if (timeLeft <= 60) {
+        el.style.color = 'var(--danger)';
+        el.style.animation = 'timerPulse 0.8s ease-in-out infinite';
+      }
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        doSubmitExam(); // langsung submit tanpa konfirmasi saat waktu habis
+      }
+    }
+  }, 1000);
+}
+
+function submitExam() {
+  // Hitung soal belum dijawab dan ragu-ragu
+  const total = examQs.length;
+  const answered = Object.keys(answers).length;
+  const belumDijawab = total - answered;
+  const ragu = doubts.size;
+
+  if (belumDijawab === 0 && ragu === 0) {
+    // Semua terjawab, langsung submit
+    doSubmitExam();
+    return;
+  }
+
+  // Tampilkan modal konfirmasi
+  let modal = document.getElementById('submitConfirmModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'submitConfirmModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9001;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+    document.body.appendChild(modal);
+  }
+
+  const belumList = [];
+  for (let i = 0; i < total; i++) {
+    if (answers[i] === undefined) belumList.push(i + 1);
+  }
+  const raguList = [...doubts].map(i => i + 1);
+
+  modal.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:420px;width:100%;animation:fadeInContent 0.25s ease;">
+      <div style="display:flex;justify-content:center;margin-bottom:14px;color:var(--warning);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:40px;height:40px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      </div>
+      <div style="font-size:1.05rem;font-weight:800;color:var(--text-primary);text-align:center;margin-bottom:6px;">Yakin Ingin Mengakhiri Ujian?</div>
+      <div style="font-size:.82rem;color:var(--text-muted);text-align:center;margin-bottom:18px;">Jawaban yang belum diisi akan dianggap kosong.</div>
+      ${belumDijawab > 0 ? `<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:.78rem;font-weight:700;color:var(--danger);margin-bottom:4px;">⚠ ${belumDijawab} Soal Belum Dijawab: No. ${belumList.join(', ')}</div>
+      </div>` : ''}
+      ${ragu > 0 ? `<div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:.78rem;font-weight:700;color:var(--warning);margin-bottom:4px;">🤔 ${ragu} Soal Ragu-ragu: No. ${raguList.join(', ')}</div>
+      </div>` : ''}
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button onclick="document.getElementById('submitConfirmModal').style.display='none'" class="btn btn-ghost" style="flex:1;">← Kembali ke Soal</button>
+        <button onclick="document.getElementById('submitConfirmModal').style.display='none'; doSubmitExam();" class="btn btn-danger" style="flex:1;">✓ Ya, Selesaikan</button>
+      </div>
+    </div>`;
+  modal.style.display = 'flex';
+}
+
+function doSubmitExam() {
+  disableAntiCheat();
+  clearInterval(timerInterval);
+  const modal2 = document.getElementById('submitConfirmModal');
+  if (modal2) modal2.style.display = 'none';
+
+  const answered = Object.keys(answers).length;
+  const total = examQs.length;
+  let benar = 0;
+  examQs.forEach((q, i) => { if (answers[i] === q.jawaban) benar++; });
+  const skor = total > 0 ? Math.round((benar / total) * 100) : 0;
+
+  // Simpan Hasil Ke localStorage
+  let allHasil = [];
+  try {
+    allHasil = JSON.parse(localStorage.getItem('cbt_hasil')) || [];
+    if (!Array.isArray(allHasil)) allHasil = [];
+  } catch (e) { allHasil = []; }
+
+  const studentEmail = sessionStorage.getItem('edu_email') || 'siswa@pelitabangsa.sch.id';
+  const studentName = sessionStorage.getItem('edu_name') || 'Siswa PB';
+  const studentKelas = localStorage.getItem('edu_profile_kelas') || 'VII';
+
+  const newHasil = {
+    namaSiswa: studentName,
+    emailSiswa: studentEmail,
+    kelas: studentKelas,
+    examId: currentExamId,
+    examTitle: document.getElementById('examTitle')?.textContent || 'Ujian CBT',
+    skor,
+    benar,
+    total,
+    dijawab: answered,
+    tanggal: new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'})
+  };
+
+  allHasil.push(newHasil);
+  localStorage.setItem('cbt_hasil', JSON.stringify(allHasil));
+
+  // Refresh List
+  loadStudentCBT();
+
+  // Tampilkan modal selesai
+  let modal = document.getElementById('examResultModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'examResultModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:420px;width:90%;text-align:center;animation:fadeInContent 0.3s ease;">
+      <div style="display:flex;justify-content:center;margin-bottom:12px;color:var(--success);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 48px; height: 48px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <div style="font-size:1.3rem;font-weight:900;color:var(--text-primary);margin-bottom:6px;">Ujian Selesai!</div>
+      <div style="font-size:.88rem;color:var(--text-muted);margin-bottom:6px;">Jawaban Anda telah berhasil disimpan.</div>
+      <div style="font-size:.82rem;color:var(--text-secondary);margin-bottom:20px;padding:10px;background:var(--bg-input);border-radius:10px;">
+        Terjawab: <strong>${answered}</strong> dari <strong>${total}</strong> soal<br/>
+        Nilai akan diumumkan oleh guru Anda.
+      </div>
+      <button class="btn btn-primary" onclick="exitExam()">Kembali ke Dashboard</button>
+    </div>`;
+  modal.style.display = 'flex';
+  const navExam = document.getElementById('navExam');
+  if (navExam) navExam.style.display = 'none';
+}
+// ── ANTI-CHEAT CBT IMPLEMENTATION ────────────────────────────
+function enterFullscreen() {
+  const elem = document.documentElement;
+  try {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    }
+  } catch (err) {
+    console.warn("Fullscreen request failed:", err);
+  }
+}
+
+function exitFullscreen() {
+  try {
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+  } catch (err) {
+    console.warn("Fullscreen exit failed:", err);
+  }
+}
+
+function handleFullscreenChange() {
+  if (antiCheatActive) {
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+    if (!isFullscreen) {
+      const warningModal = document.getElementById('antiCheatWarningModal');
+      if (!warningModal || warningModal.style.display === 'none') {
+        triggerViolation("Keluar dari Mode Layar Penuh (Fullscreen)");
+      }
+    }
+  }
+}
+
+function handleExamBlur() {
+  if (!antiCheatActive) return;
+  triggerViolation("Meninggalkan jendela ujian (Alt+Tab / buka aplikasi lain)");
+}
+
+function handleVisibilityChange() {
+  if (!antiCheatActive) return;
+  if (document.visibilityState === 'hidden') {
+    triggerViolation("Membuka tab baru atau meminimalkan browser");
+  }
+}
+
+function handleExamKeydown(e) {
+  if (!antiCheatActive) return;
+
+  const forbiddenKeys = ['c', 'v', 'x', 'u', 'p', 's', 'a'];
+  const isCmdOrCtrl = e.ctrlKey || e.metaKey;
+  
+  if (isCmdOrCtrl && forbiddenKeys.includes(e.key.toLowerCase())) {
+    e.preventDefault();
+    triggerViolation(`Menekan shortcut Ctrl + ${e.key.toUpperCase()}`);
+    return false;
+  }
+
+  if (e.key === 'F12') {
+    e.preventDefault();
+    triggerViolation("Membuka Developer Tools (F12)");
+    return false;
+  }
+
+  if (isCmdOrCtrl && e.shiftKey && ['i', 'j', 'c', 'k'].includes(e.key.toLowerCase())) {
+    e.preventDefault();
+    triggerViolation("Membuka Developer Tools");
+    return false;
+  }
+}
+
+function preventDefaultAction(e) {
+  e.preventDefault();
+  return false;
+}
+
+function enableAntiCheat() {
+  violationCount = 0;
+  antiCheatActive = true;
+  
+  // Disable selection
+  document.body.classList.add('exam-no-select');
+  
+  // Add listeners
+  window.addEventListener('blur', handleExamBlur);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  document.addEventListener('keydown', handleExamKeydown);
+  document.addEventListener('contextmenu', preventDefaultAction);
+  document.addEventListener('copy', preventDefaultAction);
+  document.addEventListener('paste', preventDefaultAction);
+  document.addEventListener('selectstart', preventDefaultAction);
+  
+  document.addEventListener('fullscreenchange', handleFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+  document.addEventListener('msfullscreenchange', handleFullscreenChange);
+  
+  // Show badge
+  const badge = document.getElementById('examViolationBadge');
+  if (badge) {
+    badge.style.display = 'inline-flex';
+  }
+  
+  enterFullscreen();
+}
+
+function disableAntiCheat() {
+  antiCheatActive = false;
+  
+  // Enable selection
+  document.body.classList.remove('exam-no-select');
+  
+  // Remove listeners
+  window.removeEventListener('blur', handleExamBlur);
+  document.removeEventListener('visibilitychange', handleVisibilityChange);
+  document.removeEventListener('keydown', handleExamKeydown);
+  document.removeEventListener('contextmenu', preventDefaultAction);
+  document.removeEventListener('copy', preventDefaultAction);
+  document.removeEventListener('paste', preventDefaultAction);
+  document.removeEventListener('selectstart', preventDefaultAction);
+  
+  document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+  document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+  
+  // Hide badge & warning modal
+  const badge = document.getElementById('examViolationBadge');
+  if (badge) badge.style.display = 'none';
+  
+  const modal = document.getElementById('antiCheatWarningModal');
+  if (modal) modal.style.display = 'none';
+  
+  exitFullscreen();
+}
+
+function triggerViolation(reason) {
+  if (!antiCheatActive || isHandlingViolation) return;
+  isHandlingViolation = true;
+
+  // Reset jawaban dan progress ujian
+  answers = {};
+  doubts.clear();
+  currentQ = 0;
+
+  // Re-render tampilan soal & navigasi
+  renderQuestion();
+  renderNav();
+
+  // Informasikan kepada siswa secara langsung
+  alert(`PERINGATAN KECURANGAN!\n\nAnda terdeteksi meninggalkan halaman ujian (Tindakan: ${reason}).\n\nSesuai aturan ujian, seluruh jawaban Anda di-reset dan Anda wajib mengulang ujian dari nomor 1!`);
+
+  // Pastikan masuk mode layar penuh lagi
+  enterFullscreen();
+
+  // Beri sedikit delay sebelum mengaktifkan deteksi violation lagi agar focus benar-benar kembali
+  setTimeout(() => {
+    isHandlingViolation = false;
+  }, 500);
+}
+
+
+function exitExam() {
+  disableAntiCheat();
+  clearInterval(timerInterval);
+  const modal = document.getElementById('examResultModal');
+  if(modal) modal.style.display = 'none';
+  document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
+  const cbtSec = document.querySelector('.page-section[data-page="cbt"]');
+  if(cbtSec) cbtSec.style.display = '';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nCBT = document.getElementById('navCBT');
+  if(nCBT) nCBT.classList.add('active');
+  const pTitle = document.querySelector('.page-title');
+  if(pTitle) pTitle.textContent = 'Ujian CBT';
+}
+
+function loadProfileData() {
+  const kelas = localStorage.getItem('edu_profile_kelas') || 'VII';
+  const txt = document.getElementById('userProfileKelasText');
+  if (txt) txt.textContent = kelas;
+  const input = document.getElementById('userProfileKelasInput');
+  if (input) input.value = kelas;
+  
+  // Set defaults for form if empty
+  const nameInput = document.getElementById('userProfileNameInput');
+  if (nameInput) nameInput.value = sessionStorage.getItem('edu_name') || 'Siswa PB';
+  const emailInput = document.getElementById('userProfileEmailInput');
+  if (emailInput) emailInput.value = sessionStorage.getItem('edu_email') || 'siswa@pelitabangsa.sch.id';
+}
+
+function updateProfileData() {
+  const input = document.getElementById('userProfileKelasInput');
+  if (input) {
+    localStorage.setItem('edu_profile_kelas', input.value);
+  }
+  
+  const nameInput = document.getElementById('userProfileNameInput');
+  if (nameInput && nameInput.value.trim()) {
+    sessionStorage.setItem('edu_name', nameInput.value.trim());
+    // update data-user-name elements
+    document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = nameInput.value.trim());
+  }
+
+  const emailInput = document.getElementById('userProfileEmailInput');
+  if (emailInput && emailInput.value.trim()) {
+    sessionStorage.setItem('edu_email', emailInput.value.trim());
+  }
+
+  loadProfileData();
+  loadStudentCBT();
+  showToast('Profil berhasil diperbarui!', 'success');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProfileData();
+  loadStudentCBT();
+  loadSiswaJadwal();
+  loadSiswaPengumuman();
+});
+
+/* ═══ JADWAL SISWA ═══ */
+function loadSiswaJadwal() {
+  const container = document.getElementById('siswaJadwalContent');
+  if (!container) return;
+  let jadwal = [];
+  try { jadwal = JSON.parse(localStorage.getItem('edu_jadwal')) || []; } catch(e) {}
+  const myKelas = localStorage.getItem('edu_profile_kelas') || '';
+  if (myKelas) jadwal = jadwal.filter(j => j.kelas === myKelas || !j.kelas);
+  if (jadwal.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada jadwal pelajaran.<br><small style="color:var(--text-muted)">Jadwal akan muncul setelah Admin menginputnya.</small></div></div>';
+    return;
+  }
+  const hariOrder = ['Senin','Selasa','Rabu','Kamis','Jumat'];
+  jadwal.sort((a, b) => hariOrder.indexOf(a.hari) - hariOrder.indexOf(b.hari));
+  container.innerHTML = `<div style="overflow-x:auto;"><table class="table"><thead><tr><th>Hari</th><th>Jam</th><th>Mata Pelajaran</th><th>Kelas</th><th>Ruang</th></tr></thead><tbody>
+    ${jadwal.map(j => `<tr>
+      <td style="font-weight:700;">${j.hari || '-'}</td>
+      <td style="color:var(--text-muted)">${j.jam || '-'}</td>
+      <td>${j.mapel || '-'}</td>
+      <td><span class="badge badge-success">${j.kelas || '-'}</span></td>
+      <td style="color:var(--text-muted)">${j.ruang || '-'}</td>
+    </tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+/* ═══ PENGUMUMAN SISWA ═══ */
+function loadSiswaPengumuman() {
+  const container = document.getElementById('siswaPengumumanContent');
+  if (!container) return;
+  let pengumuman = [];
+  try { pengumuman = JSON.parse(localStorage.getItem('edu_pengumuman')) || []; } catch(e) {}
+  // Filter hanya pengumuman untuk siswa atau semua
+  pengumuman = pengumuman.filter(p => p.target === 'siswa' || p.target === 'semua');
+  if (pengumuman.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada pengumuman yang dipublikasikan.<br><small style="color:var(--text-muted)">Pengumuman dari Admin akan tampil di sini.</small></div></div>';
+    return;
+  }
+  const catColor = { Akademik:'var(--primary)', 'Lomba/Event':'var(--warning)', Libur:'var(--success)', 'Info Umum':'var(--secondary)' };
+  container.innerHTML = pengumuman.map(p => `
+    <div style="border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px;background:var(--bg-input);">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="width:4px;border-radius:4px;background:${catColor[p.kategori]||'var(--primary)'};align-self:stretch;flex-shrink:0;"></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:800;font-size:.88rem;color:var(--text-primary);margin-bottom:4px;">${p.judul}</div>
+          <div style="font-size:.7rem;color:var(--text-muted);margin-bottom:8px;">${p.tanggal} · <span style="color:${catColor[p.kategori]||'var(--primary)'}">${p.kategori}</span></div>
+          <div style="font-size:.8rem;color:var(--text-secondary);line-height:1.6;">${p.isi}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="PB-Learning – Platform belajar digital SMP Pelita Bangsa Pamulang. Masuk untuk mengakses materi, tugas, dan prestasi kamu." />
+  <title>PB-Learning – Masuk | SMP Pelita Bangsa</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+
+<body>
+
+  <main class="page">
+
+    <!-- ══════════════════════════════════════
+       PANEL KIRI — Dark Navy dengan Info Sekolah
+    ══════════════════════════════════════ -->
+    <div class="panel-left">
+
+      <!-- Dekoratif lingkaran -->
+      <div class="deco-circle deco-circle--1"></div>
+      <div class="deco-circle deco-circle--2"></div>
+      <div class="deco-circle deco-circle--3"></div>
+
+      <!-- Brand / Logo -->
+      <div class="left-brand">
+        <div class="left-brand-logo">
+          <img src="Logo/Logo Sekolah.png" alt="Logo SMP Pelita Bangsa" />
+        </div>
+        <div class="left-brand-text">
+          <span class="left-brand-name">PB-Learning</span>
+          <span class="left-brand-sub">SMP Pelita Bangsa Pamulang</span>
+        </div>
+      </div>
+
+      <!-- Teks Utama -->
+      <div class="left-content">
+        <div class="left-headline">
+          <h1 class="left-title">Sistem Akademik</h1>
+          <div class="left-title-accent">PB-Learning</div>
+        </div>
+
+        <!-- Tagline / Motto Sekolah -->
+        <div class="left-motto">
+          <span class="motto-word">Intelligence</span>
+          <span class="motto-dot">•</span>
+          <span class="motto-word motto-word--accent">Delligence</span>
+          <span class="motto-dot">•</span>
+          <span class="motto-word">Attitude</span>
+        </div>
+
+        <p class="left-desc">
+          Platform akademik digital SMP Pelita Bangsa Pamulang yang dirancang untuk mendukung sistem pembelajaran berlandaskan nilai <strong>Intelligence</strong>, <strong>Delligence</strong>, dan <strong>Attitude</strong>.
+        </p>
+
+
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════
+       PANEL KANAN — Form Login (Card)
+    ══════════════════════════════════════ -->
+    <div class="panel-right">
+
+      <!-- Tombol ganti tema -->
+      <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+
+      <!-- Login Card -->
+      <div class="login-card">
+
+        <!-- Card Header -->
+        <div class="card-header">
+          <div class="card-title-row">
+            <h2 class="card-title">Masuk ke Sistem</h2>
+            <span class="card-emoji">👋</span>
+          </div>
+          <p class="card-subtitle">Sistem Akademik Siswa — SMP Pelita Bangsa Pamulang</p>
+        </div>
+
+        <!-- Pesan error / sukses -->
+        <div id="alert"></div>
+
+        <!-- Role Selector -->
+        <div class="role-tabs" id="roleTabs">
+          <button class="role-tab active" data-role="siswa" onclick="setRole('siswa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 13px; height: 13px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
+            Siswa
+          </button>
+          <button class="role-tab" data-role="guru" onclick="setRole('guru')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 13px; height: 13px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Guru
+          </button>
+          <button class="role-tab" data-role="admin" onclick="setRole('admin')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 13px; height: 13px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Admin
+          </button>
+        </div>
+
+        <!-- Form Login -->
+        <form id="loginForm" class="form" onsubmit="handleLogin(event)" novalidate>
+
+          <div class="field">
+            <label class="field-label" for="email">USERNAME / NO HP / NIS</label>
+            <div class="field-wrap">
+              <span class="field-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <input type="email" id="email" class="field-input has-icon" placeholder="Masukkan username atau NIS"
+                autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="password">PASSWORD</label>
+            <div class="field-wrap">
+              <span class="field-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <input type="password" id="password" class="field-input has-icon has-toggle" placeholder="Masukkan password"
+                autocomplete="current-password" />
+              <button type="button" class="toggle-btn" id="togglePwd" aria-label="Tampilkan password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btnLogin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;margin-right:6px;vertical-align:middle;">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            Masuk
+          </button>
+
+        </form>
+
+
+
+        <!-- Footer -->
+        <p class="footer">Belum punya akun? <a href="register.html" class="footer-link">Daftar di sini</a></p>
+        <p class="footer" style="margin-top: 10px; font-size: 0.76rem; color: var(--text-muted); opacity: 0.8;">
+          Lupa password? Silakan hubungi <strong>Admin Sekolah</strong> untuk mereset password Anda ke default (<code>pbresetpass</code>).
+        </p>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ── Success Modal ── -->
+  <div class="modal-overlay" id="successModal" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-icon-wrap">
+        <div class="modal-icon-ring"></div>
+        <div class="modal-icon-ring modal-icon-ring--2"></div>
+        <svg class="modal-check" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle class="modal-check-circle" cx="26" cy="26" r="24" stroke-width="2" />
+          <path class="modal-check-tick" d="M14 26 L22 34 L38 18" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 class="modal-title" id="modalTitle">Login Berhasil!</h2>
+      <p class="modal-sub" id="modalSub">Selamat datang kembali</p>
+      <div class="modal-role-badge" id="modalRoleBadge"></div>
+      <div class="modal-loader">
+        <div class="modal-loader-bar" id="modalLoaderBar"></div>
+      </div>
+      <p class="modal-redirect-note">Mengalihkan ke dashboard...</p>
+    </div>
+  </div>
+
+  <script src="js/login.js"></script>
+</body>
+
+</html>

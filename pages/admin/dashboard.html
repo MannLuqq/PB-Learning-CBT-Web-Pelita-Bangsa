@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dashboard Admin – EduPortal SMP Pelita Bangsa Pamulang." />
+  <title>Dashboard Admin – EduPortal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../css/dashboard.css?v=2.1" />
+  <style>
+    .notif-dropdown {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      width: 300px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      overflow: hidden;
+    }
+
+    .notif-dropdown.open {
+      display: block;
+      animation: fadeInContent 0.2s ease;
+    }
+
+    .notif-header {
+      padding: 14px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .topbar-notif-wrap {
+      position: relative;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .avatar.sm {
+      width: 26px;
+      height: 26px;
+      font-size: .62rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../../images/logo-sekolah.png" alt="Logo" class="sidebar-logo-img" />
+        <div class="sidebar-logo-text">
+          <span class="sidebar-logo-title" style="font-size: 1.1rem; line-height: 1.2; white-space: normal;">SMP Pelita
+            Bangsa</span>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" data-user-avatar>?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Administrator</div>
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Menu Utama</div>
+        <div class="nav-item active" id="navDashboard" data-page="dashboard">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </span>
+          <span class="nav-label">Dashboard</span>
+        </div>
+
+        <div class="nav-section-label">Data Master</div>
+        <div class="nav-item" id="navSiswa" data-page="siswa">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+            </svg>
+          </span>
+          <span class="nav-label">Data Siswa</span>
+        </div>
+        <div class="nav-item" id="navGuru" data-page="guru">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </span>
+          <span class="nav-label">Data Guru</span>
+        </div>
+        <div class="nav-item" id="navKelas" data-page="kelas">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+              <line x1="15" y1="3" x2="15" y2="21"></line>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="3" y1="15" x2="21" y2="15"></line>
+            </svg>
+          </span>
+          <span class="nav-label">Manajemen Kelas</span>
+        </div>
+        <div class="nav-item" id="navBukuInduk" data-page="buku-induk">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </span>
+          <span class="nav-label">Buku Induk</span>
+        </div>
+
+        <div class="nav-section-label">Akademik</div>
+        <div class="nav-item" id="navJadwal" data-page="jadwal">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </span>
+          <span class="nav-label">Jadwal Pelajaran</span>
+        </div>
+
+        <div class="nav-section-label">Sistem</div>
+        <div class="nav-item" id="navAkun" data-page="akun">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path
+                d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+              </path>
+            </svg>
+          </span>
+          <span class="nav-label">Manajemen Akun</span>
+        </div>
+        <div class="nav-item" id="navPengumuman" data-page="pengumuman">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </span>
+          <span class="nav-label">Pengumuman</span>
+        </div>
+        <div class="nav-item" id="navSetting" data-page="setting">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
+            </svg>
+          </span>
+          <span class="nav-label">Pengaturan Sistem</span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="nav-item" onclick="logout()" id="navLogout">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </span>
+          <span class="nav-label">Keluar</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebarToggle"><span></span><span></span><span></span></button>
+          <div>
+            <div class="page-title">Dashboard Admin</div>
+            <div class="page-breadcrumb" data-date-now>Memuat...</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="topbar-btn theme-toggle-btn" title="Ganti tema">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <div class="topbar-notif-wrap">
+            <button class="topbar-btn" id="notifBell">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 18px; height: 18px;">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+              <div class="notif-header">Notifikasi</div>
+              <div class="empty-state" style="padding:24px;">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    <path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path>
+                    <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path>
+                    <path d="M18 8a6 6 0 0 0-9.33-5M1 1l22 22"></path>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada notifikasi</div>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-avatar sm" data-user-avatar style="cursor:default;">?</div>
+        </div>
+      </header>
+
+      <main class="content">
+
+        <!-- ═══ DASHBOARD ═══ -->
+        <section class="page-section" data-page="dashboard">
+          <div class="welcome-banner">
+            <div>
+              <div class="welcome-title">Halo, <span data-user-name>Admin</span>!</div>
+              <div class="welcome-sub">Panel administrasi EduPortal &nbsp;|&nbsp; <span data-date-now></span></div>
+              <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                <span class="badge badge-muted">Belum ada data</span>
+              </div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card blue">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Total Siswa</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 24px; height: 24px;">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <div class="stat-value" id="dashTotalGuru">0</div>
+                <div class="stat-label">Total Guru</div>
+              </div>
+              <div class="stat-card amber">
+                <div class="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 24px; height: 24px;">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                    <line x1="15" y1="3" x2="15" y2="21"></line>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="3" y1="15" x2="21" y2="15"></line>
+                  </svg>
+                </div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">Total Kelas</div>
+              </div>
+              <div class="stat-card cyan">
+                <div class="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 24px; height: 24px;">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                </div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">CBT Aktif</div>
+              </div>
+            </div>
+            <div class="grid-2" style="margin-bottom:20px;">
+              <div class="card">
+                <div class="section-header">
+                  <div>
+                    <div class="section-title">Kehadiran Hari Ini</div>
+                    <div class="section-subtitle" data-date-now></div>
+                  </div>
+                </div>
+                <div class="empty-state">
+                  <div class="empty-state-icon"
+                    style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" style="width: 32px; height: 32px;">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">Belum ada data kehadiran hari ini</div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="section-header">
+                  <div>
+                    <div class="section-title">Aktivitas Terbaru</div>
+                    <div class="section-subtitle">Log sistem</div>
+                  </div>
+                </div>
+                <div class="empty-state">
+                  <div class="empty-state-icon"
+                    style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" style="width: 32px; height: 32px;">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">Belum ada aktivitas</div>
+                </div>
+              </div>
+            </div>
+            <div class="grid-2" style="margin-bottom:20px;">
+              <div class="card">
+                <div class="section-header">
+                  <div>
+                    <div class="section-title">Akun Pending</div>
+                    <div class="section-subtitle">Menunggu persetujuan</div>
+                  </div><button class="btn btn-ghost btn-sm"
+                    onclick="showToast('Membuka manajemen akun...','info')">Lihat Semua</button>
+                </div>
+                <div class="empty-state">
+                  <div class="empty-state-icon"
+                    style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" style="width: 32px; height: 32px;">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">Tidak ada akun yang menunggu persetujuan</div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="section-header">
+                  <div>
+                    <div class="section-title">CBT Berlangsung</div>
+                  </div>
+                </div>
+                <div class="empty-state">
+                  <div class="empty-state-icon"
+                    style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" style="width: 32px; height: 32px;">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">Tidak ada CBT yang sedang berlangsung</div>
+                </div>
+              </div>
+            </div>
+            <div style="text-align:center;padding:12px 0;font-size:0.75rem;color:var(--text-muted);">
+              © 2026 EduPortal · SMP Pelita Bangsa Pamulang
+            </div>
+        </section>
+
+        <!-- ═══ DATA SISWA ═══ -->
+        <section class="page-section" data-page="siswa" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(79,70,229,0.15),rgba(6,182,212,0.08));border-color:rgba(79,70,229,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Data Siswa</div>
+              <div class="welcome-sub">Kelola data seluruh siswa</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card blue">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Total Siswa</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Aktif</div>
+            </div>
+            <div class="stat-card amber">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                  <line x1="15" y1="3" x2="15" y2="21"></line>
+                  <line x1="3" y1="9" x2="21" y2="9"></line>
+                  <line x1="3" y1="15" x2="21" y2="15"></line>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Kelas Tersedia</div>
+            </div>
+            <div class="stat-card cyan">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <div class="stat-value">0%</div>
+              <div class="stat-label">Rata-rata Kehadiran</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Daftar Siswa</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <input type="text" id="cariSiswa" placeholder="Cari siswa..." oninput="renderDataSiswaAdmin()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;width:180px;" />
+                <select id="filterKelasSiswaAdmin" onchange="renderDataSiswaAdmin()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option value="">-- Semua Kelas --</option>
+                  <option>VII</option>
+                  <option>VIII</option>
+                  <option>IX</option>
+                </select>
+                <a href="../../Data Siswa SMP.xlsx" class="btn btn-ghost btn-sm" download
+                  style="text-decoration:none;display:inline-flex;align-items:center;height:32px;">Download Template</a>
+                <button class="btn btn-primary btn-sm" onclick="triggerExcelUpload()">Import Excel / CSV</button>
+                <button class="btn btn-primary btn-sm" onclick="showFormTambahSiswa()">+ Tambah Siswa</button>
+                <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" style="display:none;"
+                  onchange="handleExcelUpload(event)" />
+              </div>
+            </div>
+            <div id="dataSiswaAdminTable">
+              <div class="empty-state">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada data siswa.<br>Klik "Tambah Siswa" untuk menambahkan.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ DATA GURU ═══ -->
+        <section class="page-section" data-page="guru" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(16,185,129,0.15),rgba(79,70,229,0.08));border-color:rgba(16,185,129,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Data Guru</div>
+              <div class="welcome-sub">Kelola data seluruh guru dan tenaga pendidik</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card blue">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="stat-value" id="guruTotalGuru">0</div>
+              <div class="stat-label">Total Guru</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="stat-value" id="guruAktifGuru">0</div>
+              <div class="stat-label">Aktif</div>
+            </div>
+            <div class="stat-card amber">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Mata Pelajaran</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Daftar Guru</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <input type="text" id="cariGuru" placeholder="Cari guru..." oninput="renderDataGuruAdmin()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;width:180px;" />
+                <button class="btn btn-primary btn-sm" onclick="showFormTambahGuru()">+ Tambah Guru</button>
+              </div>
+            </div>
+            <div id="dataGuruAdminTable">
+              <div class="empty-state">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada data guru.<br>Klik "Tambah Guru" untuk menambahkan data.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ KELAS ═══ -->
+        <section class="page-section" data-page="kelas" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(6,182,212,0.15),rgba(79,70,229,0.08));border-color:rgba(6,182,212,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Manajemen Kelas</div>
+              <div class="welcome-sub">Atur pembagian kelas dan wali kelas</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Daftar Kelas</div>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="showToast('Form buat kelas dibuka!','info')">+ Tambah
+                Kelas</button>
+            </div>
+            <div class="empty-state">
+              <div class="empty-state-icon"
+                style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 32px; height: 32px;">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                  <line x1="15" y1="3" x2="15" y2="21"></line>
+                  <line x1="3" y1="9" x2="21" y2="9"></line>
+                  <line x1="3" y1="15" x2="21" y2="15"></line>
+                </svg>
+              </div>
+              <div class="empty-state-text">Belum ada kelas yang dibuat.<br>Klik "Tambah Kelas" untuk membuat kelas
+                baru.</div>
+            </div>
+          </div>
+        </section>
+
+
+
+        <!-- ═══ JADWAL ═══ -->
+        <section class="page-section" data-page="jadwal" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(16,185,129,0.14),rgba(79,70,229,0.07));border-color:rgba(16,185,129,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Jadwal Pelajaran</div>
+              <div class="welcome-sub">Kelola dan atur jadwal pelajaran semua kelas</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:20px;align-items:start;">
+            <!-- FORM TAMBAH JADWAL -->
+            <div class="card">
+              <div class="section-title" style="margin-bottom:16px;">Tambah Jadwal</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Hari</label>
+                  <select id="jadwalHari"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option value="">-- Pilih Hari --</option>
+                    <option>Senin</option>
+                    <option>Selasa</option>
+                    <option>Rabu</option>
+                    <option>Kamis</option>
+                    <option>Jumat</option>
+                  </select>
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Jam
+                    (contoh: 07:00 - 08:30)</label>
+                  <input type="text" id="jadwalJam" placeholder="07:00 - 08:30"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Mata
+                    Pelajaran</label>
+                  <input type="text" id="jadwalMapel" placeholder="Matematika"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Kelas</label>
+                  <select id="jadwalKelas"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option value="">-- Pilih Kelas --</option>
+                    <option>VII</option>
+                    <option>VIII</option>
+                    <option>IX</option>
+                  </select>
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Ruang</label>
+                  <input type="text" id="jadwalRuang" placeholder="Kelas 7A / Lab IPA"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <button class="btn btn-primary" style="width:100%;" onclick="simpanJadwal()">+ Tambah Jadwal</button>
+              </div>
+            </div>
+            <!-- DAFTAR JADWAL -->
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">Daftar Jadwal</div>
+                </div>
+                <select id="filterJadwalKelas" onchange="renderJadwalAdmin()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option value="">Semua Kelas</option>
+                  <option>VII</option>
+                  <option>VIII</option>
+                  <option>IX</option>
+                </select>
+              </div>
+              <div id="jadwalAdminList">
+                <div class="empty-state">
+                  <div class="empty-state-text">Belum ada jadwal yang dibuat.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ MANAJEMEN AKUN ═══ -->
+        <section class="page-section" data-page="akun" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(239,68,68,0.12),rgba(79,70,229,0.07));border-color:rgba(239,68,68,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Manajemen Akun</div>
+              <div class="welcome-sub">Kelola akses, role, dan status akun pengguna EduPortal</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card blue">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Total Akun</div>
+            </div>
+            <div class="stat-card amber">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Aktif</div>
+            </div>
+            <div class="stat-card red">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Suspended</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Daftar Akun</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <select id="filterRoleAkun" onchange="renderDataAkunAdmin()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option>Semua Role</option>
+                  <option>Siswa</option>
+                  <option>Guru</option>
+                  <option>Admin</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="showFormTambahAkun()">+ Buat Akun</button>
+              </div>
+            </div>
+            <div id="dataAkunAdminTable">
+              <div class="empty-state">
+                <div class="empty-state-text">Memuat daftar akun...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ PENGUMUMAN ═══ -->
+        <section class="page-section" data-page="pengumuman" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(59,130,246,0.14),rgba(79,70,229,0.07));border-color:rgba(59,130,246,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Manajemen Pengumuman</div>
+              <div class="welcome-sub">Buat dan kelola pengumuman untuk siswa dan guru</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <path d="M16 8h2M16 12h2M16 16h2M6 8h6v8H6z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card">
+              <div class="section-title" style="margin-bottom:16px;">Buat Pengumuman Baru</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Judul</label><input
+                    type="text" id="pengJudul" placeholder="Judul pengumuman..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Kategori</label><select
+                    id="pengKategori"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option>Akademik</option>
+                    <option>Lomba/Event</option>
+                    <option>Libur</option>
+                    <option>Info Umum</option>
+                  </select></div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Target</label><select
+                    id="pengTarget"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option value="semua">Semua</option>
+                    <option value="siswa">Siswa</option>
+                    <option value="guru">Guru</option>
+                  </select></div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Isi
+                    Pengumuman</label><textarea id="pengIsi"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:90px;resize:vertical;font-family:inherit;"
+                    placeholder="Tulis isi pengumuman..."></textarea></div>
+                <button class="btn btn-primary" style="width:100%;"
+                  onclick="publikasikanPengumuman()">Publikasikan</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-header">
+                <div class="section-title">Pengumuman Aktif</div><button class="btn btn-ghost btn-sm"
+                  style="color:var(--danger);" onclick="hapusSemuaPengumuman()">Hapus Semua</button>
+              </div>
+              <div id="pengumumanAktifList">
+                <div class="empty-state">
+                  <div class="empty-state-text">Belum ada pengumuman yang dipublikasikan</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ SETTING ═══ -->
+        <section class="page-section" data-page="setting" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(100,116,139,0.15),rgba(79,70,229,0.07));border-color:rgba(100,116,139,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Pengaturan Sistem</div>
+              <div class="welcome-sub">Konfigurasi EduPortal dan informasi sekolah</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path
+                  d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
+                </path>
+              </svg>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card">
+              <div class="section-title" style="margin-bottom:16px;">Informasi Sekolah</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama
+                    Sekolah</label><input type="text" placeholder="Nama sekolah..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">NPSN</label><input
+                    type="text" placeholder="Nomor NPSN..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Tahun
+                    Ajaran</label><input type="text" placeholder="Contoh: 2025/2026"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Alamat</label><textarea
+                    placeholder="Alamat sekolah..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:70px;resize:vertical;font-family:inherit;"></textarea>
+                </div>
+                <button class="btn btn-primary" style="width:100%;"
+                  onclick="showToast('Pengaturan disimpan!','success')">Simpan</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-title" style="margin-bottom:16px;">Status &amp; Pemeliharaan Sistem</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-input);border-radius:var(--radius-md);">
+                  <span style="font-size:.82rem;color:var(--text-secondary);display:flex;align-items:center;"><span
+                      style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:8px;"></span>
+                    Server EduPortal</span><span
+                    style="font-size:.78rem;color:var(--success);font-weight:600;">Online</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-input);border-radius:var(--radius-md);">
+                  <span style="font-size:.82rem;color:var(--text-secondary);display:flex;align-items:center;"><span
+                      style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:8px;"></span>
+                    Database MySQL</span><span
+                    style="font-size:.78rem;color:var(--success);font-weight:600;">Terhubung</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-input);border-radius:var(--radius-md);">
+                  <span style="font-size:.82rem;color:var(--text-secondary);display:flex;align-items:center;"><span
+                      style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-right:8px;"></span>
+                    Penyimpanan</span><span style="font-size:.78rem;color:var(--warning);font-weight:600;">—</span>
+                </div>
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-input);border-radius:var(--radius-md);">
+                  <span style="font-size:.82rem;color:var(--text-secondary);display:flex;align-items:center;"><span
+                      style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:8px;"></span>
+                    Backup Terakhir</span><span
+                    style="font-size:.78rem;color:var(--text-muted);font-weight:600;">—</span></div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-ghost btn-sm" onclick="showToast('Backup dimulai...','info')">Backup
+                  Sekarang</button>
+                <button class="btn btn-ghost btn-sm" onclick="showToast('Cache berhasil dibersihkan!','success')">Clear
+                  Cache</button>
+                <button class="btn btn-danger btn-sm" onclick="showToast('Mode maintenance diaktifkan!','warning')">Mode
+                  Maintenance</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ BUKU INDUK ═══ -->
+        <section class="page-section" data-page="buku-induk" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(6,182,212,0.15),rgba(79,70,229,0.08));border-color:rgba(6,182,212,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Buku Induk Siswa</div>
+              <div class="welcome-sub">Manajemen database profil detail siswa</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Direktori Buku Induk</div>
+                <div class="section-subtitle">Pilih kelas dan cari siswa untuk melengkapi profil</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <select id="biKelasFilter" onchange="biLoadSiswa()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option value="">Semua Kelas</option>
+                  <option value="VII">Kelas VII</option>
+                  <option value="VIII">Kelas VIII</option>
+                  <option value="IX">Kelas IX</option>
+                </select>
+                <input type="text" id="biSearchInput" oninput="biFilterSiswa()" placeholder="Cari nama / NIS..."
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;width:200px;" />
+              </div>
+            </div>
+
+            <div class="table-wrap" style="margin-top: 14px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>NIS</th>
+                    <th>NISN</th>
+                    <th>Nama Lengkap</th>
+                    <th>Kelas</th>
+                    <th>L/P</th>
+                    <th>Tempat, Tgl Lahir</th>
+                    <th>Orang Tua / Wali</th>
+                    <th style="text-align:right;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="biTableBody">
+                  <tr>
+                    <td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Memuat data...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="../../js/dashboard.js?v=1.0.1"></script>
+  <script>
+    'use strict';
+
+    /* ═══ ADMIN STAT CARDS ═══ */
+    function updateAdminStats() {
+      const allSiswa = getAllSiswaData();
+      const totalSiswa = Object.values(allSiswa).reduce((s, a) => s + a.length, 0);
+      const el = document.querySelector('[data-page="dashboard"] .stat-card.blue > .stat-value');
+      if (el) el.textContent = totalSiswa;
+      const el2 = document.querySelector('[data-page="siswa"] .stat-card.blue .stat-value');
+      if (el2) el2.textContent = totalSiswa;
+
+      // Update Guru Stats
+      const allGuru = getAllGuruData();
+      const totalGuru = allGuru.length;
+      const elGuruDash = document.getElementById('dashTotalGuru');
+      if (elGuruDash) elGuruDash.textContent = totalGuru;
+      const elGuruList = document.getElementById('guruTotalGuru');
+      if (elGuruList) elGuruList.textContent = totalGuru;
+      const elGuruAktif = document.getElementById('guruAktifGuru');
+      if (elGuruAktif) elGuruAktif.textContent = totalGuru;
+    }
+
+    function getAllSiswaData() {
+      try { return JSON.parse(localStorage.getItem('edu_siswa_data')) || {}; } catch (e) { return {}; }
+    }
+    function saveAllSiswaData(data) {
+      localStorage.setItem('edu_siswa_data', JSON.stringify(data));
+    }
+
+    /* ═══ DATA GURU ADMIN ═══ */
+    function getAllGuruData() {
+      try { return JSON.parse(localStorage.getItem('edu_guru_data')) || []; } catch (e) { return []; }
+    }
+
+    function renderDataGuruAdmin() {
+      const container = document.getElementById('dataGuruAdminTable');
+      if (!container) return;
+      const cari = (document.getElementById('cariGuru')?.value || '').toLowerCase();
+      const allData = getAllGuruData();
+      let rows = [];
+      allData.forEach(g => {
+        if (cari && !g.nama.toLowerCase().includes(cari) && !g.nip.includes(cari) && !g.email.toLowerCase().includes(cari)) return;
+        rows.push(g);
+      });
+      if (rows.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada data guru. Klik "Tambah Guru" untuk menambahkan data.</div></div>';
+        return;
+      }
+      container.innerHTML = `<div style="overflow-x:auto;"><table class="table"><thead><tr>
+    <th>No</th><th>NUPTK</th><th>Nama Lengkap</th><th>Mata Pelajaran</th><th>Email</th><th>No. HP</th><th style="text-align:right;">Aksi</th>
+  </tr></thead><tbody>
+    ${rows.map((g, i) => `<tr>
+      <td style="color:var(--text-muted);">${i + 1}</td>
+      <td style="color:var(--text-muted);">${g.nip || '—'}</td>
+      <td style="font-weight:600;">${g.nama}</td>
+      <td><span style="padding:3px 10px;border-radius:99px;font-size:.72rem;font-weight:700;background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3);">${g.mata_pelajaran || '—'}</span></td>
+      <td style="color:var(--text-muted);">${g.email || '—'}</td>
+      <td style="color:var(--text-muted);">${g.no_hp || '—'}</td>
+      <td style="text-align:right;">
+        <button onclick="showFormEditGuru(${g.id})" style="padding:4px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid var(--primary-light);background:transparent;color:var(--primary-light);cursor:pointer;">Edit</button>
+      </td>
+    </tr>`).join('')}
+  </tbody></table></div>`;
+      updateAdminStats();
+    }
+
+    function showFormTambahGuru() {
+      let modal = document.getElementById('modalTambahGuru');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalTambahGuru';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:420px;width:100%;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+    <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-bottom:20px;">Tambah Guru Baru</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">NUPTK</label>
+        <input type="text" id="newGuruNUPTK" placeholder="Nomor Unik Pendidik (16 digit)..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama Lengkap</label>
+        <input type="text" id="newGuruNama" placeholder="Nama lengkap guru..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Email</label>
+        <input type="email" id="newGuruEmail" placeholder="Email aktif..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Mata Pelajaran</label>
+        <select id="newGuruMapel" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;cursor:pointer;">
+          <option value="">-- Pilih Mata Pelajaran --</option>
+          <option>TIK</option><option>Matematika</option><option>Seni Rupa</option>
+          <option>Qiraati</option><option>Bahasa Indonesia</option><option>IPS</option>
+          <option>PAI</option><option>Bahasa Inggris</option><option>Bahasa Arab</option>
+          <option>Fiqih dan Aqidah</option><option>IPA</option>
+        </select></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">No. HP</label>
+        <input type="tel" id="newGuruNoHp" placeholder="No. HP aktif..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('modalTambahGuru').style.display='none'">Batal</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="simpanGuruBaru()">Simpan</button>
+      </div>
+    </div>
+  </div>`;
+      modal.style.display = 'flex';
+    }
+
+    function simpanGuruBaru() {
+      const nip            = document.getElementById('newGuruNUPTK')?.value.trim();
+      const nama           = document.getElementById('newGuruNama')?.value.trim();
+      const email          = document.getElementById('newGuruEmail')?.value.trim();
+      const mata_pelajaran = document.getElementById('newGuruMapel')?.value;
+      const no_hp          = document.getElementById('newGuruNoHp')?.value.trim();
+      if (!nip)  { showToast('NUPTK wajib diisi!', 'warning'); return; }
+      if (!nama) { showToast('Nama wajib diisi!', 'warning'); return; }
+      if (!email){ showToast('Email wajib diisi!', 'warning'); return; }
+      if (!mata_pelajaran) { showToast('Pilih mata pelajaran!', 'warning'); return; }
+
+      const btn = document.querySelector('button[onclick="simpanGuruBaru()"]');
+      if (btn) btn.disabled = true;
+
+      fetch('../../api/save_guru_manual.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nip, nama, email, no_hp, mata_pelajaran })
+      })
+        .then(async res => {
+          const text = await res.text();
+          try { return JSON.parse(text); }
+          catch (e) { throw new Error(text || 'Respon server kosong'); }
+        })
+        .then(data => {
+          if (btn) btn.disabled = false;
+          if (data.status === 'success') {
+            document.getElementById('modalTambahGuru').style.display = 'none';
+            showToast(`Guru ${nama} (${mata_pelajaran}) berhasil ditambahkan!`, 'success');
+            syncDatabaseWithLocalStorage();
+          } else {
+            showToast('Gagal: ' + data.message, 'error');
+          }
+        })
+        .catch(err => {
+          if (btn) btn.disabled = false;
+          showToast('Gagal: ' + err.message.slice(0, 150), 'error');
+        });
+    }
+
+    function showFormEditGuru(id) {
+      const allGuru = getAllGuruData();
+      const guru = allGuru.find(g => g.id == id);
+      if (!guru) {
+        showToast('Data guru tidak ditemukan!', 'error');
+        return;
+      }
+
+      let modal = document.getElementById('modalEditGuru');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalEditGuru';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        document.body.appendChild(modal);
+      }
+
+      const mapelList = [
+        'TIK', 'Matematika', 'Seni Rupa', 'Qiraati', 'Bahasa Indonesia',
+        'IPS', 'PAI', 'Bahasa Inggris', 'Bahasa Arab', 'Fiqih dan Aqidah', 'IPA'
+      ];
+
+      const optionsHtml = mapelList.map(m =>
+        `<option value="${m}" ${guru.mata_pelajaran === m ? 'selected' : ''}>${m}</option>`
+      ).join('');
+
+      modal.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:420px;width:100%;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+    <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-bottom:20px;">Edit Data Guru</div>
+    <input type="hidden" id="editGuruId" value="${guru.id}"/>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">NUPTK</label>
+        <input type="text" id="editGuruNUPTK" value="${guru.nip}" placeholder="Nomor Unik Pendidik (16 digit)..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama Lengkap</label>
+        <input type="text" id="editGuruNama" value="${guru.nama}" placeholder="Nama lengkap guru..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Email</label>
+        <input type="email" id="editGuruEmail" value="${guru.email}" placeholder="Email aktif..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Mata Pelajaran</label>
+        <select id="editGuruMapel" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;cursor:pointer;">
+          <option value="">-- Pilih Mata Pelajaran --</option>
+          ${optionsHtml}
+        </select></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">No. HP</label>
+        <input type="tel" id="editGuruNoHp" value="${guru.no_hp}" placeholder="No. HP aktif..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div style="padding:10px 0 4px;border-top:1px solid var(--border);margin-top:4px;">
+        <button style="width:100%;padding:7px 12px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);border-radius:8px;color:#fbbf24;font-size:.75rem;font-weight:700;cursor:pointer;" onclick="resetPasswordAdmin(document.getElementById('editGuruId').value,'guru','Guru')">🔑 Reset Password ke Default (pbresetpass)</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('modalEditGuru').style.display='none'">Batal</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="simpanEditGuru()">Simpan</button>
+      </div>
+    </div>
+  </div>`;
+      modal.style.display = 'flex';
+    }
+
+    function simpanEditGuru() {
+      const id             = document.getElementById('editGuruId')?.value;
+      const nip            = document.getElementById('editGuruNUPTK')?.value.trim();
+      const nama           = document.getElementById('editGuruNama')?.value.trim();
+      const email          = document.getElementById('editGuruEmail')?.value.trim();
+      const mata_pelajaran = document.getElementById('editGuruMapel')?.value;
+      const no_hp          = document.getElementById('editGuruNoHp')?.value.trim();
+
+      if (!id)   { showToast('ID guru tidak valid!', 'error'); return; }
+      if (!nip)  { showToast('NUPTK wajib diisi!', 'warning'); return; }
+      if (!nama) { showToast('Nama wajib diisi!', 'warning'); return; }
+      if (!email){ showToast('Email wajib diisi!', 'warning'); return; }
+      if (!mata_pelajaran) { showToast('Pilih mata pelajaran!', 'warning'); return; }
+
+      const btn = document.querySelector('button[onclick="simpanEditGuru()"]');
+      if (btn) btn.disabled = true;
+
+      fetch('../../api/update_guru_manual.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, nip, nama, email, no_hp, mata_pelajaran })
+      })
+        .then(async res => {
+          const text = await res.text();
+          try { return JSON.parse(text); }
+          catch (e) { throw new Error(text || 'Respon server kosong'); }
+        })
+        .then(data => {
+          if (btn) btn.disabled = false;
+          if (data.status === 'success') {
+            document.getElementById('modalEditGuru').style.display = 'none';
+            showToast(`Data Guru ${nama} berhasil diperbarui!`, 'success');
+            syncDatabaseWithLocalStorage();
+          } else {
+            showToast('Gagal: ' + data.message, 'error');
+          }
+        })
+        .catch(err => {
+          if (btn) btn.disabled = false;
+          showToast('Gagal: ' + err.message.slice(0, 150), 'error');
+        });
+    }
+
+    function hapusGuruAdmin(nip) {
+      showToast('🚫 Penghapusan data guru hanya dapat dilakukan oleh Superadmin.', 'error');
+    }
+
+    function resetPasswordAdmin(id, role, label) {
+      if (!id) { showToast('ID tidak valid!', 'error'); return; }
+      if (!confirm(`Reset password ${label} ini menjadi "pbresetpass"? Informasikan kepada yang bersangkutan untuk segera mengganti password setelah login.`)) return;
+      fetch('../../api/reset_password.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, role })
+      })
+        .then(async res => {
+          const text = await res.text();
+          try { return JSON.parse(text); }
+          catch(e) { throw new Error(text || 'Respon server kosong'); }
+        })
+        .then(data => {
+          if (data.status === 'success') {
+            showToast('✅ ' + data.message, 'success');
+          } else {
+            showToast('Gagal: ' + data.message, 'error');
+          }
+        })
+        .catch(err => showToast('Gagal: ' + err.message.slice(0,150), 'error'));
+    }
+
+    /* ═══ MANAJEMEN AKUN ADMIN ═══ */
+    function renderDataAkunAdmin() {
+      const container = document.getElementById('dataAkunAdminTable');
+      if (!container) return;
+
+      const allSiswa = getAllSiswaData();
+      const allGuru = getAllGuruData();
+      const filterRole = document.getElementById('filterRoleAkun')?.value || 'Semua Role';
+
+      let accounts = [];
+
+      // Add Admin (since it's demo admin)
+      accounts.push({
+        nama: 'Admin Utama',
+        email: 'admin@demo.com',
+        role: 'admin',
+        nis_nip: '—',
+        status: 'Aktif'
+      });
+
+      // Add Teachers
+      allGuru.forEach(g => {
+        accounts.push({
+          id: g.id,
+          nama: g.nama,
+          email: g.email,
+          role: 'guru',
+          nis_nip: g.nip || '—',
+          status: 'Aktif'
+        });
+      });
+
+      // Add Students
+      Object.entries(allSiswa).forEach(([kelas, list]) => {
+        list.forEach(s => {
+          accounts.push({
+            id: s.id,
+            nama: s.nama,
+            email: s.email || `${s.nis}@pb-learning.com`,
+            role: 'siswa',
+            nis_nip: s.nis || '—',
+            status: 'Aktif'
+          });
+        });
+      });
+
+      // Filter by role
+      if (filterRole !== 'Semua Role') {
+        accounts = accounts.filter(a => a.role.toLowerCase() === filterRole.toLowerCase());
+      }
+
+      // Update Account Stats
+      const totalAkunEl = document.querySelector('[data-page="akun"] .stat-card.blue .stat-value');
+      if (totalAkunEl) totalAkunEl.textContent = accounts.length;
+
+      const aktifAkunEl = document.querySelector('[data-page="akun"] .stat-card.green .stat-value');
+      if (aktifAkunEl) aktifAkunEl.textContent = accounts.length;
+
+      if (accounts.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Tidak ada akun ditemukan.</div></div>';
+        return;
+      }
+
+      container.innerHTML = `<div style="overflow-x:auto;"><table class="table"><thead><tr>
+    <th>No</th><th>Nama Pengguna</th><th>Email / Username</th><th>Role</th><th>NIS / NUPTK</th><th>Status</th><th style="text-align:right;">Aksi</th>
+  </tr></thead><tbody>
+    ${accounts.map((a, i) => `<tr>
+      <td style="color:var(--text-muted);">${i + 1}</td>
+      <td style="font-weight:600;">${a.nama}</td>
+      <td style="color:var(--text-muted);">${a.email}</td>
+      <td><span class="badge ${a.role === 'admin' ? 'badge-muted' : a.role === 'guru' ? 'badge-warning' : 'badge-success'}">${capitalizeRole(a.role)}</span></td>
+      <td style="color:var(--text-muted);">${a.nis_nip}</td>
+      <td><span class="badge badge-success">${a.status}</span></td>
+      <td style="text-align:right;">
+        ${a.role === 'admin' ? '—' : `
+          <div style="display:flex;gap:6px;justify-content:flex-end;align-items:center;">
+            <button onclick="editAkunAdmin(${a.id}, '${a.role}')" style="padding:4px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid var(--primary-light);background:transparent;color:var(--primary-light);cursor:pointer;">Edit</button>
+            <button onclick="hapusAkunAdmin('${a.nis_nip}', '${a.role}')" style="padding:4px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid var(--danger);background:transparent;color:var(--danger);cursor:pointer;">Hapus</button>
+          </div>
+        `}
+      </td>
+    </tr>`).join('')}
+  </tbody></table></div>`;
+    }
+
+    function editAkunAdmin(id, role) {
+      if (role === 'siswa') {
+        showFormEditSiswa(id);
+      } else if (role === 'guru') {
+        showFormEditGuru(id);
+      }
+    }
+
+    function hapusAkunAdmin(nis_nip, role) {
+      if (role === 'siswa') {
+        const allSiswa = getAllSiswaData();
+        let foundKelas = '';
+        for (const [kelas, list] of Object.entries(allSiswa)) {
+          if (list.some(s => s.nis === nis_nip)) {
+            foundKelas = kelas;
+            break;
+          }
+        }
+        if (foundKelas) {
+          hapusSiswaAdmin(nis_nip, foundKelas);
+        } else {
+          showToast('Siswa tidak ditemukan', 'error');
+        }
+      } else if (role === 'guru') {
+        hapusGuruAdmin(nis_nip);
+      }
+    }
+
+    function showFormTambahAkun() {
+      let modal = document.getElementById('modalTambahAkunChooser');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalTambahAkunChooser';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:360px;width:100%;text-align:center;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+    <div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);margin-bottom:12px;">Pilih Jenis Akun</div>
+    <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:20px;">Silakan pilih jenis peran akun yang ingin Anda buat:</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button class="btn btn-primary" onclick="goToAddAccount('siswa')">Akun Siswa</button>
+      <button class="btn btn-primary" onclick="goToAddAccount('guru')" style="background:linear-gradient(135deg, var(--secondary), var(--primary));">Akun Guru</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('modalTambahAkunChooser').style.display='none'">Batal</button>
+    </div>
+  </div>`;
+      modal.style.display = 'flex';
+    }
+
+    function goToAddAccount(role) {
+      document.getElementById('modalTambahAkunChooser').style.display = 'none';
+      if (role === 'siswa') {
+        profileNavTo('siswa');
+        setTimeout(showFormTambahSiswa, 300);
+      } else {
+        profileNavTo('guru');
+        setTimeout(showFormTambahGuru, 300);
+      }
+    }
+
+    /* ═══ DATA SISWA ADMIN ═══ */
+    function renderDataSiswaAdmin() {
+      const container = document.getElementById('dataSiswaAdminTable');
+      if (!container) return;
+      const filterKelas = document.getElementById('filterKelasSiswaAdmin')?.value || '';
+      const cari = (document.getElementById('cariSiswa')?.value || '').toLowerCase();
+      const allData = getAllSiswaData();
+      let rows = [];
+      Object.entries(allData).forEach(([kelas, list]) => {
+        if (filterKelas && kelas !== filterKelas) return;
+        list.forEach(s => {
+          if (cari && !s.nama.toLowerCase().includes(cari) && !s.nis.includes(cari)) return;
+          rows.push({ ...s, kelas });
+        });
+      });
+      if (rows.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada data siswa. Klik "Tambah Siswa" untuk menambahkan.</div></div>';
+        return;
+      }
+      container.innerHTML = `<div style="overflow-x:auto;"><table class="table"><thead><tr>
+    <th>No</th><th>NIS</th><th>Nama Siswa</th><th>Kelas</th><th style="text-align:right;">Aksi</th>
+  </tr></thead><tbody>
+    ${rows.map((s, i) => `<tr>
+      <td style="color:var(--text-muted);">${i + 1}</td>
+      <td style="color:var(--text-muted);">${s.nis}</td>
+      <td style="font-weight:600;">${s.nama}</td>
+      <td><span class="badge badge-success">${s.kelas}</span></td>
+      <td style="text-align:right;">
+        <button onclick="showFormEditSiswa(${s.id})" style="padding:4px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid var(--primary-light);background:transparent;color:var(--primary-light);cursor:pointer;margin-right:5px;">Edit</button>
+        <button onclick="hapusSiswaAdmin('${s.nis}','${s.kelas}')" style="padding:4px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid var(--danger);background:transparent;color:var(--danger);cursor:pointer;">Hapus</button>
+      </td>
+    </tr>`).join('')}
+  </tbody></table></div>`;
+      updateAdminStats();
+    }
+
+    function showFormTambahSiswa() {
+      let modal = document.getElementById('modalTambahSiswa');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalTambahSiswa';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:400px;width:100%;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+    <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-bottom:20px;">Tambah Siswa Baru</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">NIS</label>
+        <input type="text" id="newSiswaNIS" placeholder="Nomor Induk Siswa..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama Lengkap</label>
+        <input type="text" id="newSiswaNama" placeholder="Nama lengkap siswa..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Kelas</label>
+        <select id="newSiswaKelas" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+          <option value="">-- Pilih Kelas --</option>
+          <option>VII</option><option>VIII</option><option>IX</option>
+        </select></div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('modalTambahSiswa').style.display='none'">Batal</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="simpanSiswaBaru()">Simpan</button>
+      </div>
+    </div>
+  </div>`;
+      modal.style.display = 'flex';
+    }
+
+    function triggerExcelUpload() {
+      document.getElementById('excelFileInput').click();
+    }
+
+    function handleExcelUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('excel_file', file);
+
+      showToast('Memproses dan mengimpor file...', 'info');
+
+      fetch('../../api/import_excel.php', {
+        method: 'POST',
+        body: formData
+      })
+        .then(async res => {
+          const text = await res.text();
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            throw new Error(text || 'Respon server kosong');
+          }
+        })
+        .then(data => {
+          if (data.status === 'success') {
+            showToast(data.message, 'success');
+            // Sync local storage and re-render
+            syncDatabaseWithLocalStorage();
+          } else {
+            showToast('Gagal: ' + data.message, 'error');
+          }
+          document.getElementById('excelFileInput').value = '';
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('Gagal: ' + err.message.slice(0, 150), 'error');
+          document.getElementById('excelFileInput').value = '';
+        });
+    }
+
+    function simpanSiswaBaru() {
+      const nis = document.getElementById('newSiswaNIS')?.value.trim();
+      const nama = document.getElementById('newSiswaNama')?.value.trim();
+      const kelas = document.getElementById('newSiswaKelas')?.value;
+      if (!nis) { showToast('NIS wajib diisi!', 'warning'); return; }
+      if (!nama) { showToast('Nama wajib diisi!', 'warning'); return; }
+      if (!kelas) { showToast('Pilih kelas terlebih dahulu!', 'warning'); return; }
+
+      // Disable button
+      const btn = document.querySelector('button[onclick="simpanSiswaBaru()"]');
+      if (btn) btn.disabled = true;
+
+      // Kirim ke backend
+      fetch('../../api/save_siswa_manual.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nis, nama, kelas })
+      })
+        .then(async res => {
+          const text = await res.text();
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            throw new Error(text || 'Respon server kosong');
+          }
+        })
+        .then(data => {
+          if (btn) btn.disabled = false;
+          if (data.status === 'success') {
+            document.getElementById('modalTambahSiswa').style.display = 'none';
+            showToast(`Siswa ${nama} berhasil ditambahkan ke kelas ${kelas}!`, 'success');
+
+            // Sync local storage and re-render
+            syncDatabaseWithLocalStorage();
+          } else {
+            showToast('Gagal: ' + data.message, 'error');
+          }
+        })
+        .catch(err => {
+          if (btn) btn.disabled = false;
+          console.error(err);
+          showToast('Gagal: ' + err.message.slice(0, 150), 'error');
+        });
+    }
+
+    function showFormEditSiswa(id) {
+      const allData = getAllSiswaData();
+      let foundSiswa = null;
+      let foundKelas = "";
+      for (const [kelas, list] of Object.entries(allData)) {
+        const found = list.find(s => s.id == id);
+        if (found) {
+          foundSiswa = found;
+          foundKelas = kelas;
+          break;
+        }
+      }
+
+      if (!foundSiswa) {
+        showToast('Data siswa tidak ditemukan!', 'error');
+        return;
+      }
+
+      let modal = document.getElementById('modalEditSiswa');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalEditSiswa';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        document.body.appendChild(modal);
+      }
+
+      modal.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:400px;width:100%;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+    <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-bottom:20px;">Edit Data Siswa</div>
+    <input type="hidden" id="editSiswaId" value="${foundSiswa.id}"/>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">NIS</label>
+        <input type="text" id="editSiswaNIS" value="${foundSiswa.nis}" placeholder="Nomor Induk Siswa..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama Lengkap</label>
+        <input type="text" id="editSiswaNama" value="${foundSiswa.nama}" placeholder="Nama lengkap siswa..." style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;"/></div>
+      <div><label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Kelas</label>
+        <select id="editSiswaKelas" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+          <option value="">-- Pilih Kelas --</option>
+          <option ${foundKelas === 'VII' ? 'selected' : ''}>VII</option>
+          <option ${foundKelas === 'VIII' ? 'selected' : ''}>VIII</option>
+          <option ${foundKelas === 'IX' ? 'selected' : ''}>IX</option>
+        </select></div>
+      <div style="padding:10px 0 4px;border-top:1px solid var(--border);margin-top:4px;">
+        <button style="width:100%;padding:7px 12px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);border-radius:8px;color:#fbbf24;font-size:.75rem;font-weight:700;cursor:pointer;" onclick="resetPasswordAdmin(document.getElementById('editSiswaId').value,'siswa','Siswa')">🔑 Reset Password ke Default (pbresetpass)</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('modalEditSiswa').style.display='none'">Batal</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="simpanEditSiswa()">Simpan</button>
+      </div>
+    </div>
+  </div>`;
+      modal.style.display = 'flex';
+    }
+
+    function simpanEditSiswa() {
+      const id    = document.getElementById('editSiswaId')?.value;
+      const nis   = document.getElementById('editSiswaNIS')?.value.trim();
+      const nama  = document.getElementById('editSiswaNama')?.value.trim();
+      const kelas = document.getElementById('editSiswaKelas')?.value;
+
+      if (!id)    { showToast('ID siswa tidak valid!', 'error'); return; }
+      if (!nis)   { showToast('NIS wajib diisi!', 'warning'); return; }
+      if (!nama)  { showToast('Nama wajib diisi!', 'warning'); return; }
+      if (!kelas) { showToast('Pilih kelas!', 'warning'); return; }
+
+      const btn = document.querySelector('button[onclick="simpanEditSiswa()"]');
+      if (btn) btn.disabled = true;
+
+      fetch('../../api/update_siswa_manual.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, nis, nama, kelas })
+      })
+        .then(async res => {
+          const text = await res.text();
+          try { return JSON.parse(text); }
+          catch (e) { throw new Error(text || 'Respon server kosong'); }
+        })
+        .then(data => {
+          if (btn) btn.disabled = false;
+          if (data.status === 'success') {
+            document.getElementById('modalEditSiswa').style.display = 'none';
+            showToast(`Data Siswa ${nama} berhasil diperbarui!`, 'success');
+            syncDatabaseWithLocalStorage();
+          } else {
+            showToast('Gagal: ' + data.message, 'error');
+          }
+        })
+        .catch(err => {
+          if (btn) btn.disabled = false;
+          showToast('Gagal: ' + err.message.slice(0, 150), 'error');
+        });
+    }
+
+    function hapusSiswaAdmin(nis, kelas) {
+      if (!confirm('Hapus siswa ini dari daftar?')) return;
+
+      // Kirim ke backend
+      fetch('../../api/delete_siswa_manual.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nis })
+      })
+        .then(async res => {
+          const text = await res.text();
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            throw new Error(text || 'Respon server kosong');
+          }
+        })
+        .then(data => {
+          if (data.status === 'success') {
+            showToast('Siswa berhasil dihapus dari database!', 'success');
+
+            // Sync local storage and re-render
+            syncDatabaseWithLocalStorage();
+          } else {
+            showToast('Gagal: ' + data.message, 'error');
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('Gagal: ' + err.message.slice(0, 150), 'error');
+        });
+    }
+
+    /* ═══ JADWAL ADMIN ═══ */
+    function simpanJadwal() {
+      const hari = document.getElementById('jadwalHari')?.value;
+      const jam = document.getElementById('jadwalJam')?.value.trim();
+      const mapel = document.getElementById('jadwalMapel')?.value.trim();
+      const kelas = document.getElementById('jadwalKelas')?.value;
+      const ruang = document.getElementById('jadwalRuang')?.value.trim();
+      if (!hari || !mapel || !kelas) { showToast('Hari, mata pelajaran, dan kelas wajib diisi!', 'warning'); return; }
+      let jadwal = [];
+      try { jadwal = JSON.parse(localStorage.getItem('edu_jadwal')) || []; } catch (e) { }
+      jadwal.push({ id: Date.now(), hari, jam, mapel, kelas, ruang });
+      localStorage.setItem('edu_jadwal', JSON.stringify(jadwal));
+      // Reset form
+      ['jadwalHari', 'jadwalKelas'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      ['jadwalJam', 'jadwalMapel', 'jadwalRuang'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      showToast(`Jadwal ${mapel} kelas ${kelas} berhasil ditambahkan!`, 'success');
+      renderJadwalAdmin();
+    }
+
+    function renderJadwalAdmin() {
+      const container = document.getElementById('jadwalAdminList');
+      if (!container) return;
+      let jadwal = [];
+      try { jadwal = JSON.parse(localStorage.getItem('edu_jadwal')) || []; } catch (e) { }
+      const filter = document.getElementById('filterJadwalKelas')?.value || '';
+      if (filter) jadwal = jadwal.filter(j => j.kelas === filter);
+      if (jadwal.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada jadwal yang dibuat.</div></div>';
+        return;
+      }
+      const hariOrder = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+      jadwal.sort((a, b) => hariOrder.indexOf(a.hari) - hariOrder.indexOf(b.hari));
+      container.innerHTML = jadwal.map(j => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:8px;background:var(--bg-input);">
+      <div>
+        <div style="font-weight:700;font-size:.85rem;">${j.hari} · ${j.jam || '-'}</div>
+        <div style="font-size:.78rem;color:var(--text-muted);">${j.mapel} · <span class="badge badge-success" style="font-size:.65rem;">${j.kelas}</span> · ${j.ruang || '-'}</div>
+      </div>
+      <button onclick="hapusJadwal(${j.id})" style="padding:5px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid var(--danger);background:transparent;color:var(--danger);cursor:pointer;">Hapus</button>
+    </div>`).join('');
+    }
+
+    function hapusJadwal(id) {
+      let jadwal = [];
+      try { jadwal = JSON.parse(localStorage.getItem('edu_jadwal')) || []; } catch (e) { }
+      jadwal = jadwal.filter(j => j.id !== id);
+      localStorage.setItem('edu_jadwal', JSON.stringify(jadwal));
+      showToast('Jadwal berhasil dihapus!', 'success');
+      renderJadwalAdmin();
+    }
+
+    /* ═══ PENGUMUMAN ADMIN ═══ */
+    function publikasikanPengumuman() {
+      const judul = document.getElementById('pengJudul')?.value.trim();
+      const kategori = document.getElementById('pengKategori')?.value;
+      const target = document.getElementById('pengTarget')?.value;
+      const isi = document.getElementById('pengIsi')?.value.trim();
+      if (!judul) { showToast('Judul pengumuman wajib diisi!', 'warning'); return; }
+      if (!isi) { showToast('Isi pengumuman wajib diisi!', 'warning'); return; }
+      let pengumuman = [];
+      try { pengumuman = JSON.parse(localStorage.getItem('edu_pengumuman')) || []; } catch (e) { }
+      pengumuman.unshift({
+        id: Date.now(), judul, kategori, target, isi,
+        tanggal: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+        waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+      });
+      localStorage.setItem('edu_pengumuman', JSON.stringify(pengumuman));
+      // Reset form
+      ['pengJudul', 'pengIsi'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      showToast(`Pengumuman "${judul}" berhasil dipublikasikan!`, 'success');
+      renderPengumumanAktif();
+    }
+
+    function renderPengumumanAktif() {
+      const container = document.getElementById('pengumumanAktifList');
+      if (!container) return;
+      let pengumuman = [];
+      try { pengumuman = JSON.parse(localStorage.getItem('edu_pengumuman')) || []; } catch (e) { }
+      if (pengumuman.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada pengumuman yang dipublikasikan</div></div>';
+        return;
+      }
+      const catColor = { Akademik: 'var(--primary)', 'Lomba/Event': 'var(--warning)', Libur: 'var(--success)', 'Info Umum': 'var(--info,var(--secondary))' };
+      container.innerHTML = pengumuman.map(p => `
+    <div style="border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;margin-bottom:10px;background:var(--bg-input);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;">
+        <div>
+          <div style="font-weight:700;font-size:.87rem;color:var(--text-primary);">${p.judul}</div>
+          <div style="font-size:.7rem;color:var(--text-muted);margin-top:2px;">${p.tanggal} · <span style="color:${catColor[p.kategori] || 'var(--primary)'};">${p.kategori}</span> · Target: ${p.target}</div>
+        </div>
+        <button onclick="hapusPengumuman(${p.id})" style="padding:4px 8px;font-size:.68rem;font-weight:700;border-radius:6px;border:1px solid var(--danger);background:transparent;color:var(--danger);cursor:pointer;flex-shrink:0;">Hapus</button>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5;">${p.isi}</div>
+    </div>`).join('');
+    }
+
+    function hapusPengumuman(id) {
+      let pengumuman = [];
+      try { pengumuman = JSON.parse(localStorage.getItem('edu_pengumuman')) || []; } catch (e) { }
+      pengumuman = pengumuman.filter(p => p.id !== id);
+      localStorage.setItem('edu_pengumuman', JSON.stringify(pengumuman));
+      showToast('Pengumuman dihapus!', 'success');
+      renderPengumumanAktif();
+    }
+
+    function hapusSemuaPengumuman() {
+      if (!confirm('Hapus semua pengumuman?')) return;
+      localStorage.removeItem('edu_pengumuman');
+      showToast('Semua pengumuman telah dihapus!', 'success');
+      renderPengumumanAktif();
+    }
+
+    /* ═══ INIT ═══ */
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDataSiswaAdmin();
+      renderDataGuruAdmin();
+      renderDataAkunAdmin();
+      renderJadwalAdmin();
+      renderPengumumanAktif();
+      updateAdminStats();
+      biLoadSiswa();
+    });
+
+    /* ════════════════════════════════════════════════
+       MANAJEMEN BUKU INDUK
+    ════════════════════════════════════════════════ */
+
+    // Buku Induk: Load students from database
+    let biCachedSiswa = [];
+    function biLoadSiswa() {
+      const kelas = document.getElementById('biKelasFilter').value;
+      const body = document.getElementById('biTableBody');
+      if (!body) return;
+      body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Memuat data...</td></tr>';
+
+      let url = '../../api/get_buku_induk.php';
+      if (kelas) {
+        url += '?kelas=' + encodeURIComponent(kelas);
+      }
+
+      fetch(url)
+      .then(res => res.json())
+      .then(resData => {
+        if (resData.status !== 'success' || !Array.isArray(resData.data)) {
+          body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--danger);padding:24px;">Gagal mengambil data.</td></tr>';
+          return;
+        }
+        biCachedSiswa = resData.data;
+        biRenderSiswaTable(biCachedSiswa);
+      })
+      .catch(err => {
+        body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--danger);padding:24px;">Gagal memuat data Buku Induk.</td></tr>';
+      });
+    }
+
+    // Buku Induk: Render table rows
+    function biRenderSiswaTable(list) {
+      const body = document.getElementById('biTableBody');
+      if (!body) return;
+      if (list.length === 0) {
+        body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Tidak ada data siswa ditemukan.</td></tr>';
+        return;
+      }
+      body.innerHTML = list.map((s, index) => {
+        const ttl = (s.tempat_lahir || s.tanggal_lahir) 
+          ? `${s.tempat_lahir || '-'}, ${s.tanggal_lahir || '-'}`
+          : '-';
+        const jk = s.jenis_kelamin || '-';
+        const ortu = (s.nama_ayah || s.nama_ibu) 
+          ? `A: ${s.nama_ayah || '-'}<br>I: ${s.nama_ibu || '-'}`
+          : '-';
+        
+        return `
+          <tr style="font-size: 0.85rem;">
+            <td style="color:var(--text-muted);">${index + 1}</td>
+            <td style="font-weight:700;color:var(--text-secondary);">${s.nis}</td>
+            <td style="color:var(--text-muted);">${s.nisn || '-'}</td>
+            <td style="font-weight:700;color:var(--text-primary);">${s.nama}</td>
+            <td><span class="badge badge-success">${s.kelas}</span></td>
+            <td>${jk}</td>
+            <td style="font-size:0.78rem;color:var(--text-secondary);">${ttl}</td>
+            <td style="font-size:0.75rem;line-height:1.4;color:var(--text-secondary);">${ortu}</td>
+            <td style="text-align:right;">
+              <button class="btn btn-primary btn-sm" onclick="biOpenDetail('${s.nis}')" style="padding:6px 12px;font-size:0.75rem;">Detail</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Buku Induk: Client-side search
+    function biFilterSiswa() {
+      const q = document.getElementById('biSearchInput').value.toLowerCase().trim();
+      if (!q) {
+        biRenderSiswaTable(biCachedSiswa);
+        return;
+      }
+      const filtered = biCachedSiswa.filter(s => 
+        s.nama.toLowerCase().includes(q) || 
+        s.nis.toLowerCase().includes(q)
+      );
+      biRenderSiswaTable(filtered);
+    }
+
+    // Buku Induk: Open student detail modal
+    function biOpenDetail(nis) {
+      let modal = document.getElementById('modalDetailSiswa');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalDetailSiswa';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        document.body.appendChild(modal);
+      }
+
+      modal.innerHTML = `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:12px;">
+            <h3 style="font-size:1.1rem;font-weight:800;color:var(--text-primary);margin:0;">Detail Profil Buku Induk</h3>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('modalDetailSiswa').style.display='none'" style="padding:4px 8px;font-size:1.1rem;line-height:1;border:none;cursor:pointer;">✕</button>
+          </div>
+          <div style="text-align:center;padding:12px;color:var(--text-muted);">Memuat profil...</div>
+        </div>
+      `;
+      modal.style.display = 'flex';
+
+      fetch(`../../api/get_buku_induk.php?nis=${encodeURIComponent(nis)}`)
+      .then(res => res.json())
+      .then(resData => {
+        if (resData.status !== 'success') {
+          modal.querySelector('div').innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:12px;">
+              <h3 style="font-size:1.1rem;font-weight:800;color:var(--text-primary);margin:0;">Detail Profil Buku Induk</h3>
+              <button class="btn btn-ghost btn-sm" onclick="document.getElementById('modalDetailSiswa').style.display='none'" style="padding:4px 8px;font-size:1.1rem;line-height:1;border:none;cursor:pointer;">✕</button>
+            </div>
+            <div style="text-align:center;padding:24px;color:var(--danger);">
+              Gagal memuat profil: ${resData.message}
+            </div>
+          `;
+          return;
+        }
+        const s = resData.data;
+        modal.innerHTML = `
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:12px;">
+              <h3 style="font-size:1.1rem;font-weight:800;color:var(--text-primary);margin:0;">Detail Profil Buku Induk</h3>
+              <button class="btn btn-ghost btn-sm" onclick="document.getElementById('modalDetailSiswa').style.display='none'" style="padding:4px 8px;font-size:1.1rem;line-height:1;border:none;cursor:pointer;">✕</button>
+            </div>
+
+            <form id="biDetailForm" onsubmit="biSimpanDetail(event)" style="display:flex;flex-direction:column;gap:16px;">
+              <!-- Data Akademik Utama -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;background:var(--bg-input);padding:12px;border-radius:10px;border:1px solid var(--border);">
+                <div>
+                  <span style="font-size:0.7rem;color:var(--text-muted);display:block;">Nama Lengkap</span>
+                  <strong style="font-size:0.85rem;color:var(--text-primary);">${s.nama}</strong>
+                </div>
+                <div>
+                  <span style="font-size:0.7rem;color:var(--text-muted);display:block;">Kelas</span>
+                  <strong style="font-size:0.85rem;color:var(--text-primary);">${s.kelas}</strong>
+                </div>
+                <div style="margin-top:6px;">
+                  <span style="font-size:0.7rem;color:var(--text-muted);display:block;">NIS (ID Sistem)</span>
+                  <strong style="font-size:0.85rem;color:var(--text-primary);">${s.nis}</strong>
+                  <input type="hidden" name="nis" value="${s.nis}" />
+                </div>
+                <div style="margin-top:6px;">
+                  <span style="font-size:0.7rem;color:var(--text-muted);display:block;">Email</span>
+                  <span style="font-size:0.8rem;color:var(--text-muted);">${s.email || '-'}</span>
+                </div>
+              </div>
+
+              <!-- Identitas Pribadi -->
+              <div>
+                <h4 style="font-size:0.8rem;font-weight:800;color:var(--primary-light);margin:0 0 10px 0;letter-spacing:0.5px;">I. IDENTITAS PRIBADI SISWA</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">NISN</label>
+                    <input type="text" name="nisn" value="${s.nisn || ''}" placeholder="NISN..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Jenis Kelamin</label>
+                    <select name="jenis_kelamin"
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;">
+                      <option value="">-- Pilih --</option>
+                      <option value="Laki-laki" ${s.jenis_kelamin === 'Laki-laki' ? 'selected' : ''}>Laki-laki</option>
+                      <option value="Perempuan" ${s.jenis_kelamin === 'Perempuan' ? 'selected' : ''}>Perempuan</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Tempat Lahir</label>
+                    <input type="text" name="tempat_lahir" value="${s.tempat_lahir || ''}" placeholder="Tempat..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Tanggal Lahir</label>
+                    <input type="date" name="tanggal_lahir" value="${s.tanggal_lahir || ''}"
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Agama</label>
+                    <input type="text" name="agama" value="${s.agama || ''}" placeholder="Agama..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">No HP Siswa</label>
+                    <input type="tel" name="no_hp_siswa" value="${s.no_hp_siswa || ''}" placeholder="No HP Siswa..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                </div>
+                <div style="margin-top:12px;">
+                  <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Alamat Lengkap</label>
+                  <textarea name="alamat" placeholder="Alamat rumah..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:55px;resize:vertical;font-family:inherit;box-sizing:border-box;">${s.alamat || ''}</textarea>
+                </div>
+              </div>
+
+              <!-- Data Orang Tua -->
+              <div>
+                <h4 style="font-size:0.8rem;font-weight:800;color:var(--primary-light);margin:10px 0 10px 0;letter-spacing:0.5px;">II. DATA ORANG TUA / WALI</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Nama Ayah</label>
+                    <input type="text" name="nama_ayah" value="${s.nama_ayah || ''}" placeholder="Nama Ayah..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Nama Ibu</label>
+                    <input type="text" name="nama_ibu" value="${s.nama_ibu || ''}" placeholder="Nama Ibu..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Pekerjaan Orang Tua</label>
+                    <input type="text" name="pekerjaan_ortu" value="${s.pekerjaan_ortu || ''}" placeholder="Pekerjaan..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">No HP Orang Tua / Wali</label>
+                    <input type="tel" name="no_hp_ortu" value="${s.no_hp_ortu || ''}" placeholder="No HP Ortu..."
+                      style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:12px;margin-top:10px;border-top:1px solid var(--border);padding-top:16px;">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('modalDetailSiswa').style.display='none'" style="flex:1;">Tutup</button>
+                <button type="submit" class="btn btn-primary" style="flex:2;">Simpan Data</button>
+              </div>
+            </form>
+          </div>
+        `;
+      })
+      .catch(err => {
+        modal.querySelector('div').innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:12px;">
+            <h3 style="font-size:1.1rem;font-weight:800;color:var(--text-primary);margin:0;">Detail Profil Buku Induk</h3>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('modalDetailSiswa').style.display='none'" style="padding:4px 8px;font-size:1.1rem;line-height:1;border:none;cursor:pointer;">✕</button>
+          </div>
+          <div style="text-align:center;padding:24px;color:var(--danger);">
+            Gagal memuat profil: Kesalahan jaringan.
+          </div>
+        `;
+      });
+    }
+
+    // Buku Induk: Save student detail form to backend
+    function biSimpanDetail(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((val, key) => {
+        data[key] = val;
+      });
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const origText = submitBtn ? submitBtn.innerHTML : 'Simpan Data';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Menyimpan...';
+      }
+
+      fetch('../../api/save_buku_induk.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(resData => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origText;
+        }
+        if (resData.status === 'success') {
+          showToast(resData.message, 'success');
+          document.getElementById('modalDetailSiswa').style.display = 'none';
+          biLoadSiswa();
+        } else {
+          showToast(resData.message, 'error');
+        }
+      })
+      .catch(err => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origText;
+        }
+        showToast('Gagal menyimpan data ke server.', 'error');
+      });
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Panel Superadmin – PB-Learning. Akses terbatas untuk manajemen darurat." />
+  <title>⚠️ Superadmin Panel – PB-Learning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-main:    #0a0a0f;
+      --bg-card:    #12111a;
+      --bg-input:   #1a1824;
+      --border:     rgba(220,38,38,0.2);
+      --danger:     #dc2626;
+      --danger-light: #ef4444;
+      --danger-glow:  rgba(220,38,38,0.15);
+      --danger-muted: rgba(220,38,38,0.08);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted:   #64748b;
+      --success:    #10b981;
+      --warning:    #f59e0b;
+      --radius:     14px;
+      --shadow:     0 8px 32px rgba(220,38,38,0.15);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background Pattern ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(220,38,38,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(185,28,28,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px; flex-shrink: 0;
+      background: linear-gradient(180deg, #0f0d16 0%, #0a0a12 100%);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 100; padding: 24px 0;
+    }
+
+    .sidebar-brand {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .brand-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; background: var(--danger-muted);
+      border: 1px solid rgba(220,38,38,0.4); border-radius: 99px;
+      font-size: .7rem; font-weight: 800; color: var(--danger-light);
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px;
+    }
+
+    .brand-name {
+      font-size: 1.1rem; font-weight: 900;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+
+    .nav-label {
+      font-size: .65rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .1em;
+      padding: 0 20px; margin-bottom: 8px;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; margin: 2px 12px; border-radius: 10px;
+      cursor: pointer; transition: all .2s;
+      font-size: .85rem; font-weight: 600; color: var(--text-muted);
+      border: none; background: none; width: calc(100% - 24px); text-align: left;
+    }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .nav-item:hover { background: var(--danger-muted); color: var(--danger-light); }
+    .nav-item.active { background: var(--danger-glow); color: var(--danger-light); border: 1px solid rgba(220,38,38,0.25); }
+
+    .sidebar-footer {
+      margin-top: auto; padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .user-chip {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; background: var(--danger-muted);
+      border: 1px solid rgba(220,38,38,0.25); border-radius: 12px;
+    }
+
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .85rem; color: white; flex-shrink: 0;
+    }
+
+    .user-name { font-size: .82rem; font-weight: 700; color: var(--text-primary); }
+    .user-role { font-size: .68rem; color: var(--danger-light); font-weight: 600; }
+
+    /* ── Main ── */
+    .main {
+      margin-left: 260px; flex: 1;
+      padding: 28px 32px;
+      min-height: 100vh;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .page-title {
+      font-size: 1.4rem; font-weight: 900;
+      background: linear-gradient(135deg, #ef4444, #fca5a5);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .warning-banner {
+      background: linear-gradient(135deg, rgba(220,38,38,0.12), rgba(185,28,28,0.06));
+      border: 1px solid rgba(220,38,38,0.3);
+      border-radius: 14px; padding: 16px 20px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px; font-size: .85rem; color: var(--text-secondary);
+    }
+
+    .warning-banner .warn-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--danger-glow); border: 1px solid rgba(220,38,38,0.4);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .warn-title { font-weight: 800; color: var(--danger-light); font-size: .9rem; margin-bottom: 3px; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px; margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 1rem; font-weight: 800; color: var(--text-primary);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .card-count {
+      font-size: .75rem; font-weight: 700;
+      background: var(--danger-glow); border: 1px solid rgba(220,38,38,0.3);
+      color: var(--danger-light); padding: 3px 10px; border-radius: 99px;
+    }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { border-bottom: 1px solid var(--border); }
+    th {
+      padding: 10px 12px; text-align: left;
+      font-size: .72rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    td { padding: 12px; font-size: .84rem; border-bottom: 1px solid rgba(220,38,38,0.07); }
+    tbody tr:hover { background: rgba(220,38,38,0.04); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Mapel Badge ── */
+    .mapel-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 99px;
+      font-size: .7rem; font-weight: 700;
+      background: rgba(124,58,237,0.15); color: #a78bfa;
+      border: 1px solid rgba(124,58,237,0.3);
+    }
+
+    /* ── Buttons ── */
+    .btn-hapus {
+      padding: 5px 14px; border-radius: 8px; font-size: .75rem; font-weight: 700;
+      border: 1px solid var(--danger); background: transparent; color: var(--danger);
+      cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn-hapus:hover { background: var(--danger); color: white; box-shadow: 0 0 12px rgba(220,38,38,0.4); }
+    .btn-hapus:disabled { opacity: .5; cursor: not-allowed; }
+
+    .btn-restore {
+      padding: 5px 14px; border-radius: 8px; font-size: .75rem; font-weight: 700;
+      border: 1px solid var(--success); background: transparent; color: var(--success);
+      cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 5px;
+      margin-right: 6px;
+    }
+    .btn-restore:hover { background: var(--success); color: white; box-shadow: 0 0 12px rgba(16,185,129,0.4); }
+    .btn-restore:disabled { opacity: .5; cursor: not-allowed; }
+
+    .btn-refresh {
+      padding: 8px 16px; border-radius: 10px; font-size: .8rem; font-weight: 700;
+      border: 1px solid var(--border); background: var(--bg-input); color: var(--text-secondary);
+      cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-refresh:hover { border-color: var(--danger); color: var(--danger-light); }
+
+    .btn-logout {
+      padding: 8px 16px; border-radius: 10px; font-size: .8rem; font-weight: 700;
+      border: 1px solid rgba(220,38,38,0.4); background: var(--danger-muted);
+      color: var(--danger-light); cursor: pointer; transition: all .2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-logout:hover { background: var(--danger); color: white; }
+
+    /* ── Action column (table) ── */
+    .action-td {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      justify-content: flex-end; align-items: center;
+    }
+    .btn-action-edit, .btn-action-reset {
+      padding: 4px 10px; font-size: .72rem; font-weight: 700;
+      border-radius: 6px; cursor: pointer; transition: all .2s;
+      display: inline-flex; align-items: center; gap: 4px;
+      white-space: nowrap; line-height: 1.3;
+    }
+    .btn-action-edit:hover  { opacity: .85; }
+    .btn-action-reset:hover { opacity: .85; }
+
+    /* ── Search ── */
+    .search-box {
+      padding: 8px 14px; border-radius: 10px; font-size: .83rem;
+      border: 1px solid var(--border); background: var(--bg-input); color: var(--text-primary);
+      font-family: inherit; outline: none; width: 220px; transition: border-color .2s;
+    }
+    .search-box:focus { border-color: var(--danger); }
+
+    /* ── Empty State ── */
+    .empty-state {
+      text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: .85rem;
+    }
+
+    /* ── Confirm Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); z-index: 9999;
+      align-items: center; justify-content: center; backdrop-filter: blur(8px);
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: var(--bg-card); border: 1px solid rgba(220,38,38,0.4);
+      border-radius: 20px; padding: 32px; max-width: 420px; width: 90%;
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .modal-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--danger-glow); border: 2px solid rgba(220,38,38,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin: 0 auto 16px;
+    }
+    .modal-title { text-align: center; font-size: 1.1rem; font-weight: 800; color: var(--danger-light); margin-bottom: 8px; }
+    .modal-desc { text-align: center; font-size: .84rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 24px; }
+    .modal-name { font-weight: 700; color: var(--text-primary); }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-btn-cancel {
+      flex: 1; padding: 11px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--bg-input); color: var(--text-secondary);
+      font-family: inherit; font-size: .85rem; font-weight: 700; cursor: pointer;
+    }
+    .modal-btn-confirm {
+      flex: 2; padding: 11px; border-radius: 10px; border: none;
+      background: var(--danger); color: white;
+      font-family: inherit; font-size: .85rem; font-weight: 700; cursor: pointer;
+      transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .modal-btn-confirm:hover { background: #b91c1c; box-shadow: 0 0 20px rgba(220,38,38,0.4); }
+    .modal-btn-confirm:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 99999;
+      padding: 12px 20px; border-radius: 12px;
+      font-size: .85rem; font-weight: 600;
+      transform: translateY(100px); opacity: 0;
+      transition: all .3s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none; max-width: 360px;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { background: #064e3b; border: 1px solid #065f46; color: #6ee7b7; }
+    #toast.error   { background: #7f1d1d; border: 1px solid #991b1b; color: #fca5a5; }
+    #toast.info    { background: #1e3a5f; border: 1px solid #1e40af; color: #93c5fd; }
+
+    /* ── Spinner ── */
+    .spinner {
+      width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Sections ── */
+    .page-section { display: none; }
+    .page-section.active { display: block; animation: fadeIn .25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Stats ── */
+    .stats-row { display: flex; gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      flex: 1; padding: 18px 20px; border-radius: 14px;
+      background: var(--bg-card); border: 1px solid var(--border);
+    }
+    .stat-number { font-size: 1.8rem; font-weight: 900; color: var(--danger-light); }
+    .stat-label  { font-size: .75rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* ── Mobile Hamburger Toggle ── */
+    .menu-toggle {
+      display: none;
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid rgba(220,38,38,0.3); background: var(--danger-muted);
+      color: var(--danger-light); align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .menu-toggle svg { width: 18px; height: 18px; }
+
+    /* ── Sidebar Overlay ── */
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6); z-index: 99;
+      backdrop-filter: blur(4px);
+    }
+    .sidebar-overlay.show { display: block; }
+
+    /* ── Mobile Bottom Nav ── */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #0f0d16; border-top: 1px solid var(--border);
+      z-index: 150; padding: 6px 0;
+    }
+    .mobile-bottom-nav-inner {
+      display: flex; justify-content: space-around; align-items: center;
+    }
+    .mob-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 6px 8px; border-radius: 8px; cursor: pointer;
+      border: none; background: none; color: var(--text-muted);
+      font-size: .55rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .04em;
+      transition: color .2s; flex: 1;
+    }
+    .mob-nav-item svg { width: 20px; height: 20px; }
+    .mob-nav-item.active { color: var(--danger-light); }
+    .mob-nav-item:hover { color: var(--danger-light); }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        z-index: 200;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .menu-toggle { display: flex; }
+      .mobile-bottom-nav { display: block; }
+      .main {
+        margin-left: 0;
+        padding: 12px 12px 80px;
+      }
+      .stats-row { flex-direction: column; }
+
+      /* Topbar mobile */
+      .topbar {
+        margin-bottom: 14px;
+        gap: 8px;
+        flex-wrap: nowrap;
+      }
+      .page-title { font-size: 1rem; }
+      .btn-refresh {
+        padding: 7px 10px; font-size: .72rem;
+        white-space: nowrap;
+      }
+
+      /* Warning banner compact */
+      .warning-banner {
+        padding: 10px 12px;
+        font-size: .75rem;
+        gap: 10px;
+        margin-bottom: 14px;
+        border-radius: 10px;
+      }
+      .warning-banner .warn-icon {
+        width: 32px; height: 32px; font-size: 1rem;
+        flex-shrink: 0;
+      }
+      .warn-title { font-size: .78rem; }
+
+      /* Card compact */
+      .card { padding: 14px; border-radius: 10px; margin-bottom: 14px; }
+
+      /* Card header stack vertically on small */
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+      }
+      .card-header > div:last-child {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      /* Search boxes full width */
+      .search-box {
+        width: 100% !important;
+        font-size: .78rem;
+        padding: 7px 10px;
+      }
+
+      /* Tables: compact */
+      table { font-size: .72rem; }
+      th { font-size: .6rem; padding: 7px 6px; }
+      td { padding: 8px 6px; font-size: .72rem; }
+
+      /* Action column td */
+      .action-td {
+        text-align: right;
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      /* Action buttons in tables */
+      .btn-hapus, .btn-restore {
+        padding: 3px 7px;
+        font-size: .62rem;
+        gap: 3px;
+        white-space: nowrap;
+      }
+      .btn-hapus svg, .btn-restore svg { width: 10px; height: 10px; }
+
+      .btn-action-edit, .btn-action-reset {
+        padding: 3px 7px !important;
+        font-size: .62rem !important;
+        white-space: nowrap;
+        line-height: 1.3;
+      }
+
+      /* Hide less important columns on mobile */
+      .col-hide-mobile { display: none !important; }
+    }
+
+    @media (max-width: 400px) {
+      .main { padding: 10px 10px 80px; }
+      .page-title { font-size: .88rem; }
+      table { font-size: .68rem; }
+      th { font-size: .56rem; padding: 6px 4px; }
+      td { padding: 6px 4px; font-size: .68rem; }
+      .card { padding: 10px; }
+      .btn-hapus, .btn-restore {
+        padding: 3px 5px; font-size: .6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR OVERLAY ── -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-badge">⚠️ Superadmin</div>
+      <div class="brand-name">PB-Learning</div>
+      <div class="brand-sub">Panel Darurat — Akses Terbatas</div>
+    </div>
+
+    <div class="nav-label">Menu Darurat</div>
+    <button class="nav-item active" id="navSiswa" onclick="showPage('siswa')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Hapus Data Siswa
+    </button>
+    <button class="nav-item" id="navGuru" onclick="showPage('guru')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Hapus Data Guru
+    </button>
+    <button class="nav-item" id="navAdmin" onclick="showPage('admin')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><circle cx="19" cy="8" r="3"/></svg>
+      Kelola Akun Admin
+    </button>
+    <button class="nav-item" id="navTrash" onclick="showPage('trash')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      Keranjang Sampah
+    </button>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar" id="userInitial">S</div>
+        <div>
+          <div class="user-name" id="userName">Superadmin</div>
+          <div class="user-role">🔴 SUPERADMIN</div>
+        </div>
+      </div>
+      <button class="btn-logout" style="width:100%;margin-top:10px;justify-content:center;" onclick="logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Keluar
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="page-title" id="pageTitle">🗑️ Hapus Data Siswa</div>
+      </div>
+      <button class="btn-refresh" onclick="refreshData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-8.49"/></svg>
+        <span class="refresh-text">Refresh</span>
+      </button>
+    </div>
+
+    <!-- Warning Banner -->
+    <div class="warning-banner">
+      <div class="warn-icon">🔨</div>
+      <div>
+        <div class="warn-title">Panel Darurat — Gunakan dengan Bijak</div>
+        <div>Tindakan penghapusan bersifat <strong>permanen dan tidak dapat dibatalkan</strong>. Pastikan data yang dihapus memang sudah tidak diperlukan. Panel ini seperti palu pemecah kaca darurat — hanya digunakan saat benar-benar perlu.</div>
+      </div>
+    </div>
+
+    <!-- ════ PAGE: SISWA ════ -->
+    <section class="page-section active" id="pageSiswa">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#ef4444"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Daftar Siswa
+            <span class="card-count" id="siswaCount">0 siswa</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <input type="text" class="search-box" id="searchSiswa" placeholder="Cari nama / NIS..." oninput="filterSiswa()" />
+            <select class="search-box" id="filterKelas" onchange="filterSiswa()" style="width:auto;">
+              <option value="">Semua Kelas</option>
+              <option value="VII">Kelas VII</option>
+              <option value="VIII">Kelas VIII</option>
+              <option value="IX">Kelas IX</option>
+            </select>
+          </div>
+        </div>
+        <div id="bulkActionsSiswa" style="display:none; padding:10px 20px; background:rgba(239,68,68,0.08); border-bottom:1px solid rgba(239,68,68,0.15); align-items:center; justify-content:space-between;">
+          <span style="font-size:0.8rem; color:var(--text-secondary);" id="bulkCountSiswa">0 siswa terpilih</span>
+          <button class="btn-hapus" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; background:#ef4444; color:white; border:none; cursor:pointer;" onclick="bulkDelete('siswa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Hapus Terpilih
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;"><input type="checkbox" id="checkAllSiswa" onclick="toggleSelectAll('siswa', this)" style="cursor:pointer;" /></th>
+                <th>No</th>
+                <th>NIS</th>
+                <th>Nama Siswa</th>
+                <th>Kelas</th>
+                <th style="text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="siswaTableBody">
+              <tr><td colspan="6"><div class="empty-state">Memuat data...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ PAGE: GURU ════ -->
+    <section class="page-section" id="pageGuru">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#ef4444"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Daftar Guru
+            <span class="card-count" id="guruCount">0 guru</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <input type="text" class="search-box" id="searchGuru" placeholder="Cari nama / NUPTK / mapel..." oninput="filterGuru()" />
+          </div>
+        </div>
+        <div id="bulkActionsGuru" style="display:none; padding:10px 20px; background:rgba(239,68,68,0.08); border-bottom:1px solid rgba(239,68,68,0.15); align-items:center; justify-content:space-between;">
+          <span style="font-size:0.8rem; color:var(--text-secondary);" id="bulkCountGuru">0 guru terpilih</span>
+          <button class="btn-hapus" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; background:#ef4444; color:white; border:none; cursor:pointer;" onclick="bulkDelete('guru')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Hapus Terpilih
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;"><input type="checkbox" id="checkAllGuru" onclick="toggleSelectAll('guru', this)" style="cursor:pointer;" /></th>
+                <th>No</th>
+                <th>NUPTK</th>
+                <th>Nama Guru</th>
+                <th>Mata Pelajaran</th>
+                <th>Email</th>
+                <th style="text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="guruTableBody">
+              <tr><td colspan="7"><div class="empty-state">Memuat data...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ PAGE: ADMIN ════ -->
+    <section class="page-section" id="pageAdmin">
+      <div class="card" style="border-color: rgba(59, 130, 246, 0.2);">
+        <div class="card-header" style="justify-content: space-between; align-items: center;">
+          <div class="card-title" style="color: #60a5fa;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#3b82f6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><circle cx="19" cy="8" r="3"/></svg>
+            Daftar Admin
+            <span class="card-count" id="adminCount">0 admin</span>
+          </div>
+          <button class="btn-refresh" style="background:#2563eb;color:white;padding:8px 14px;border:none;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;" onclick="showFormTambahAdmin()">
+            + Tambah Admin
+          </button>
+        </div>
+        <div id="bulkActionsAdmin" style="display:none; padding:10px 20px; background:rgba(239,68,68,0.08); border-bottom:1px solid rgba(239,68,68,0.15); align-items:center; justify-content:space-between;">
+          <span style="font-size:0.8rem; color:var(--text-secondary);" id="bulkCountAdmin">0 admin terpilih</span>
+          <button class="btn-hapus" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; background:#ef4444; color:white; border:none; cursor:pointer;" onclick="bulkDelete('admin')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Hapus Terpilih
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;"><input type="checkbox" id="checkAllAdmin" onclick="toggleSelectAll('admin', this)" style="cursor:pointer;" /></th>
+                <th>No</th>
+                <th>Nama Admin</th>
+                <th>Email / Username</th>
+                <th>Tanggal Dibuat</th>
+                <th style="text-align:right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody">
+              <tr><td colspan="6"><div class="empty-state">Memuat data...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ PAGE: TRASH ════ -->
+    <section class="page-section" id="pageTrash">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#ef4444"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Keranjang Sampah (Recycle Bin)
+            <span class="card-count" id="trashCount">0 data</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <input type="text" class="search-box" id="searchTrash" placeholder="Cari nama / NIS / NUPTK..." oninput="filterTrash()" />
+          </div>
+        </div>
+        <div id="bulkActionsTrash" style="display:none; padding:10px 20px; background:rgba(16,185,129,0.08); border-bottom:1px solid rgba(16,185,129,0.15); align-items:center; justify-content:space-between;">
+          <span style="font-size:0.8rem; color:var(--text-secondary);" id="bulkCountTrash">0 data terpilih</span>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-restore" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; cursor:pointer;" onclick="bulkRestoreTrash()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><path d="M2.5 2v6h6M21.5 22v-6h-6"/><path d="M22 11.5A10 10 0 0 0 3.2 7.2L2.5 8m19.3 8l-.7.8A10 10 0 0 1 2 12.5"/></svg>
+              Pulihkan Terpilih
+            </button>
+            <button class="btn-hapus" style="padding:6px 12px; font-size:0.75rem; border-radius:6px; background:#ef4444; color:white; border:none; cursor:pointer;" onclick="bulkPermanentDeleteTrash()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Hapus Permanen Terpilih
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;"><input type="checkbox" id="checkAllTrash" onclick="toggleSelectAll('trash', this)" style="cursor:pointer;" /></th>
+                <th>No</th>
+                <th>Tipe</th>
+                <th>NIS / NUPTK</th>
+                <th>Nama Lengkap</th>
+                <th>Detail Info</th>
+                <th>Waktu Dihapus</th>
+                <th style="text-align:right;width:240px;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="trashTableBody">
+              <tr><td colspan="8"><div class="empty-state">Memuat data sampah...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ── MOBILE BOTTOM NAV ── -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav">
+  <div class="mobile-bottom-nav-inner">
+    <button class="mob-nav-item active" id="mobNavSiswa" onclick="showPage('siswa');setMobActive('mobNavSiswa')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Siswa
+    </button>
+    <button class="mob-nav-item" id="mobNavGuru" onclick="showPage('guru');setMobActive('mobNavGuru')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Guru
+    </button>
+    <button class="mob-nav-item" id="mobNavAdmin" onclick="showPage('admin');setMobActive('mobNavAdmin')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><circle cx="19" cy="8" r="3"/></svg>
+      Admin
+    </button>
+    <button class="mob-nav-item" id="mobNavTrash" onclick="showPage('trash');setMobActive('mobNavTrash')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      Sampah
+    </button>
+    <button class="mob-nav-item" onclick="logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Keluar
+    </button>
+  </div>
+</nav>
+
+<!-- ── CONFIRM MODAL ── -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title" id="modalTitle">Hapus Data?</div>
+    <div class="modal-desc" id="modalDesc">Apakah Anda yakin ingin menghapus data <span class="modal-name" id="modalName">-</span>? Tindakan ini tidak dapat dibatalkan.</div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeModal()">Batal</button>
+      <button class="modal-btn-confirm" id="btnConfirmDelete" onclick="doDelete()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        Ya, Hapus Sekarang
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAMBAH ADMIN MODAL ── -->
+<div class="modal-overlay" id="modalTambahAdmin">
+  <div class="modal-box" style="border-color: rgba(59, 130, 246, 0.4); max-width: 400px;">
+    <div class="modal-icon" style="background: rgba(59, 130, 246, 0.1); border: 2px solid rgba(59, 130, 246, 0.4);">👥</div>
+    <div class="modal-title" style="color: #60a5fa; margin-bottom: 20px;">Tambah Admin Baru</div>
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Nama Lengkap</label>
+        <input type="text" id="newAdminNama" placeholder="Nama lengkap admin..." class="search-box" style="width: 100%; border-color: rgba(59,130,246,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Email / Username</label>
+        <input type="email" id="newAdminEmail" placeholder="Email aktif..." class="search-box" style="width: 100%; border-color: rgba(59,130,246,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Password</label>
+        <input type="password" id="newAdminPassword" placeholder="Password..." class="search-box" style="width: 100%; border-color: rgba(59,130,246,0.2);" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeTambahAdminModal()">Batal</button>
+      <button class="modal-btn-confirm" style="background: #2563eb;" onclick="simpanAdminBaru()">
+        Simpan
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDIT SISWA MODAL (SUPERADMIN) ── -->
+<div class="modal-overlay" id="modalEditSiswaSuper">
+  <div class="modal-box" style="border-color: rgba(245, 158, 11, 0.4); max-width: 400px;">
+    <div class="modal-icon" style="background: rgba(245, 158, 11, 0.1); border: 2px solid rgba(245, 158, 11, 0.4); color: #fbbf24;">✍️</div>
+    <div class="modal-title" style="color: #fbbf24; margin-bottom: 20px;">Edit Data Siswa</div>
+    <input type="hidden" id="editSiswaId" />
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">NIS</label>
+        <input type="text" id="editSiswaNIS" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Nama Lengkap</label>
+        <input type="text" id="editSiswaNama" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Kelas</label>
+        <select id="editSiswaKelas" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);">
+          <option value="">-- Pilih Kelas --</option>
+          <option value="VII">VII</option>
+          <option value="VIII">VIII</option>
+          <option value="IX">IX</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeEditSiswaModal()">Batal</button>
+      <button class="modal-btn-confirm" style="background: #f59e0b;" onclick="simpanEditSiswaSuper()">
+        Simpan
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDIT GURU MODAL (SUPERADMIN) ── -->
+<div class="modal-overlay" id="modalEditGuruSuper">
+  <div class="modal-box" style="border-color: rgba(245, 158, 11, 0.4); max-width: 420px;">
+    <div class="modal-icon" style="background: rgba(245, 158, 11, 0.1); border: 2px solid rgba(245, 158, 11, 0.4); color: #fbbf24;">✍️</div>
+    <div class="modal-title" style="color: #fbbf24; margin-bottom: 20px;">Edit Data Guru</div>
+    <input type="hidden" id="editGuruId" />
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">NUPTK</label>
+        <input type="text" id="editGuruNUPTK" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Nama Lengkap</label>
+        <input type="text" id="editGuruNama" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Email</label>
+        <input type="email" id="editGuruEmail" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Mata Pelajaran</label>
+        <select id="editGuruMapel" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);">
+          <option value="">-- Pilih Mata Pelajaran --</option>
+          <option value="TIK">TIK</option>
+          <option value="Matematika">Matematika</option>
+          <option value="Seni Rupa">Seni Rupa</option>
+          <option value="Qiraati">Qiraati</option>
+          <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+          <option value="IPS">IPS</option>
+          <option value="PAI">PAI</option>
+          <option value="Bahasa Inggris">Bahasa Inggris</option>
+          <option value="Bahasa Arab">Bahasa Arab</option>
+          <option value="Fiqih dan Aqidah">Fiqih dan Aqidah</option>
+          <option value="IPA">IPA</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">No. HP</label>
+        <input type="tel" id="editGuruNoHp" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeEditGuruModal()">Batal</button>
+      <button class="modal-btn-confirm" style="background: #f59e0b;" onclick="simpanEditGuruSuper()">
+        Simpan
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDIT ADMIN MODAL (SUPERADMIN) ── -->
+<div class="modal-overlay" id="modalEditAdminSuper">
+  <div class="modal-box" style="border-color: rgba(245, 158, 11, 0.4); max-width: 400px;">
+    <div class="modal-icon" style="background: rgba(245, 158, 11, 0.1); border: 2px solid rgba(245, 158, 11, 0.4); color: #fbbf24;">✍️</div>
+    <div class="modal-title" style="color: #fbbf24; margin-bottom: 20px;">Edit Data Admin</div>
+    <input type="hidden" id="editAdminId" />
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Nama Lengkap</label>
+        <input type="text" id="editAdminNama" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+      <div>
+        <label style="font-size: .75rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 5px; text-align: left;">Email / Username</label>
+        <input type="email" id="editAdminEmail" class="search-box" style="width: 100%; border-color: rgba(245,158,11,0.2);" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeEditAdminModal()">Batal</button>
+      <button class="modal-btn-confirm" style="background: #f59e0b;" onclick="simpanEditAdminSuper()">
+        Simpan
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<script>
+  'use strict';
+
+  /* ── User Info ── */
+  // Data user tersimpan di sessionStorage (sesuai dengan login.js)
+  const superadminRole = sessionStorage.getItem('edu_role');
+  const superadminName = sessionStorage.getItem('edu_name');
+  const superadminId   = sessionStorage.getItem('edu_id');
+
+  // Session guard: redirect jika bukan superadmin
+  if (!superadminRole || superadminRole !== 'superadmin') {
+    alert('⛔ Akses ditolak. Halaman ini hanya untuk Superadmin.');
+    window.location.href = '../../index.html';
+  }
+
+  if (superadminName) {
+    document.getElementById('userName').textContent = superadminName;
+    document.getElementById('userInitial').textContent = superadminName[0].toUpperCase();
+  }
+
+  /* ── Data Store ── */
+  let allSiswa = [];
+  let allGuru  = [];
+  let allTrash = [];
+  let deleteTarget = null; // { id, type, nama }
+
+  /* ── Toast ── */
+  let toastTimer;
+  function showToast(msg, type = 'info') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `show ${type}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.className = ''; }, 3500);
+  }
+
+  /* ── Navigation ── */
+  function showPage(page) {
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    // Sync mobile bottom nav
+    const mobMap = { siswa: 'mobNavSiswa', guru: 'mobNavGuru', admin: 'mobNavAdmin', trash: 'mobNavTrash' };
+    document.querySelectorAll('.mob-nav-item').forEach(b => b.classList.remove('active'));
+    if (mobMap[page]) {
+      const mobEl = document.getElementById(mobMap[page]);
+      if (mobEl) mobEl.classList.add('active');
+    }
+
+    if (page === 'siswa') {
+      document.getElementById('pageSiswa').classList.add('active');
+      document.getElementById('navSiswa').classList.add('active');
+      document.getElementById('pageTitle').textContent = '🗑️ Hapus Data Siswa';
+    } else if (page === 'guru') {
+      document.getElementById('pageGuru').classList.add('active');
+      document.getElementById('navGuru').classList.add('active');
+      document.getElementById('pageTitle').textContent = '🗑️ Hapus Data Guru';
+    } else if (page === 'admin') {
+      document.getElementById('pageAdmin').classList.add('active');
+      document.getElementById('navAdmin').classList.add('active');
+      document.getElementById('pageTitle').textContent = '👥 Kelola Akun Admin';
+      loadAdmins();
+    } else if (page === 'trash') {
+      document.getElementById('pageTrash').classList.add('active');
+      document.getElementById('navTrash').classList.add('active');
+      document.getElementById('pageTitle').textContent = '🗑️ Keranjang Sampah';
+      loadTrash();
+    }
+
+    // Close sidebar on mobile after navigation
+    closeSidebar();
+  }
+
+  /* ── Fetch Siswa ── */
+  async function loadSiswa() {
+    try {
+      const res  = await fetch('../../api/get_siswa.php');
+      const data = await res.json();
+      allSiswa = [];
+      Object.entries(data).forEach(([kelas, list]) => {
+        list.forEach(s => allSiswa.push({ ...s, kelas }));
+      });
+      document.getElementById('siswaCount').textContent = `${allSiswa.length} siswa`;
+      renderSiswa(allSiswa);
+    } catch (err) {
+      document.getElementById('siswaTableBody').innerHTML =
+        '<tr><td colspan="5"><div class="empty-state">❌ Gagal memuat data siswa.</div></td></tr>';
+    }
+  }
+
+  function renderSiswa(list) {
+    const tbody = document.getElementById('siswaTableBody');
+    const checkAll = document.getElementById('checkAllSiswa');
+    if (checkAll) checkAll.checked = false;
+    updateBulkActionsVisibility('siswa');
+
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Tidak ada data siswa.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map((s, i) => `
+      <tr>
+        <td style="text-align:center;"><input type="checkbox" class="check-item-siswa" value="${s.id}" onclick="updateBulkActionsVisibility('siswa')" style="cursor:pointer;" /></td>
+        <td style="color:var(--text-muted);">${i + 1}</td>
+        <td style="color:var(--text-muted);font-family:monospace;">${s.nis || '—'}</td>
+        <td style="font-weight:600;">${s.nama}</td>
+        <td><span style="padding:2px 8px;border-radius:6px;font-size:.72rem;background:rgba(6,182,212,0.12);color:#67e8f9;border:1px solid rgba(6,182,212,0.25);">${s.kelas || '—'}</span></td>
+        <td class="action-td">
+          <button class="btn-action-edit" style="font-weight:700;border-radius:6px;border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.1);color:#60a5fa;cursor:pointer;" onclick="showEditSiswaSuper(${s.id})">✍️ Edit</button>
+          <button class="btn-action-reset" style="font-weight:700;border-radius:6px;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.1);color:#fbbf24;cursor:pointer;" onclick="resetPasswordSuperadmin(${s.id},'siswa','${s.nama.replace(/'/g,'&#39;')}')">🔑 Reset PW</button>
+          <button class="btn-hapus" onclick="confirmDelete(${JSON.stringify({ nis: s.nis, nama: s.nama, type: 'siswa' }).replace(/"/g,'&quot;')})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Hapus
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function filterSiswa() {
+    const q      = document.getElementById('searchSiswa').value.toLowerCase();
+    const kelas  = document.getElementById('filterKelas').value;
+    const filtered = allSiswa.filter(s => {
+      const matchQ     = !q || s.nama.toLowerCase().includes(q) || (s.nis||'').includes(q);
+      const matchKelas = !kelas || s.kelas === kelas;
+      return matchQ && matchKelas;
+    });
+    renderSiswa(filtered);
+  }
+
+  /* ── Fetch Guru ── */
+  async function loadGuru() {
+    try {
+      const res  = await fetch('../../api/get_guru.php');
+      allGuru    = await res.json();
+      document.getElementById('guruCount').textContent = `${allGuru.length} guru`;
+      renderGuru(allGuru);
+    } catch (err) {
+      document.getElementById('guruTableBody').innerHTML =
+        '<tr><td colspan="6"><div class="empty-state">❌ Gagal memuat data guru.</div></td></tr>';
+    }
+  }
+
+  function renderGuru(list) {
+    const tbody = document.getElementById('guruTableBody');
+    const checkAll = document.getElementById('checkAllGuru');
+    if (checkAll) checkAll.checked = false;
+    updateBulkActionsVisibility('guru');
+
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Tidak ada data guru.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map((g, i) => `
+      <tr>
+        <td style="text-align:center;"><input type="checkbox" class="check-item-guru" value="${g.id}" onclick="updateBulkActionsVisibility('guru')" style="cursor:pointer;" /></td>
+        <td style="color:var(--text-muted);">${i + 1}</td>
+        <td style="color:var(--text-muted);font-family:monospace;">${g.nip || '—'}</td>
+        <td style="font-weight:600;">${g.nama}</td>
+        <td><span class="mapel-badge">${g.mata_pelajaran || '—'}</span></td>
+        <td style="color:var(--text-muted);">${g.email || '—'}</td>
+        <td class="action-td">
+          <button class="btn-action-edit" style="font-weight:700;border-radius:6px;border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.1);color:#60a5fa;cursor:pointer;" onclick="showEditGuruSuper(${g.id})">✍️ Edit</button>
+          <button class="btn-action-reset" style="font-weight:700;border-radius:6px;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.1);color:#fbbf24;cursor:pointer;" onclick="resetPasswordSuperadmin(${g.id},'guru','${g.nama.replace(/'/g,'&#39;')}')">🔑 Reset PW</button>
+          <button class="btn-hapus" onclick="confirmDelete(${JSON.stringify({ nip: g.nip, nama: g.nama, type: 'guru' }).replace(/"/g,'&quot;')})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Hapus
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function filterGuru() {
+    const q = document.getElementById('searchGuru').value.toLowerCase();
+    const filtered = allGuru.filter(g =>
+      !q || g.nama.toLowerCase().includes(q) || (g.nip||'').includes(q) || (g.mata_pelajaran||'').toLowerCase().includes(q)
+    );
+    renderGuru(filtered);
+  }
+
+  /* ── Fetch Trash ── */
+  async function loadTrash() {
+    try {
+      const today = new Date();
+      const token = 'SA_' + today.getFullYear() +
+        String(today.getMonth()+1).padStart(2,'0') +
+        String(today.getDate()).padStart(2,'0');
+
+      const res  = await fetch('../../api/get_deleted_users.php', {
+        headers: { 'X-Superadmin-Token': token }
+      });
+      allTrash = await res.json();
+      document.getElementById('trashCount').textContent = `${allTrash.length} data`;
+      renderTrash(allTrash);
+    } catch (err) {
+      document.getElementById('trashTableBody').innerHTML =
+        '<tr><td colspan="7"><div class="empty-state">❌ Gagal memuat data sampah.</div></td></tr>';
+    }
+  }
+
+  function renderTrash(list) {
+    const tbody = document.getElementById('trashTableBody');
+    const checkAll = document.getElementById('checkAllTrash');
+    if (checkAll) checkAll.checked = false;
+    updateBulkActionsVisibility('trash');
+
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">Tempat sampah kosong.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map((u, i) => {
+      const badgeColor = u.role === 'siswa' ? 'rgba(6,182,212,0.12)' : 'rgba(124,58,237,0.15)';
+      const textColor = u.role === 'siswa' ? '#67e8f9' : '#a78bfa';
+      const borderVal = u.role === 'siswa' ? 'rgba(6,182,212,0.25)' : 'rgba(124,58,237,0.3)';
+      const roleBadge = `<span style="padding:2px 8px;border-radius:6px;font-size:.72rem;background:${badgeColor};color:${textColor};border:1px solid ${borderVal};text-transform:uppercase;">${u.role}</span>`;
+      
+      const detailInfo = u.role === 'siswa' ? `Kelas: ${u.kelas}` : `Mapel: ${u.mata_pelajaran}`;
+      
+      return `
+        <tr>
+          <td style="text-align:center;"><input type="checkbox" class="check-item-trash" value="${u.id}" onclick="updateBulkActionsVisibility('trash')" style="cursor:pointer;" /></td>
+          <td style="color:var(--text-muted);">${i + 1}</td>
+          <td>${roleBadge}</td>
+          <td style="color:var(--text-muted);font-family:monospace;">${u.nis_nip || '—'}</td>
+          <td style="font-weight:600;">${u.nama}</td>
+          <td style="color:var(--text-secondary);">${detailInfo}</td>
+          <td style="color:var(--text-muted);">${u.deleted_at}</td>
+          <td style="text-align:right;">
+            <button class="btn-restore" onclick="doRestore(${u.id}, '${u.nama.replace(/'/g, "\\'")}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="M2.5 2v6h6M21.5 22v-6h-6"/><path d="M22 11.5A10 10 0 0 0 3.2 7.2L2.5 8m19.3 8l-.7.8A10 10 0 0 1 2 12.5"/></svg>
+              Pulihkan
+            </button>
+            <button class="btn-hapus" onclick="confirmPermanentDelete(${u.id}, '${u.nama.replace(/'/g, "\\'")}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Hapus Permanen
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function filterTrash() {
+    const q = document.getElementById('searchTrash').value.toLowerCase();
+    const filtered = allTrash.filter(u =>
+      !q || u.nama.toLowerCase().includes(q) || (u.nis_nip||'').includes(q)
+    );
+    renderTrash(filtered);
+  }
+
+  async function doRestore(id, name) {
+    if (!confirm(`Pulihkan akun "${name}"? Akun ini akan aktif kembali.`)) return;
+    
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    try {
+      const res = await fetch('../../api/restore_user_superadmin.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast(`✅ ${data.message}`, 'success');
+        loadTrash();
+        loadSiswa();
+        loadGuru();
+      } else {
+        showToast(`❌ ${data.message}`, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    }
+  }
+
+  async function confirmPermanentDelete(id, name) {
+    if (!confirm(`⚠️ PERINGATAN: Hapus permanen akun "${name}"?\nData akun akan dihapus selamanya dari database dan TIDAK BISA dipulihkan lagi.`)) return;
+    
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    try {
+      const res = await fetch('../../api/delete_user_permanent_superadmin.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast(`✅ ${data.message}`, 'success');
+        loadTrash();
+      } else {
+        showToast(`❌ ${data.message}`, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    }
+  }
+
+  /* ── Confirm Modal ── */
+  function confirmDelete(target) {
+    deleteTarget = target;
+    document.getElementById('modalName').textContent = target.nama;
+    document.getElementById('modalTitle').textContent = `Hapus ${target.type === 'siswa' ? 'Siswa' : 'Guru'}?`;
+    document.getElementById('confirmModal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('confirmModal').classList.remove('show');
+    deleteTarget = null;
+  }
+
+  /* ── Execute Delete ── */
+  async function doDelete() {
+    if (!deleteTarget) return;
+    const btn = document.getElementById('btnConfirmDelete');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Menghapus...';
+
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    try {
+      // Cari ID user berdasarkan NIS/NIP
+      const body = {
+        type: deleteTarget.type,
+        // Kirim NIS/NIP sebagai identifier (backend mencari by nis_nip)
+        nis_nip: deleteTarget.nis || deleteTarget.nip,
+      };
+
+      const res = await fetch('../../api/delete_user_superadmin.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        showToast(`✅ ${data.message}`, 'success');
+        closeModal();
+        // Refresh data lokal
+        if (deleteTarget.type === 'siswa') {
+          allSiswa = allSiswa.filter(s => s.nis !== deleteTarget.nis);
+          document.getElementById('siswaCount').textContent = `${allSiswa.length} siswa`;
+          filterSiswa();
+        } else {
+          allGuru = allGuru.filter(g => g.nip !== deleteTarget.nip);
+          document.getElementById('guruCount').textContent = `${allGuru.length} guru`;
+          filterGuru();
+        }
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg> Ya, Hapus Sekarang';
+    }
+  }
+
+  /* ── Refresh & Logout ── */
+  function refreshData() {
+    loadSiswa();
+    loadGuru();
+    loadTrash();
+    loadAdmins();
+    showToast('Data direfresh', 'info');
+  }
+
+  function logout() {
+    sessionStorage.clear();
+    localStorage.removeItem('edu_user');
+    localStorage.removeItem('edu_token');
+    window.location.href = '../../index.html';
+  }
+
+  /* ── Close modal on backdrop click ── */
+  document.getElementById('confirmModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  /* ── Admin Management ── */
+  let allAdmins = [];
+
+  async function loadAdmins() {
+    try {
+      const res = await fetch('../../api/get_admins_superadmin.php');
+      allAdmins = await res.json();
+      document.getElementById('adminCount').textContent = `${allAdmins.length} admin`;
+      renderAdmins(allAdmins);
+    } catch (err) {
+      const tbody = document.getElementById('adminTableBody');
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state">❌ Gagal memuat data admin.</div></td></tr>';
+      }
+    }
+  }
+
+  function renderAdmins(list) {
+    const tbody = document.getElementById('adminTableBody');
+    if (!tbody) return;
+    const checkAll = document.getElementById('checkAllAdmin');
+    if (checkAll) checkAll.checked = false;
+    updateBulkActionsVisibility('admin');
+
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Tidak ada data admin.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map((a, i) => `
+      <tr>
+        <td style="text-align:center;"><input type="checkbox" class="check-item-admin" value="${a.id}" onclick="updateBulkActionsVisibility('admin')" style="cursor:pointer;" /></td>
+        <td style="color:var(--text-muted);">${i + 1}</td>
+        <td style="font-weight:600;">${a.nama}</td>
+        <td style="color:var(--text-muted);">${a.email}</td>
+        <td style="color:var(--text-muted);">${a.created_at || '—'}</td>
+        <td style="text-align:right;display:flex;gap:6px;justify-content:flex-end;">
+          <button style="padding:4px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.1);color:#60a5fa;cursor:pointer;" onclick="showEditAdminSuper(${a.id})">
+            ✍️ Edit
+          </button>
+          <button style="padding:4px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.1);color:#fbbf24;cursor:pointer;" onclick="resetPasswordSuperadmin(${a.id}, 'admin', '${a.nama.replace(/'/g,"&#39;")}')">
+            🔑 Reset PW
+          </button>
+          <button class="btn-hapus" onclick="hapusAdminSuper(${a.id}, '${a.nama}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Hapus
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function hapusAdminSuper(id, nama) {
+    if (!confirm(`Apakah Anda yakin ingin menghapus akun admin "${nama}" secara permanen?`)) return;
+
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    try {
+      const res = await fetch('../../api/delete_admin_superadmin.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast('✅ ' + data.message, 'success');
+        loadAdmins();
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    }
+  }
+
+  async function resetPasswordSuperadmin(id, role, nama) {
+    if (!id) { showToast('ID tidak valid!', 'error'); return; }
+    if (!confirm(`Reset password "${nama}" menjadi "pbresetpass"?\nBeritahu yang bersangkutan untuk segera mengganti passwordnya.`)) return;
+    try {
+      const res = await fetch('../../api/reset_password.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, role })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast('✅ ' + data.message, 'success');
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    }
+  }
+
+  function showFormTambahAdmin() {
+    document.getElementById('modalTambahAdmin').classList.add('show');
+  }
+
+  function closeTambahAdminModal() {
+    document.getElementById('modalTambahAdmin').classList.remove('show');
+    document.getElementById('newAdminNama').value = '';
+    document.getElementById('newAdminEmail').value = '';
+    document.getElementById('newAdminPassword').value = '';
+  }
+
+  document.getElementById('modalTambahAdmin').addEventListener('click', function(e) {
+    if (e.target === this) closeTambahAdminModal();
+  });
+
+  async function simpanAdminBaru() {
+    const nama = document.getElementById('newAdminNama').value.trim();
+    const email = document.getElementById('newAdminEmail').value.trim();
+    const password = document.getElementById('newAdminPassword').value.trim();
+
+    if (!nama) { showToast('⚠️ Nama wajib diisi!', 'error'); return; }
+    if (!email) { showToast('⚠️ Email wajib diisi!', 'error'); return; }
+    if (!password) { showToast('⚠️ Password wajib diisi!', 'error'); return; }
+
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    const btn = document.querySelector('button[onclick="simpanAdminBaru()"]');
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch('../../api/save_admin_superadmin.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify({ nama, email, password })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast('✅ ' + data.message, 'success');
+        closeTambahAdminModal();
+        loadAdmins();
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  /* ── Bulk Actions Helpers ── */
+  function toggleSelectAll(type, checkAllEl) {
+    const checkboxes = document.querySelectorAll(`.check-item-${type}`);
+    checkboxes.forEach(cb => cb.checked = checkAllEl.checked);
+    updateBulkActionsVisibility(type);
+  }
+
+  function updateBulkActionsVisibility(type) {
+    const checkboxes = document.querySelectorAll(`.check-item-${type}`);
+    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+    const bulkDiv = document.getElementById(`bulkActions${type.charAt(0).toUpperCase() + type.slice(1)}`);
+    const countEl = document.getElementById(`bulkCount${type.charAt(0).toUpperCase() + type.slice(1)}`);
+
+    if (bulkDiv) {
+      if (checkedCount > 0) {
+        bulkDiv.style.display = 'flex';
+        if (countEl) {
+          const capitalizedType = type === 'siswa' ? 'siswa' : type === 'guru' ? 'guru' : type === 'admin' ? 'admin' : 'data';
+          countEl.textContent = `${checkedCount} ${capitalizedType} terpilih`;
+        }
+      } else {
+        bulkDiv.style.display = 'none';
+      }
+    }
+  }
+
+  function getSelectedIds(type) {
+    const checkboxes = document.querySelectorAll(`.check-item-${type}`);
+    return Array.from(checkboxes).filter(cb => cb.checked).map(cb => parseInt(cb.value));
+  }
+
+  async function bulkDelete(type) {
+    const ids = getSelectedIds(type);
+    if (ids.length === 0) return;
+
+    if (!confirm(`Hapus ${ids.length} ${type === 'siswa' ? 'siswa' : type === 'guru' ? 'guru' : 'admin'} terpilih?`)) return;
+
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    const url = type === 'admin' ? '../../api/delete_admin_superadmin.php' : '../../api/delete_user_superadmin.php';
+    const body = type === 'admin' ? { ids } : { ids, type };
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast(`✅ ${data.message}`, 'success');
+        if (type === 'siswa') {
+          loadSiswa();
+        } else if (type === 'guru') {
+          loadGuru();
+        } else if (type === 'admin') {
+          loadAdmins();
+        }
+        loadTrash();
+      } else {
+        showToast(`❌ ${data.message}`, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    }
+  }
+
+  async function bulkRestoreTrash() {
+    const ids = getSelectedIds('trash');
+    if (ids.length === 0) return;
+
+    if (!confirm(`Pulihkan ${ids.length} data terpilih?`)) return;
+
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    try {
+      const res = await fetch('../../api/restore_user_superadmin.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify({ ids })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast(`✅ ${data.message}`, 'success');
+        loadTrash();
+        loadSiswa();
+        loadGuru();
+      } else {
+        showToast(`❌ ${data.message}`, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    }
+  }
+
+  async function bulkPermanentDeleteTrash() {
+    const ids = getSelectedIds('trash');
+    if (ids.length === 0) return;
+
+    if (!confirm(`⚠️ PERINGATAN: Hapus permanen ${ids.length} data terpilih?\nTindakan ini TIDAK BISA dibatalkan.`)) return;
+
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    try {
+      const res = await fetch('../../api/delete_user_permanent_superadmin.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify({ ids })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast(`✅ ${data.message}`, 'success');
+        loadTrash();
+      } else {
+        showToast(`❌ ${data.message}`, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal terhubung ke server.', 'error');
+    }
+  }
+
+  /* ── Edit Modals (Siswa, Guru, Admin) ── */
+  function showEditSiswaSuper(id) {
+    const s = allSiswa.find(item => item.id == id);
+    if (!s) { showToast('Data siswa tidak ditemukan!', 'error'); return; }
+
+    document.getElementById('editSiswaId').value = s.id;
+    document.getElementById('editSiswaNIS').value = s.nis || '';
+    document.getElementById('editSiswaNama').value = s.nama || '';
+    document.getElementById('editSiswaKelas').value = s.kelas || '';
+
+    document.getElementById('modalEditSiswaSuper').classList.add('show');
+  }
+
+  function closeEditSiswaModal() {
+    document.getElementById('modalEditSiswaSuper').classList.remove('show');
+  }
+
+  async function simpanEditSiswaSuper() {
+    const id = document.getElementById('editSiswaId').value;
+    const nis = document.getElementById('editSiswaNIS').value.trim();
+    const nama = document.getElementById('editSiswaNama').value.trim();
+    const kelas = document.getElementById('editSiswaKelas').value;
+
+    if (!nis || !nama || !kelas) { showToast('⚠️ Semua field wajib diisi!', 'error'); return; }
+
+    const btn = document.querySelector('button[onclick="simpanEditSiswaSuper()"]');
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch('../../api/update_siswa_manual.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, nis, nama, kelas })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast('✅ ' + data.message, 'success');
+        closeEditSiswaModal();
+        loadSiswa();
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal mengupdate data.', 'error');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function showEditGuruSuper(id) {
+    const g = allGuru.find(item => item.id == id);
+    if (!g) { showToast('Data guru tidak ditemukan!', 'error'); return; }
+
+    document.getElementById('editGuruId').value = g.id;
+    document.getElementById('editGuruNUPTK').value = g.nip || '';
+    document.getElementById('editGuruNama').value = g.nama || '';
+    document.getElementById('editGuruEmail').value = g.email || '';
+    document.getElementById('editGuruMapel').value = g.mata_pelajaran || '';
+    document.getElementById('editGuruNoHp').value = g.no_hp || '';
+
+    document.getElementById('modalEditGuruSuper').classList.add('show');
+  }
+
+  function closeEditGuruModal() {
+    document.getElementById('modalEditGuruSuper').classList.remove('show');
+  }
+
+  async function simpanEditGuruSuper() {
+    const id = document.getElementById('editGuruId').value;
+    const nip = document.getElementById('editGuruNUPTK').value.trim();
+    const nama = document.getElementById('editGuruNama').value.trim();
+    const email = document.getElementById('editGuruEmail').value.trim();
+    const mata_pelajaran = document.getElementById('editGuruMapel').value;
+    const no_hp = document.getElementById('editGuruNoHp').value.trim();
+
+    if (!nip || !nama || !email || !mata_pelajaran) { showToast('⚠️ NUPTK, Nama, Email, dan Mapel wajib diisi!', 'error'); return; }
+
+    const btn = document.querySelector('button[onclick="simpanEditGuruSuper()"]');
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch('../../api/update_guru_manual.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, nip, nama, email, mata_pelajaran, no_hp })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast('✅ ' + data.message, 'success');
+        closeEditGuruModal();
+        loadGuru();
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal mengupdate data.', 'error');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function showEditAdminSuper(id) {
+    const a = allAdmins.find(item => item.id == id);
+    if (!a) { showToast('Data admin tidak ditemukan!', 'error'); return; }
+
+    document.getElementById('editAdminId').value = a.id;
+    document.getElementById('editAdminNama').value = a.nama || '';
+    document.getElementById('editAdminEmail').value = a.email || '';
+
+    document.getElementById('modalEditAdminSuper').classList.add('show');
+  }
+
+  function closeEditAdminModal() {
+    document.getElementById('modalEditAdminSuper').classList.remove('show');
+  }
+
+  async function simpanEditAdminSuper() {
+    const id = document.getElementById('editAdminId').value;
+    const nama = document.getElementById('editAdminNama').value.trim();
+    const email = document.getElementById('editAdminEmail').value.trim();
+
+    if (!nama || !email) { showToast('⚠️ Nama dan Email wajib diisi!', 'error'); return; }
+
+    const today = new Date();
+    const token = 'SA_' + today.getFullYear() +
+      String(today.getMonth()+1).padStart(2,'0') +
+      String(today.getDate()).padStart(2,'0');
+
+    const btn = document.querySelector('button[onclick="simpanEditAdminSuper()"]');
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch('../../api/update_admin_superadmin.php', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Superadmin-Token': token
+        },
+        body: JSON.stringify({ id, nama, email })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        showToast('✅ ' + data.message, 'success');
+        closeEditAdminModal();
+        loadAdmins();
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch (err) {
+      showToast('❌ Gagal mengupdate data.', 'error');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  // Backdrop clicks for new modals
+  document.getElementById('modalEditSiswaSuper').addEventListener('click', function(e) {
+    if (e.target === this) closeEditSiswaModal();
+  });
+  document.getElementById('modalEditGuruSuper').addEventListener('click', function(e) {
+    if (e.target === this) closeEditGuruModal();
+  });
+  document.getElementById('modalEditAdminSuper').addEventListener('click', function(e) {
+    if (e.target === this) closeEditAdminModal();
+  });
+
+  /* ── Sidebar Mobile Toggle ── */
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+  function closeSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+
+  /* ── Mobile Bottom Nav Active ── */
+  function setMobActive(id) {
+    document.querySelectorAll('.mob-nav-item').forEach(b => b.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+    closeSidebar();
+  }
+
+  /* ── Init ── */
+  loadSiswa();
+  loadGuru();
+  loadTrash();
+  loadAdmins();
+</script>
+</body>
+</html>

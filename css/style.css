@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS
+============================================================ */
+:root {
+  /* Brand colors */
+  --primary:        #4f46e5;
+  --primary-light:  #818cf8;
+  --primary-dark:   #3730a3;
+  --secondary:      #06b6d4;
+  --accent:         #f59e0b;
+  --success:        #10b981;
+  --danger:         #ef4444;
+  --warning:        #f59e0b;
+
+  /* Surfaces */
+  --bg-dark:        #07071a;
+  --bg-card:        #0f0f26;
+  --bg-card-2:      #161630;
+  --bg-input:       #1a1a38;
+  --border:         rgba(255,255,255,0.06);
+  --border-focus:   rgba(129,140,248,0.6);
+
+  /* Text */
+  --text-primary:   #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted:     #475569;
+
+  /* Shadows */
+  --shadow-glow:    0 0 60px rgba(79,70,229,0.3);
+  --shadow-card:    0 12px 48px rgba(0,0,0,0.6);
+  --shadow-sm:      0 4px 16px rgba(0,0,0,0.4);
+
+  /* Radius */
+  --radius-xs:  6px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-2xl: 32px;
+
+  /* Transitions */
+  --transition:      all 0.3s cubic-bezier(0.4,0,0.2,1);
+  --transition-fast: all 0.15s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ============================================================
+   RESET
+============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 99px; }
+
+/* ============================================================
+   TYPOGRAPHY
+============================================================ */
+h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; line-height: 1.15; }
+h2 { font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 700; line-height: 1.25; }
+h3 { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 600; }
+p  { color: var(--text-secondary); font-size: 0.95rem; }
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.01em;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.2s ease;
+}
+.btn:hover::after { background: rgba(255,255,255,0.06); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  box-shadow: 0 4px 20px rgba(79,70,229,0.45);
+}
+.btn-primary:hover {
+  box-shadow: 0 8px 32px rgba(79,70,229,0.65);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+}
+.btn-primary:active { opacity: 0.85; }
+
+.btn-block  { width: 100%; }
+.btn-lg     { padding: 15px 32px; font-size: 1rem; border-radius: var(--radius-lg); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* ============================================================
+   FORMS
+============================================================ */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+.form-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.form-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 1;
+  line-height: 1;
+}
+
+.form-input {
+  width: 100%;
+  padding: 13px 16px 13px 44px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  outline: none;
+}
+.form-input:focus {
+  border-color: var(--primary-light);
+  background: rgba(26,26,56,0.95);
+  box-shadow: 0 0 0 4px rgba(129,140,248,0.12);
+}
+.form-input::placeholder { color: var(--text-muted); }
+.form-input.error {
+  border-color: rgba(239,68,68,0.6);
+  box-shadow: 0 0 0 4px rgba(239,68,68,0.08);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-muted);
+  transition: color 0.2s;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+.toggle-password:hover { color: var(--text-primary); }
+
+/* ============================================================
+   ALERTS
+============================================================ */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+.alert-danger {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.22);
+  color: #fca5a5;
+}
+.alert-success {
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.22);
+  color: #6ee7b7;
+}
+
+/* ============================================================
+   KEYFRAMES
+============================================================ */
+@keyframes fadeIn   { from { opacity:0 } to { opacity:1 } }
+@keyframes slideUp  { from { opacity:0; transform:translateY(32px) } to { opacity:1; transform:translateY(0) } }
+@keyframes slideDown{ from { opacity:0; transform:translateY(-10px) } to { opacity:1; transform:translateY(0) } }
+@keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+@keyframes spin     { to { transform:rotate(360deg) } }
+@keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:0.35} }
+@keyframes orbDrift {
+  0%   { transform: translate(0,0) scale(1); }
+  33%  { transform: translate(30px,-20px) scale(1.05); }
+  66%  { transform: translate(-15px,25px) scale(0.97); }
+  100% { transform: translate(0,0) scale(1); }
+}
+
+.fade-in  { animation: fadeIn  0.5s ease forwards; }
+.slide-up { animation: slideUp 0.5s ease forwards; }

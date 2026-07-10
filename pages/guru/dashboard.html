@@ -1,0 +1,3531 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dashboard Guru – EduPortal SMP Pelita Bangsa Pamulang." />
+  <title>Dashboard Guru – EduPortal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../css/dashboard.css?v=2.1" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    .notif-dropdown {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      width: 300px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      overflow: hidden;
+    }
+
+    .notif-dropdown.open {
+      display: block;
+      animation: fadeInContent 0.2s ease;
+    }
+
+    .notif-header {
+      padding: 14px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .topbar-notif-wrap {
+      position: relative;
+    }
+
+    .student-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../../images/logo-sekolah.png" alt="Logo" class="sidebar-logo-img" />
+        <div class="sidebar-logo-text">
+          <span class="sidebar-logo-title" style="font-size: 1.1rem; line-height: 1.2; white-space: normal;">SMP Pelita
+            Bangsa</span>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" data-user-avatar>?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" data-user-name>Nama Guru</div>
+          <div class="sidebar-user-role">Guru</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Menu Utama</div>
+        <div class="nav-item active" id="navDashboard" data-page="dashboard">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </span>
+          <span class="nav-label">Dashboard</span>
+        </div>
+        <div class="nav-item" id="navAbsensi" data-page="absensi">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </span>
+          <span class="nav-label">Input Absensi</span>
+        </div>
+        <div class="nav-item" id="navRekapAbsensi" data-page="rekap-absensi">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </span>
+          <span class="nav-label">Rekap Absensi</span>
+        </div>
+        <div class="nav-item" id="navNilai" data-page="nilai">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+              </path>
+            </svg>
+          </span>
+          <span class="nav-label">Input Nilai</span>
+        </div>
+        <div class="nav-item" id="navCBT" data-page="cbt">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </span>
+          <span class="nav-label">Kelola Soal CBT</span>
+        </div>
+
+        <div class="nav-section-label">Sikap & Profil</div>
+        <div class="nav-item" id="navJurnalSikap" data-page="jurnal-sikap">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </span>
+          <span class="nav-label">Jurnal Sikap</span>
+        </div>
+
+        <div class="nav-section-label">Lainnya</div>
+        <div class="nav-item" id="navJadwal" data-page="jadwal">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </span>
+          <span class="nav-label">Jadwal Mengajar</span>
+        </div>
+        <div class="nav-item" id="navProfil" data-page="profil">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </span>
+          <span class="nav-label">Profil Saya</span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="nav-item" onclick="logout()" id="navLogout">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </span>
+          <span class="nav-label">Keluar</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebarToggle"><span></span><span></span><span></span></button>
+          <div>
+            <div class="page-title">Dashboard Guru</div>
+            <div class="page-breadcrumb" data-date-now>Memuat...</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="topbar-btn theme-toggle-btn" title="Ganti tema">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <div class="topbar-notif-wrap">
+            <button class="topbar-btn" id="notifBell">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 18px; height: 18px;">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+              <div class="notif-header">Notifikasi</div>
+              <div class="empty-state" style="padding:24px;">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    <path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path>
+                    <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path>
+                    <path d="M18 8a6 6 0 0 0-9.33-5M1 1l22 22"></path>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada notifikasi</div>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-avatar sm" data-user-avatar style="cursor:default;">?</div>
+        </div>
+      </header>
+
+      <main class="content">
+
+        <!-- ═══ DASHBOARD ═══ -->
+        <section class="page-section" data-page="dashboard">
+          <div class="welcome-banner">
+            <div>
+              <div class="welcome-title">Halo, <span data-user-name>Guru</span>!</div>
+              <div class="welcome-sub">Selamat datang di EduPortal &nbsp;|&nbsp; <span data-date-now></span></div>
+              <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                <span class="badge badge-muted" id="welcomeBadgeGuru">Memuat data...</span>
+              </div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card blue">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="stat-value" id="dashTotalSiswa">0</div>
+              <div class="stat-label">Total Siswa</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="stat-value" id="dashAbsensiHariIni">0</div>
+              <div class="stat-label">Absensi Tercatat</div>
+            </div>
+            <div class="stat-card amber">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </div>
+              <div class="stat-value" id="dashCbtAktif">0</div>
+              <div class="stat-label">CBT Aktif</div>
+            </div>
+            <div class="stat-card cyan">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </div>
+              <div class="stat-value" id="dashTugasAktif">0</div>
+              <div class="stat-label">Tugas Aktif</div>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">Jadwal Mengajar Hari Ini</div>
+                  <div class="section-subtitle" data-date-now></div>
+                </div>
+              </div>
+              <div class="empty-state">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada jadwal mengajar</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">Siswa Perlu Perhatian</div>
+                  <div class="section-subtitle">Tugas belum dikerjakan</div>
+                </div>
+              </div>
+              <div id="siswaPerhatianList">
+                <div class="empty-state">
+                  <div class="empty-state-icon"
+                    style="color:var(--text-muted);display:flex;justify-content:center;margin-bottom:8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      style="width:32px;height:32px;">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">Belum ada data siswa atau tugas.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">CBT Mendatang</div>
+                  <div class="section-subtitle">Ujian yang dijadwalkan</div>
+                </div>
+              </div>
+              <div class="empty-state">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada CBT yang dijadwalkan</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">Tugas Aktif</div>
+                  <div class="section-subtitle">Tugas yang belum dikumpulkan</div>
+                </div>
+              </div>
+              <div class="empty-state">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada tugas aktif</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;padding:12px 0;font-size:0.75rem;color:var(--text-muted);">
+            © 2026 EduPortal · SMP Pelita Bangsa Pamulang
+          </div>
+        </section>
+
+        <!-- ═══ INPUT ABSENSI ═══ -->
+        <section class="page-section" data-page="absensi" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(79,70,229,0.15),rgba(6,182,212,0.08));border-color:rgba(79,70,229,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Input Absensi</div>
+              <div class="welcome-sub">Catat kehadiran siswa hari ini</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Absensi Harian</div>
+                <div class="section-subtitle">Pilih kelas dan tanggal</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <div
+                  style="display:flex;align-items:center;gap:6px;background:var(--bg-input);padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-md);font-size:.83rem;">
+                  <span style="color:var(--text-muted);font-weight:600;">Target Kehadiran Lulus:</span>
+                  <input type="number" id="absTarget" value="75" min="0" max="100"
+                    style="width:50px;background:transparent;border:none;color:var(--text-primary);font-weight:700;outline:none;" />
+                  <span style="color:var(--text-primary);font-weight:700;">%</span>
+                </div>
+                <select id="absKelas" onchange="renderAbsensi()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option value="">-- Pilih Kelas --</option>
+                  <option value="VII">Kelas VII</option>
+                  <option value="VIII">Kelas VIII</option>
+                  <option value="IX">Kelas IX</option>
+                </select>
+                <input type="date" id="absDate"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;" />
+                <button class="btn btn-ghost btn-sm" onclick="openImportAbsensiModal()" style="display:flex;align-items:center;gap:6px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Import Excel
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-header" style="margin-bottom:14px;">
+              <div>
+                <div class="section-title">Daftar Siswa</div>
+                <div style="display:flex;gap:12px;margin-top:8px;font-size:.78rem;">
+                  <span style="color:var(--success);">Hadir: <strong id="absHadir">0</strong></span>
+                  <span style="color:var(--warning);">Sakit: <strong id="absSakit">0</strong></span>
+                  <span style="color:var(--info);">Izin: <strong id="absIzin">0</strong></span>
+                  <span style="color:var(--danger);">Alpha: <strong id="absAlpa">0</strong></span>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-ghost btn-sm" onclick="setAllHadir()">Semua Hadir</button>
+                <button class="btn btn-primary btn-sm" onclick="simpanAbsensi()">Simpan</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>NIS</th>
+                    <th>Status</th>
+                    <th>Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody id="absBody">
+                  <tr>
+                    <td colspan="5">
+                      <div class="empty-state">
+                        <div class="empty-state-icon"
+                          style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;"><svg
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                          </svg></div>
+                        <div class="empty-state-text">Pilih kelas terlebih dahulu</div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ REKAP ABSENSI ═══ -->
+        <section class="page-section" data-page="rekap-absensi" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(16,185,129,0.18),rgba(6,182,212,0.08));border-color:rgba(16,185,129,0.25);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Rekap Absensi Siswa</div>
+              <div class="welcome-sub">Pantau kehadiran seluruh siswa kelas Anda</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card green">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="stat-value" id="rekapSiswaHadir">0</div>
+              <div class="stat-label">Siswa Hadir</div>
+            </div>
+            <div class="stat-card red">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </div>
+              <div class="stat-value" id="rekapSiswaAlpa">0</div>
+              <div class="stat-label">Siswa Alpha</div>
+            </div>
+            <div class="stat-card amber">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+                </svg>
+              </div>
+              <div class="stat-value" id="rekapSiswaSakit">0</div>
+              <div class="stat-label">Siswa Sakit</div>
+            </div>
+            <div class="stat-card blue">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" style="width: 24px; height: 24px;">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+              </div>
+              <div class="stat-value" id="rekapSiswaIzin">0</div>
+              <div class="stat-label">Siswa Izin</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:20px;">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Data Kehadiran Mingguan</div>
+                <div class="section-subtitle">Pilih kelas untuk melihat rekap</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <select id="rekapKelas" onchange="renderRekapAbsensi()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option value="all">Semua Kelas</option>
+                  <option value="VII">Kelas VII</option>
+                  <option value="VIII">Kelas VIII</option>
+                  <option value="IX">Kelas IX</option>
+                </select>
+                <button class="btn btn-ghost btn-sm" onclick="exportKehadiran()">Export</button>
+              </div>
+            </div>
+            <div id="rekapTableContainer">
+              <div class="empty-state">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 32px; height: 32px;">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada data absensi yang tercatat.<br>Mulai dengan menginput absensi
+                  harian.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Perlu Perhatian Khusus</div>
+                <div class="section-subtitle">Siswa dengan tugas banyak belum dikerjakan</div>
+              </div>
+            </div>
+            <div id="rekapPerhatianList">
+              <div class="empty-state-text" style="font-size:.8rem;color:var(--text-muted);padding:12px 0;">Belum ada
+                data. Input absensi untuk melihat rekap.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ INPUT NILAI ═══ -->
+        <section class="page-section" data-page="nilai" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(245,158,11,0.14),rgba(79,70,229,0.07));border-color:rgba(245,158,11,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Input Nilai Siswa</div>
+              <div class="welcome-sub">Masukkan nilai ulangan, tugas, dan ujian</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                </path>
+              </svg>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Filter & Pengaturan</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <div
+                  style="display:flex;align-items:center;gap:6px;background:var(--bg-input);padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-md);font-size:.83rem;">
+                  <span style="color:var(--text-muted);font-weight:600;">KKM (Batas Lulus):</span>
+                  <input type="number" id="nilaiKkm" value="75" min="0" max="100"
+                    style="width:50px;background:transparent;border:none;color:var(--text-primary);font-weight:700;outline:none;"
+                    oninput="renderNilai()" />
+                </div>
+                <select id="nilaiKelas" onchange="renderNilai()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option value="">-- Pilih Kelas --</option>
+                  <option value="VII">Kelas VII</option>
+                  <option value="VIII">Kelas VIII</option>
+                  <option value="IX">Kelas IX</option>
+                </select>
+                <select id="nilaiJenis" onchange="renderNilai()"
+                  style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                  <option value="">-- Jenis Nilai --</option>
+                  <option value="uh">Ulangan Harian</option>
+                  <option value="cbt">Ujian CBT</option>
+                  <option value="tugas">Tugas</option>
+                  <option value="uts">UTS</option>
+                  <option value="uas">UAS</option>
+                </select>
+                <button class="btn btn-ghost btn-sm" onclick="showPage('profil')" style="font-size:.75rem;">⚙ Atur Rumus
+                  Nilai</button>
+              </div>
+            </div>
+          </div>
+          <!-- INFO BOBOT AKTIF -->
+          <div id="infoBobotAktif"
+            style="display:none;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 16px;margin-bottom:12px;font-size:.75rem;color:var(--text-secondary);">
+          </div>
+          <!-- TAB BUTTONS -->
+          <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <button id="tabInputNilai" class="btn btn-primary btn-sm" onclick="switchNilaiTab('input')">Input Nilai Per
+              Komponen</button>
+            <button id="tabRekapNilai" class="btn btn-ghost btn-sm" onclick="switchNilaiTab('rekap')">Rekap Nilai
+              Akhir</button>
+          </div>
+          <div id="panelInputNilai" class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Daftar Nilai</div>
+                <div class="section-subtitle">Pilih kelas untuk menginput nilai</div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-ghost btn-sm" onclick="downloadTemplateNilaiCSV()" title="Download template CSV">
+                  📄 Template CSV
+                </button>
+                <label class="btn btn-ghost btn-sm" style="cursor:pointer;" title="Import nilai dari file CSV">
+                  ⬆️ Import CSV
+                  <input type="file" id="importNilaiCsvFile" accept=".csv" style="display:none;" onchange="handleImportNilaiCSV(this)" />
+                </label>
+                <button class="btn btn-primary btn-sm" onclick="simpanNilai()">Simpan Nilai</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>NIS</th>
+                    <th>Nilai</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="nilaiBody">
+                  <tr>
+                    <td colspan="5">
+                      <div class="empty-state">
+                        <div class="empty-state-icon"
+                          style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;"><svg
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                          </svg></div>
+                        <div class="empty-state-text">Belum ada data nilai.<br>Pilih kelas dan jenis nilai untuk
+                          memulai.</div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- TAB: REKAP NILAI AKHIR -->
+          <div id="panelRekapNilai" class="card" style="display:none;">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Rekap Nilai Akhir Siswa</div>
+                <div class="section-subtitle" id="rekapRumusLabel">Berdasarkan rumus bobot yang dikonfigurasi</div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="renderRekapNilai()">Refresh</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>Tugas</th>
+                    <th>UH</th>
+                    <th>UTS</th>
+                    <th>UAS</th>
+                    <th>Nilai Akhir</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="rekapNilaiBody">
+                  <tr>
+                    <td colspan="8">
+                      <div class="empty-state">
+                        <div class="empty-state-text">Pilih kelas terlebih dahulu.</div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ CBT ═══ -->
+        <section class="page-section" data-page="cbt" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(79,70,229,0.15),rgba(6,182,212,0.08));border-color:rgba(79,70,229,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Kelola Soal CBT & Hasil Ujian</div>
+              <div class="welcome-sub">Buat ujian dari file PDF/Word dan pantau lembar jawaban siswa</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card blue">
+              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  style="width: 24px; height: 24px;">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg></div>
+              <div class="stat-value" id="statsTotalUjian">0</div>
+              <div class="stat-label">Total Ujian Aktif</div>
+            </div>
+            <div class="stat-card green">
+              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  style="width: 24px; height: 24px;">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg></div>
+              <div class="stat-value" id="statsSelesaiUjian">0</div>
+              <div class="stat-label">Siswa Selesai Ujian</div>
+            </div>
+            <div class="stat-card amber">
+              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  style="width: 24px; height: 24px;">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg></div>
+              <div class="stat-value" id="statsRataSkor">0</div>
+              <div class="stat-label">Rata-rata Skor</div>
+            </div>
+          </div>
+
+          <!-- MAIN PANEL CBT -->
+          <div id="cbtMainPanel" style="display:flex; flex-direction:column; gap:20px;">
+            <!-- DAFTAR PAKET UJIAN -->
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">Daftar Paket Ujian CBT</div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="showCbtCompiler()">+ Buat Ujian Baru (PDF/Word)</button>
+              </div>
+              <div id="cbtListContainer">
+                <div class="empty-state">
+                  <div class="empty-state-icon"
+                    style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      style="width:32px;height:32px;">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                  </div>
+                  <div class="empty-state-text">Belum ada ujian yang dibuat.<br>Klik tombol di atas untuk mengunggah PDF
+                    atau menulis soal.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- HASIL UJIAN SISWA -->
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">Hasil Ujian &amp; Nilai Siswa</div>
+                  <div class="section-subtitle">Nilai lembar jawaban siswa yang masuk secara otomatis</div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="btn btn-ghost btn-sm" onclick="exportHasilCSV()" style="font-size:.75rem;">&#128229;
+                    Export CSV</button>
+                  <button class="btn btn-ghost btn-sm" onclick="clearHasilUjian()"
+                    style="color:var(--danger);">&#128465; Clear Hasil</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table class="table cbt-table" style="width:100%; border-collapse:collapse; text-align:left;">
+                  <thead>
+                    <tr
+                      style="border-bottom:1px solid var(--border); color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+                      <th style="padding:12px 16px;">Siswa</th>
+                      <th style="padding:12px 16px;">Kelas</th>
+                      <th style="padding:12px 16px;">Nama Ujian</th>
+                      <th style="padding:12px 16px; text-align:center;">Skor</th>
+                      <th style="padding:12px 16px; text-align:center;">Benar / Total</th>
+                      <th style="padding:12px 16px; text-align:center;">Status</th>
+                      <th style="padding:12px 16px;">Tanggal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cbtHasilBody">
+                    <tr>
+                      <td colspan="6" style="padding:0;">
+                        <div class="empty-state" style="border:none; background:transparent;">
+                          <div class="empty-state-text" style="color:var(--text-muted);">Belum ada riwayat hasil ujian
+                            siswa.</div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL COMPILER (HIDDEN BY DEFAULT) -->
+          <div id="cbtCompilerPanel" style="display:none; flex-direction:column; gap:20px;">
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">PDF / Word Smart Exam Compiler</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="hideCbtCompiler()">← Kembali</button>
+              </div>
+
+              <!-- Mode Switcher -->
+              <div style="display:flex;gap:10px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:12px;">
+                <button id="btnModeText" class="btn btn-primary btn-sm" onclick="setCompilerMode('text')" style="font-size:0.75rem;padding:6px 12px;">Mode 1: Ketik / Ekstrak Teks</button>
+                <button id="btnModePdf" class="btn btn-ghost btn-sm" onclick="setCompilerMode('pdf')" style="font-size:0.75rem;padding:6px 12px;">Mode 2: Import PDF Soal</button>
+              </div>
+
+              <div class="compiler-grid-main">
+                <!-- INPUT DAN TEXTAREA EDITOR (MODE 1: TEKS) -->
+                <div id="textModeInputArea" style="display:flex; flex-direction:column; gap:14px;">
+                  <div class="compiler-grid-inputs">
+                    <div>
+                      <label
+                        style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Judul
+                        Ujian</label>
+                      <input type="text" id="compTitleText" placeholder="Contoh: Penilaian Harian Matematika"
+                        style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                    </div>
+                    <div>
+                      <label
+                        style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Target
+                        Kelas</label>
+                      <select id="compKelasText"
+                        style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                        <option value="VII">Kelas VII</option>
+                        <option value="VIII">Kelas VIII</option>
+                        <option value="IX">Kelas IX</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Durasi
+                        (Menit)</label>
+                      <input type="number" id="compDurationText" value="60" min="5"
+                        style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                    </div>
+                  </div>
+
+                  <!-- PDF UPLOAD BOX -->
+                  <div
+                    style="background:var(--bg-card);border:1px dashed var(--primary);border-radius:var(--radius-md);padding:14px;text-align:center;">
+                    <label for="pdfUploadInput" style="cursor:pointer;display:block;">
+                      <div style="color:var(--primary);margin-bottom:6px;display:flex;justify-content:center;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                          style="width:24px;height:24px;">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                          <polyline points="14 2 14 8 20 8"></polyline>
+                          <line x1="16" y1="13" x2="8" y2="13"></line>
+                          <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                      </div>
+                      <div style="color:var(--text-primary);font-weight:600;font-size:0.8rem;" id="pdfUploadStatusText">
+                        Unggah File PDF Soal</div>
+                      <div style="color:var(--text-muted);font-size:0.7rem;margin-top:2px;">Teks PDF akan langsung
+                        diekstrak secara otomatis ke editor</div>
+                    </label>
+                    <input type="file" id="pdfUploadInput" accept=".pdf" style="display:none;"
+                      onchange="handlePDFUpload(event)" />
+                  </div>
+
+                  <!-- TEXTAREA EDITOR -->
+                  <div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                      <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;">Editor Teks
+                        Soal (Copy-Paste dari Word/PDF)</label>
+                      <button class="btn btn-ghost btn-sm" onclick="loadContohSoal()"
+                        style="padding:2px 6px;font-size:0.7rem;color:var(--primary);">+ Load Contoh Soal</button>
+                    </div>
+                    <textarea id="compTextEditor"
+                      style="width:100%;padding:12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:280px;resize:vertical;font-family:monospace;line-height:1.5;"
+                      placeholder="Ketik atau tempel soal di sini...
+
+CONTOH FORMAT:
+
+1. Ibu kota Indonesia adalah...
+A. Bandung
+B. Jakarta
+C. Surabaya
+D. Medan
+
+2. Hasil dari 5 + 7 adalah...
+A. 10
+B. 11
+C. 12
+D. 13
+
+💡 Setelah soal muncul di PREVIEW kanan,
+    KLIK salah satu opsi untuk menandai kunci jawaban!" oninput="compileTextToPreview()"></textarea>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;display:flex;align-items:center;gap:4px;">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;color:var(--primary-light);flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                      <span>Gunakan tanda bintang <code>*</code> di depan opsi (contoh: <code>*A. HTML</code>) untuk menandai kunci jawaban, atau klik opsi di Live Preview sebelah kanan.</span>
+                    </div>
+                  </div>
+
+                  <!-- OPSI SHUFFLE -->
+                  <div
+                    style="display:flex;gap:20px;flex-wrap:wrap;padding:10px 14px;background:var(--bg-input);border-radius:var(--radius-md);border:1px solid var(--border);">
+                    <label
+                      style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;color:var(--text-secondary);">
+                      <input type="checkbox" id="compShuffle"
+                        style="width:15px;height:15px;accent-color:var(--primary);" />
+                      <span>🔀 Acak urutan soal</span>
+                    </label>
+                    <label
+                      style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;color:var(--text-secondary);">
+                      <input type="checkbox" id="compShuffleOpsi"
+                        style="width:15px;height:15px;accent-color:var(--primary);" />
+                      <span>🔀 Acak opsi jawaban</span>
+                    </label>
+                  </div>
+
+                  <button class="btn btn-primary" onclick="saveCompiledExam()" style="width:100%;">🚀
+                    Publikasikan Ujian ke Siswa</button>
+                </div>
+
+                <!-- LIVE PREVIEW SOAL (MODE 1: TEKS) -->
+                <div id="textModePreviewArea"
+                  style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;min-height:450px;display:flex;flex-direction:column;gap:12px;max-height:520px;overflow-y:auto;">
+                  <div style="border-bottom:1px solid var(--border);padding-bottom:10px;">
+                    <div
+                      style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                      <span>🖥️ LIVE PREVIEW – KLIK OPSI UNTUK PILIH KUNCI JAWABAN</span>
+                      <span id="compStatsCount" style="color:var(--primary-light);">0 Soal</span>
+                    </div>
+                    <div id="compKeyStatus"
+                      style="font-size:.7rem;padding:5px 10px;border-radius:6px;background:rgba(239,68,68,0.1);color:var(--danger);display:none;">
+                      ⚠ Ada soal tanpa kunci jawaban</div>
+                  </div>
+                  <div id="compPreviewContainer" style="display:flex;flex-direction:column;gap:16px;font-size:0.85rem;">
+                    <div style="color:var(--text-muted);text-align:center;padding-top:40px;">Mulai mengetik soal, lalu
+                      klik opsi jawaban untuk menandai kunci...</div>
+                  </div>
+                </div>
+
+                <!-- INPUT AREA (MODE 2: PDF SOAL) -->
+                <div id="pdfModeInputArea" style="display:none; flex-direction:column; gap:14px;">
+                  <div class="compiler-grid-inputs">
+                    <div>
+                      <label
+                        style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Judul
+                        Ujian</label>
+                      <input type="text" id="compTitlePdf" placeholder="Contoh: Ujian Akhir Semester IPA"
+                        style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                    </div>
+                    <div>
+                      <label
+                        style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Target
+                        Kelas</label>
+                      <select id="compKelasPdf"
+                        style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;">
+                        <option value="VII">Kelas VII</option>
+                        <option value="VIII">Kelas VIII</option>
+                        <option value="IX">Kelas IX</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Durasi
+                        (Menit)</label>
+                      <input type="number" id="compDurationPdf" value="60" min="5"
+                        style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                    </div>
+                  </div>
+
+                  <!-- PDF Exam File Input -->
+                  <div style="background:var(--bg-card);border:1px dashed var(--primary);border-radius:var(--radius-md);padding:20px;text-align:center;">
+                    <label for="pdfExamFileInput" style="cursor:pointer;display:block;">
+                      <div style="color:var(--primary);margin-bottom:8px;display:flex;justify-content:center;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                          <polyline points="14 2 14 8 20 8"></polyline>
+                          <line x1="16" y1="13" x2="8" y2="13"></line>
+                          <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                      </div>
+                      <div style="color:var(--text-primary);font-weight:600;font-size:0.85rem;" id="pdfExamStatusText">Pilih File PDF Soal</div>
+                      <div style="color:var(--text-muted);font-size:0.72rem;margin-top:4px;">File PDF ini akan ditampilkan utuh di layar siswa</div>
+                    </label>
+                    <input type="file" id="pdfExamFileInput" accept=".pdf" style="display:none;" onchange="handlePdfExamUpload(event)" />
+                  </div>
+
+                  <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Jumlah Soal</label>
+                    <input type="number" id="compPdfSoalCount" value="10" min="1" max="100" oninput="generatePdfAnswerKeyGrid()" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;" />
+                  </div>
+
+                  <button class="btn btn-primary" onclick="saveCompiledExam()" style="width:100%;margin-top:10px;">🚀 Publikasikan Ujian PDF</button>
+                </div>
+
+                <!-- PREVIEW/ANSWER KEY AREA (MODE 2: PDF SOAL) -->
+                <div id="pdfModePreviewArea" style="display:none; background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;min-height:450px;max-height:520px;overflow-y:auto;flex-direction:column;gap:12px;box-sizing:border-box;">
+                  <div style="font-size:.75rem;font-weight:700;color:var(--text-muted);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:6px;">
+                    🔑 KUNCI JAWABAN (PILIH UNTUK SETIAP SOAL)
+                  </div>
+                  <div id="pdfAnswerKeyGrid" style="display:flex;flex-direction:column;gap:12px;">
+                    <!-- Will be generated dynamically -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section> <!-- ═══ TUGAS ═══ -->
+
+
+
+        <!-- ═══ JADWAL ═══ -->
+        <section class="page-section" data-page="jadwal" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(16,185,129,0.15),rgba(79,70,229,0.07));border-color:rgba(16,185,129,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Jadwal Mengajar</div>
+              <div class="welcome-sub">Semester ini – diatur oleh Admin</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Jadwal Mingguan</div>
+                <div class="section-subtitle">Senin – Jumat</div>
+              </div>
+            </div>
+            <div id="guruJadwalContent">
+              <div class="empty-state">
+                <div class="empty-state-icon"
+                  style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    style="width: 32px; height: 32px;">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </div>
+                <div class="empty-state-text">Belum ada jadwal mengajar.<br><small
+                    style="color:var(--text-muted)">Jadwal akan muncul setelah Admin menginput melalui Dashboard
+                    Admin.</small></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ PROFIL ═══ -->
+        <section class="page-section" data-page="profil" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(79,70,229,0.15),rgba(16,185,129,0.06));border-color:rgba(79,70,229,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Profil Saya</div>
+              <div class="welcome-sub">Kelola informasi akun dan data guru</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card" style="text-align:center;">
+              <div
+                style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:white;margin:0 auto 14px;box-shadow:0 0 0 4px rgba(79,70,229,0.2);"
+                data-user-avatar>?</div>
+              <div style="font-size:1rem;font-weight:800;color:var(--text-primary);" data-user-name>Nama Guru</div>
+              <div style="font-size:.78rem;color:var(--text-muted);margin-top:4px;">Guru</div>
+              <div style="margin:16px 0;display:flex;flex-direction:column;gap:8px;">
+                <div
+                  style="display:flex;justify-content:space-between;font-size:.8rem;padding:8px 12px;background:var(--bg-input);border-radius:var(--radius-md);">
+                  <span style="color:var(--text-muted);">NUPTK</span><span style="color:var(--text-muted);">—</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;font-size:.8rem;padding:8px 12px;background:var(--bg-input);border-radius:var(--radius-md);">
+                  <span style="color:var(--text-muted);">Kelas Diampu</span><span
+                    style="color:var(--text-muted);">—</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;font-size:.8rem;padding:8px 12px;background:var(--bg-input);border-radius:var(--radius-md);">
+                  <span style="color:var(--text-muted);">Status</span><span class="badge badge-success">Aktif</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-title" style="margin-bottom:16px;">Edit Informasi</div>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama
+                    Lengkap</label><input type="text" placeholder="Nama lengkap..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Email
+                    Aktif</label><input type="email" placeholder="Email..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">No.
+                    Telepon</label><input type="tel" placeholder="No. telepon..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div><label
+                    style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Alamat</label><textarea
+                    placeholder="Alamat..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:70px;resize:vertical;font-family:inherit;"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="showToast('Profil berhasil diperbarui!','success')"
+                  style="width:100%;">Simpan Perubahan</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:20px;">
+            <div class="section-title" style="margin-bottom:4px;">Pengaturan Rumus Penilaian</div>
+            <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:16px;">Atur bobot tiap komponen nilai.
+              Total bobot harus = 100%</div>
+            <div
+              style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:14px;">
+              <div>
+                <label
+                  style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Tugas
+                  (%)</label>
+                <input type="number" id="bobotTugas" value="20" min="0" max="100"
+                  style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;"
+                  oninput="updateBobotTotal()" />
+              </div>
+              <div>
+                <label
+                  style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Ulangan
+                  Harian (%)</label>
+                <input type="number" id="bobotUH" value="30" min="0" max="100"
+                  style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;"
+                  oninput="updateBobotTotal()" />
+              </div>
+              <div>
+                <label
+                  style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">UTS
+                  (%)</label>
+                <input type="number" id="bobotUTS" value="20" min="0" max="100"
+                  style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;"
+                  oninput="updateBobotTotal()" />
+              </div>
+              <div>
+                <label
+                  style="font-size:.72rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">UAS
+                  (%)</label>
+                <input type="number" id="bobotUAS" value="30" min="0" max="100"
+                  style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;box-sizing:border-box;"
+                  oninput="updateBobotTotal()" />
+              </div>
+            </div>
+            <div id="bobotTotalInfo"
+              style="font-size:.8rem;font-weight:700;padding:10px 14px;border-radius:var(--radius-md);background:rgba(16,185,129,0.1);color:var(--success);margin-bottom:14px;">
+              Total Bobot: 100% ✓</div>
+            <div
+              style="background:var(--bg-input);border-radius:var(--radius-md);padding:12px 14px;font-size:.78rem;color:var(--text-secondary);margin-bottom:14px;line-height:1.8;">
+              <strong style="color:var(--text-primary);">Rumus Nilai Akhir:</strong><br />
+              Nilai Akhir = (Tugas × <span id="previewTugas">20</span>%) + (UH × <span id="previewUH">30</span>%) + (UTS
+              × <span id="previewUTS">20</span>%) + (UAS × <span id="previewUAS">30</span>%)
+            </div>
+            <button class="btn btn-primary" onclick="simpanBobot()" style="width:100%;">Simpan Pengaturan Rumus
+              Nilai</button>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:16px;">Ganti Password</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">
+              <div><label
+                  style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Password
+                  Lama</label><input type="password" placeholder="••••••••"
+                  style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+              </div>
+              <div><label
+                  style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Password
+                  Baru</label><input type="password" placeholder="••••••••"
+                  style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+              </div>
+              <div><label
+                  style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Konfirmasi
+                  Password</label><input type="password" placeholder="••••••••"
+                  style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+              </div>
+            </div>
+            <button class="btn btn-ghost" style="margin-top:14px;"
+              onclick="showToast('Password berhasil diperbarui!','success')">Update Password</button>
+          </div>
+        </section>
+
+        <!-- ═══ JURNAL SIKAP ═══ -->
+        <section class="page-section" data-page="jurnal-sikap" style="display:none;">
+          <div class="welcome-banner"
+            style="background:linear-gradient(120deg,rgba(79,70,229,0.15),rgba(16,185,129,0.08));border-color:rgba(79,70,229,0.22);margin-bottom:24px;">
+            <div>
+              <div class="welcome-title">Jurnal Sikap Siswa</div>
+              <div class="welcome-sub">Catat dan pantau jurnal sikap spiritual & sosial siswa</div>
+            </div>
+            <div class="welcome-emoji"
+              style="display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 80px; height: 80px;">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom:20px; grid-template-columns: 1fr 2fr;">
+            <!-- Form Input Jurnal -->
+            <div class="card">
+              <div class="section-title" style="margin-bottom:16px;">Tambah Catatan Jurnal</div>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div>
+                  <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Pilih Kelas</label>
+                  <select id="jsKelas" onchange="jsLoadSiswaDropdown()"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="VII">Kelas VII</option>
+                    <option value="VIII">Kelas VIII</option>
+                    <option value="IX">Kelas IX</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nama Siswa</label>
+                  <select id="jsSiswa"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option value="">-- Pilih Siswa --</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Tanggal</label>
+                  <input type="date" id="jsTanggal"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;" />
+                </div>
+                <div>
+                  <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Aspek Sikap</label>
+                  <select id="jsAspek"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option value="spiritual">Spiritual</option>
+                    <option value="sosial">Sosial</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Nilai Sikap</label>
+                  <select id="jsNilai"
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;">
+                    <option value="positif">Positif</option>
+                    <option value="negatif">Negatif</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Deskripsi Perilaku (Ketik Manual)</label>
+                  <textarea id="jsPerilaku" placeholder="Tuliskan perilaku siswa secara detail..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:80px;resize:vertical;font-family:inherit;"></textarea>
+                </div>
+                <div>
+                  <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">Tindak Lanjut</label>
+                  <textarea id="jsTindakLanjut" placeholder="Tindakan yang diambil (misal: pembinaan, apresiasi)..."
+                    style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.84rem;min-height:70px;resize:vertical;font-family:inherit;"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="jsSimpanJurnal()" style="width:100%;">Simpan Jurnal</button>
+              </div>
+            </div>
+
+            <!-- List Jurnal Terdaftar -->
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <div class="section-title">Riwayat Jurnal Sikap</div>
+                  <div class="section-subtitle">Daftar jurnal sikap yang tercatat di kelas Anda</div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <select id="jsFilterKelas" onchange="jsLoadLogs()"
+                    style="padding:7px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-primary);font-size:.83rem;">
+                    <option value="">Semua Kelas</option>
+                    <option value="VII">Kelas VII</option>
+                    <option value="VIII">Kelas VIII</option>
+                    <option value="IX">Kelas IX</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-wrap" style="margin-top: 14px;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Tanggal</th>
+                      <th>Siswa</th>
+                      <th>Kelas</th>
+                      <th>Aspek</th>
+                      <th>Perilaku</th>
+                      <th>Tindak Lanjut</th>
+                      <th>Nilai</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="jsLogsBody">
+                    <tr>
+                      <td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Memuat data...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+      </main>
+    </div>
+  </div>
+
+  <script src="../../js/dashboard.js"></script>
+  <script>
+    'use strict';
+    // ============================================================
+    // DATA SISWA — dibaca dari localStorage (diisi oleh Admin)
+    // Format: { 'VII': [{no,nis,nama}, ...], ... }
+    // ============================================================
+    function getSiswaData() {
+      try {
+        const stored = localStorage.getItem('edu_siswa_data');
+        return stored ? JSON.parse(stored) : {};
+      } catch (e) { return {}; }
+    }
+
+    // Proxy agar kode lama yang pakai `siswaData[kelas]` tetap jalan
+    const siswaData = new Proxy({}, {
+      get(target, kelas) {
+        const data = getSiswaData();
+        return data[kelas] || [];
+      }
+    });
+
+    let absStatus = {};
+
+    /* ═══ UPDATE STAT CARDS DASHBOARD ═══ */
+    function updateDashboardStats() {
+      const allSiswa = getSiswaData();
+      const totalSiswa = Object.values(allSiswa).reduce((s, arr) => s + arr.length, 0);
+      const el = document.getElementById('dashTotalSiswa');
+      if (el) el.textContent = totalSiswa;
+
+      // Badge welcome
+      const badge = document.getElementById('welcomeBadgeGuru');
+      if (badge) badge.textContent = totalSiswa > 0 ? `${totalSiswa} Siswa Terdaftar` : 'Belum ada data siswa';
+
+      // CBT
+      let exams = [];
+      try { exams = JSON.parse(localStorage.getItem('cbt_soal')) || []; } catch (e) { }
+      const cbtEl = document.getElementById('dashCbtAktif');
+      if (cbtEl) cbtEl.textContent = exams.length;
+
+      // Tugas
+      let tugas = [];
+      try { tugas = JSON.parse(localStorage.getItem('edu_tugas')) || []; } catch (e) { }
+      const tugasEl = document.getElementById('dashTugasAktif');
+      if (tugasEl) tugasEl.textContent = tugas.length;
+
+      // Absensi (hitung total entri absensi yang tersimpan)
+      let absensiCount = 0;
+      try {
+        const absData = JSON.parse(localStorage.getItem('edu_absensi_data')) || {};
+        absensiCount = Object.keys(absData).length;
+      } catch (e) { }
+      const absEl = document.getElementById('dashAbsensiHariIni');
+      if (absEl) absEl.textContent = absensiCount;
+
+      // Siswa Perlu Perhatian – update berdasarkan tugas belum dikerjakan
+      renderSiswaPerhatian(allSiswa, tugas);
+    }
+
+    function renderSiswaPerhatian(allSiswa, tugas) {
+      const container1 = document.getElementById('siswaPerhatianList');
+      const container2 = document.getElementById('rekapPerhatianList');
+      
+      const setHTML = (container, html) => {
+        if (container) container.innerHTML = html;
+      };
+
+      if (!tugas || tugas.length === 0 || Object.keys(allSiswa).length === 0) {
+        const emptyHtml = '<div class="empty-state"><div class="empty-state-text">Belum ada data siswa atau tugas.</div></div>';
+        setHTML(container1, emptyHtml);
+        setHTML(container2, emptyHtml);
+        return;
+      }
+      let perhatian = [];
+      tugas.forEach(t => {
+        const list = allSiswa[t.kelas] || [];
+        const sudah = t.sudah || [];
+        list.forEach(s => {
+          if (!sudah.includes(s.nis)) {
+            const found = perhatian.find(p => p.nis === s.nis);
+            if (found) { found.count++; }
+            else { perhatian.push({ nis: s.nis, nama: s.nama, kelas: t.kelas, count: 1 }); }
+          }
+        });
+      });
+      perhatian.sort((a, b) => b.count - a.count);
+      const top = perhatian.slice(0, 5);
+      if (top.length === 0) {
+        const okHtml = '<div class="empty-state-text" style="font-size:.8rem;color:var(--text-muted);padding:8px 0;">Semua siswa sudah mengerjakan tugas ✓</div>';
+        setHTML(container1, okHtml);
+        setHTML(container2, okHtml);
+        return;
+      }
+      const itemsHtml = top.map(p => {
+        const init = getInitials(p.nama);
+        return `<div class="list-item" style="border-bottom:1px dashed var(--border);padding-bottom:10px;margin-bottom:10px;">
+      <div class="avatar sm" style="background:var(--warning);">${init}</div>
+      <div class="list-item-info">
+        <div class="list-item-name">${p.nama}</div>
+        <div class="list-item-sub" style="color:var(--warning);font-weight:600;">${p.count} tugas belum dikerjakan</div>
+      </div>
+      <div class="list-item-right">
+        <button class="btn btn-ghost btn-sm" onclick="sendWarningNotification('${p.nama}','${p.count} tugas belum dikerjakan')">Notif</button>
+      </div>
+    </div>`;
+      }).join('');
+
+      setHTML(container1, itemsHtml);
+      setHTML(container2, itemsHtml);
+    }
+
+
+
+
+
+    /* ═══ JADWAL GURU (baca dari admin) ═══ */
+    function loadGuruJadwal() {
+      const container = document.getElementById('guruJadwalContent');
+      if (!container) return;
+      let jadwal = [];
+      try { jadwal = JSON.parse(localStorage.getItem('edu_jadwal')) || []; } catch (e) { }
+      if (jadwal.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Belum ada jadwal mengajar.<br><small style="color:var(--text-muted)">Jadwal akan muncul setelah Admin menginput melalui Dashboard Admin.</small></div></div>';
+        return;
+      }
+      const hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+      container.innerHTML = `<div class="table-wrap"><table class="table"><thead><tr><th>Hari</th><th>Jam</th><th>Mata Pelajaran</th><th>Kelas</th><th>Ruang</th></tr></thead><tbody>
+    ${jadwal.map(j => `<tr><td style="font-weight:600;">${j.hari || '-'}</td><td style="color:var(--text-muted)">${j.jam || '-'}</td><td>${j.mapel || '-'}</td><td><span class="badge badge-success">${j.kelas || '-'}</span></td><td style="color:var(--text-muted)">${j.ruang || '-'}</td></tr>`).join('')}
+  </tbody></table></div>`;
+    }
+
+    function renderAbsensi() {
+      const kelas = document.getElementById('absKelas')?.value;
+      const body = document.getElementById('absBody');
+      if (!body) return;
+
+      if (!kelas) {
+        body.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div class="empty-state-text">Pilih kelas terlebih dahulu</div></div></td></tr>';
+        return;
+      }
+
+      const list = siswaData[kelas];
+      if (!list || list.length === 0) {
+        body.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div><div class="empty-state-text">Belum ada data siswa untuk kelas ini</div></div></td></tr>';
+        return;
+      }
+
+      absStatus = {};
+      list.forEach(s => absStatus[s.nis] = 'hadir');
+      body.innerHTML = list.map(s => {
+        const init = getInitials(s.nama);
+        return `<tr id="ar-${s.nis}">
+      <td style="color:var(--text-muted);">${s.no}</td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div class="student-avatar">${init}</div><span style="color:var(--text-primary);font-weight:600;font-size:.83rem;">${s.nama}</span></div></td>
+      <td style="color:var(--text-muted);">${s.nis}</td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="abs-btn hadir active" id="h-${s.nis}" onclick="setAbs('${s.nis}','hadir')" style="padding:4px 9px;font-size:.7rem;font-weight:700;border-radius:6px;border:1px solid;background:rgba(16,185,129,.2);border-color:var(--success);color:var(--success);cursor:pointer;transition:all .15s;">H</button>
+          <button class="abs-btn sakit" id="s-${s.nis}" onclick="setAbs('${s.nis}','sakit')" style="padding:4px 9px;font-size:.7rem;font-weight:700;border-radius:6px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-muted);cursor:pointer;transition:all .15s;">S</button>
+          <button class="abs-btn izin" id="i-${s.nis}" onclick="setAbs('${s.nis}','izin')" style="padding:4px 9px;font-size:.7rem;font-weight:700;border-radius:6px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-muted);cursor:pointer;transition:all .15s;">I</button>
+          <button class="abs-btn alpa" id="a-${s.nis}" onclick="setAbs('${s.nis}','alpa')" style="padding:4px 9px;font-size:.7rem;font-weight:700;border-radius:6px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-muted);cursor:pointer;transition:all .15s;">A</button>
+        </div>
+      </td>
+      <td><input type="text" placeholder="Keterangan..." style="width:100%;padding:5px 8px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-size:.75rem;"/></td>
+    </tr>`;
+      }).join('');
+      updateAbsStats();
+    }
+
+    function setAbs(nis, status) {
+      absStatus[nis] = status;
+      const styles = {
+        hadir: ['rgba(16,185,129,.2)', 'var(--success)', 'var(--success)'],
+        sakit: ['rgba(245,158,11,.2)', 'var(--warning)', 'var(--warning)'],
+        izin: ['rgba(59,130,246,.2)', 'var(--info)', 'var(--info)'],
+        alpa: ['rgba(239,68,68,.2)', 'var(--danger)', 'var(--danger)'],
+      };
+      ['hadir', 'sakit', 'izin', 'alpa'].forEach(st => {
+        const btn = document.getElementById(`${st[0]}-${nis}`);
+        if (!btn) return;
+        if (st === status) {
+          const [bg, bc, col] = styles[st];
+          btn.style.cssText = `padding:4px 9px;font-size:.7rem;font-weight:700;border-radius:6px;border:1px solid ${bc};background:${bg};color:${col};cursor:pointer;transition:all .15s;`;
+        } else {
+          btn.style.cssText = 'padding:4px 9px;font-size:.7rem;font-weight:700;border-radius:6px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-muted);cursor:pointer;transition:all .15s;';
+        }
+      });
+      updateAbsStats();
+    }
+
+    function updateAbsStats() {
+      const counts = { hadir: 0, sakit: 0, izin: 0, alpa: 0 };
+      Object.values(absStatus).forEach(s => counts[s]++);
+      ['hadir', 'sakit', 'izin', 'alpa'].forEach(k => {
+        const el = document.getElementById('abs' + k.charAt(0).toUpperCase() + k.slice(1));
+        if (el) el.textContent = counts[k];
+      });
+    }
+
+    function setAllHadir() {
+      const kelas = document.getElementById('absKelas')?.value;
+      if (!kelas) { showToast('Pilih kelas dulu', 'info'); return; }
+      if (!siswaData[kelas] || siswaData[kelas].length === 0) { showToast('Belum ada data siswa', 'info'); return; }
+      Object.keys(absStatus).forEach(nis => setAbs(nis, 'hadir'));
+      showToast('Semua siswa ditandai Hadir', 'success');
+    }
+
+    function simpanAbsensi() {
+      const kelas = document.getElementById('absKelas')?.value;
+      if (!kelas) { showToast('Pilih kelas dulu', 'info'); return; }
+      if (Object.keys(absStatus).length === 0) { showToast('Belum ada siswa untuk disimpan', 'info'); return; }
+
+      // Simpan secara lokal ke localStorage
+      const today = new Date().toISOString().split('T')[0];
+      let absData = JSON.parse(localStorage.getItem('edu_absensi_data')) || {};
+      absData[`${today}_${kelas}`] = absStatus;
+      localStorage.setItem('edu_absensi_data', JSON.stringify(absData));
+
+      // Disable button saat proses menyimpan ke backend
+      const btn = document.querySelector('button[onclick="simpanAbsensi()"]');
+      const origText = btn ? btn.innerHTML : 'Simpan';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Menyimpan...';
+      }
+
+      // Kirim data ke backend database
+      fetch('../../api/save_absensi.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kelas, tanggal: today, absStatus })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+          }
+          if (data.status === 'success') {
+            showToast('Absensi berhasil disimpan ke database!', 'success');
+            updateDashboardStats();
+            renderRekapAbsensi();
+          } else {
+            showToast('Absensi disimpan lokal. ' + data.message, 'warning');
+            updateDashboardStats();
+            renderRekapAbsensi();
+          }
+        })
+        .catch(err => {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+          }
+          showToast('Absensi disimpan secara lokal!', 'success');
+          updateDashboardStats();
+          renderRekapAbsensi();
+        });
+    }
+
+    function getCurrentWeekDates() {
+      const current = new Date();
+      const day = current.getDay();
+      const mondayOffset = day === 0 ? -6 : 1 - day;
+      const dates = [];
+      for (let i = 0; i < 6; i++) {
+        const d = new Date(current);
+        d.setDate(current.getDate() + mondayOffset + i);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        dates.push({
+          dateStr: `${yyyy}-${mm}-${dd}`,
+          label: `${dd}/${mm}`
+        });
+      }
+      return dates;
+    }
+
+    function renderRekapAbsensi() {
+      const kelas = document.getElementById('rekapKelas')?.value || 'all';
+      const container = document.getElementById('rekapTableContainer');
+      if (!container) return;
+
+      const elHadir = document.getElementById('rekapSiswaHadir');
+      const elAlpa = document.getElementById('rekapSiswaAlpa');
+      const elSakit = document.getElementById('rekapSiswaSakit');
+      const elIzin = document.getElementById('rekapSiswaIzin');
+
+      if (elHadir) elHadir.textContent = '0';
+      if (elAlpa) elAlpa.textContent = '0';
+      if (elSakit) elSakit.textContent = '0';
+      if (elIzin) elIzin.textContent = '0';
+
+      let list = [];
+      if (kelas === 'all') {
+        const allSiswa = getSiswaData();
+        const classes = ['VII', 'VIII', 'IX'];
+        classes.forEach(cls => {
+          const classList = allSiswa[cls] || [];
+          classList.forEach(s => {
+            list.push({ ...s, kelas: cls });
+          });
+        });
+      } else {
+        const classList = siswaData[kelas] || [];
+        classList.forEach(s => {
+          list.push({ ...s, kelas: kelas });
+        });
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"
+              style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 32px; height: 32px;">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="empty-state-text">Belum ada data siswa untuk kelas ini.</div>
+          </div>
+        `;
+        return;
+      }
+
+      let absData = {};
+      try {
+        absData = JSON.parse(localStorage.getItem('edu_absensi_data')) || {};
+      } catch (e) {}
+
+      const weekDates = getCurrentWeekDates();
+      const classKeys = Object.keys(absData).filter(key => {
+        if (kelas === 'all') {
+          return key.endsWith('_VII') || key.endsWith('_VIII') || key.endsWith('_IX');
+        } else {
+          return key.endsWith(`_${kelas}`);
+        }
+      });
+
+      let totalHadir = 0;
+      let totalAlpa = 0;
+      let totalSakit = 0;
+      let totalIzin = 0;
+
+      classKeys.forEach(key => {
+        const records = absData[key] || {};
+        Object.values(records).forEach(status => {
+          if (status === 'hadir') totalHadir++;
+          else if (status === 'sakit') totalSakit++;
+          else if (status === 'alpa') totalAlpa++;
+          else if (status === 'izin') totalIzin++;
+        });
+      });
+
+      if (elHadir) elHadir.textContent = totalHadir;
+      if (elAlpa) elAlpa.textContent = totalAlpa;
+      if (elSakit) elSakit.textContent = totalSakit;
+      if (elIzin) elIzin.textContent = totalIzin;
+
+      const headersHtml = weekDates.map(wd => `
+        <th style="text-align:center; min-width:60px; font-size:0.75rem; padding: 8px 4px;">${wd.label}</th>
+      `).join('');
+
+      const rowsHtml = list.map((s, idx) => {
+        const init = getInitials(s.nama);
+        const cellsHtml = weekDates.map(wd => {
+          const dayKey = `${wd.dateStr}_${s.kelas}`;
+          const dayRecord = absData[dayKey] || {};
+          const status = dayRecord[s.nis];
+
+          let badgeHtml = '<span style="color:var(--text-muted); font-size:0.95rem; font-weight:700;">-</span>';
+          if (status === 'hadir') {
+            badgeHtml = '<span class="badge badge-success" style="padding:2px 5px; font-size:0.65rem; border-radius:4px; font-weight:800;">H</span>';
+          } else if (status === 'sakit') {
+            badgeHtml = '<span class="badge badge-warning" style="padding:2px 5px; font-size:0.65rem; border-radius:4px; font-weight:800;">S</span>';
+          } else if (status === 'izin') {
+            badgeHtml = '<span class="badge badge-info" style="padding:2px 5px; font-size:0.65rem; border-radius:4px; font-weight:800;">I</span>';
+          } else if (status === 'alpa') {
+            badgeHtml = '<span class="badge badge-danger" style="padding:2px 5px; font-size:0.65rem; border-radius:4px; font-weight:800;">A</span>';
+          }
+
+          return `<td style="text-align:center; padding:6px 4px;">${badgeHtml}</td>`;
+        }).join('');
+
+        return `
+          <tr>
+            <td style="color:var(--text-muted); font-size:0.75rem; width:35px; padding: 8px 6px;">${idx + 1}</td>
+            <td style="padding: 8px 6px;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="student-avatar" style="width:24px; height:24px; font-size:0.6rem;">${init}</div>
+                <span style="font-weight:600; font-size:0.8rem; color:var(--text-primary); white-space:nowrap;">${s.nama}</span>
+              </div>
+            </td>
+            <td style="padding: 8px 6px;"><span class="badge badge-info" style="padding:2px 6px; font-size:0.65rem; border-radius:4px; font-weight:700;">${s.kelas}</span></td>
+            <td style="color:var(--text-secondary); font-size:0.75rem; width:85px; padding: 8px 6px;">${s.nis}</td>
+            ${cellsHtml}
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="table-wrap" style="margin-top: 14px; width: 100%;">
+          <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="width:35px; font-size:0.7rem; padding: 8px 6px;">No</th>
+                <th style="font-size:0.7rem; padding: 8px 6px;">Nama Siswa</th>
+                <th style="font-size:0.7rem; padding: 8px 6px; width:60px;">Kelas</th>
+                <th style="width:85px; font-size:0.7rem; padding: 8px 6px;">NIS</th>
+                ${headersHtml}
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function exportKehadiran() {
+      const kelas = document.getElementById('rekapKelas')?.value || 'all';
+
+      // Create CSV content
+      const header = "No,NIS,Nama Siswa,Kelas,Status Kehadiran\n";
+      let list = [];
+      if (kelas === 'all') {
+        const allSiswa = getSiswaData();
+        const classes = ['VII', 'VIII', 'IX'];
+        classes.forEach(cls => {
+          const classList = allSiswa[cls] || [];
+          classList.forEach(s => {
+            list.push({ ...s, kelas: cls });
+          });
+        });
+      } else {
+        const classList = siswaData[kelas] || [];
+        classList.forEach(s => {
+          list.push({ ...s, kelas: kelas });
+        });
+      }
+
+      if (list.length === 0) {
+        showToast('Tidak ada data siswa untuk di-export.', 'warning');
+        return;
+      }
+
+      let absData = {};
+      try {
+        absData = JSON.parse(localStorage.getItem('edu_absensi_data')) || {};
+      } catch (e) {}
+
+      const today = new Date().toISOString().split('T')[0];
+
+      let csvContent = header;
+      list.forEach((s, idx) => {
+        const dayKey = `${today}_${s.kelas}`;
+        const dayRecord = absData[dayKey] || {};
+        const status = dayRecord[s.nis] || 'Belum diisi';
+        csvContent += `${idx + 1},${s.nis},"${s.nama}",Kelas ${s.kelas},${status.toUpperCase()}\n`;
+      });
+
+      // Trigger download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Rekap_Kehadiran_${kelas === 'all' ? 'Semua_Kelas' : 'Kelas_' + kelas}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast(`Data absensi berhasil diexport ke CSV!`, 'success');
+    }
+
+    let nilaiSiswa = {};
+    let nilaiTab = 'input';
+
+    function getBobotConfig() {
+      try { return JSON.parse(localStorage.getItem('edu_bobot')) || { tugas: 20, uh: 30, uts: 20, uas: 30 }; }
+      catch (e) { return { tugas: 20, uh: 30, uts: 20, uas: 30 }; }
+    }
+
+    function switchNilaiTab(tab) {
+      nilaiTab = tab;
+      const panelInput = document.getElementById('panelInputNilai');
+      const panelRekap = document.getElementById('panelRekapNilai');
+      const btnInput = document.getElementById('tabInputNilai');
+      const btnRekap = document.getElementById('tabRekapNilai');
+      if (tab === 'input') {
+        panelInput.style.display = ''; panelRekap.style.display = 'none';
+        btnInput.className = 'btn btn-primary btn-sm'; btnRekap.className = 'btn btn-ghost btn-sm';
+      } else {
+        panelInput.style.display = 'none'; panelRekap.style.display = '';
+        btnInput.className = 'btn btn-ghost btn-sm'; btnRekap.className = 'btn btn-primary btn-sm';
+        renderRekapNilai();
+      }
+    }
+
+    function renderRekapNilai() {
+      const kelas = document.getElementById('nilaiKelas')?.value;
+      const kkm = parseInt(document.getElementById('nilaiKkm')?.value) || 75;
+      const body = document.getElementById('rekapNilaiBody');
+      const bobot = getBobotConfig();
+      const label = document.getElementById('rekapRumusLabel');
+      if (label) label.textContent = `Rumus: (Tugas×${bobot.tugas}%) + (UH×${bobot.uh}%) + (UTS×${bobot.uts}%) + (UAS×${bobot.uas}%)`;
+      if (!body) return;
+      if (!kelas) { body.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-state-text">Pilih kelas terlebih dahulu.</div></div></td></tr>'; return; }
+      const list = siswaData[kelas];
+      if (!list || list.length === 0) { body.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-state-text">Belum ada siswa.</div></div></td></tr>'; return; }
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem('edu_nilai_rekap_' + kelas)) || {}; } catch (e) { }
+      body.innerHTML = list.map((s, i) => {
+        const init = getInitials(s.nama);
+        const nTugas = saved[s.nis]?.tugas ?? '';
+        const nUH = saved[s.nis]?.uh ?? '';
+        const nUTS = saved[s.nis]?.uts ?? '';
+        const nUAS = saved[s.nis]?.uas ?? '';
+        const hasData = nTugas !== '' || nUH !== '' || nUTS !== '' || nUAS !== '';
+        const na = hasData ? Math.round(
+          ((parseInt(nTugas) || 0) * (bobot.tugas / 100)) +
+          ((parseInt(nUH) || 0) * (bobot.uh / 100)) +
+          ((parseInt(nUTS) || 0) * (bobot.uts / 100)) +
+          ((parseInt(nUAS) || 0) * (bobot.uas / 100))
+        ) : null;
+        const lulus = na !== null && na >= kkm;
+        const bc = na === null ? 'var(--text-muted)' : lulus ? 'var(--success)' : 'var(--danger)';
+        const bb = na === null ? 'var(--bg-input)' : lulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
+        const naText = na === null ? '-' : na;;
+        return `<tr>
+      <td style="color:var(--text-muted);">${s.no}</td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div class="student-avatar">${init}</div><span style="font-weight:600;font-size:.83rem;">${s.nama}</span></div></td>
+      <td><input type="number" value="${nTugas}" onchange="updateRekap('${s.nis}','${kelas}','tugas',this.value)" style="width:52px;padding:4px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-size:.83rem;"/></td>
+      <td><input type="number" value="${nUH}" onchange="updateRekap('${s.nis}','${kelas}','uh',this.value)" style="width:52px;padding:4px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-size:.83rem;"/></td>
+      <td><input type="number" value="${nUTS}" onchange="updateRekap('${s.nis}','${kelas}','uts',this.value)" style="width:52px;padding:4px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-size:.83rem;"/></td>
+      <td><input type="number" value="${nUAS}" onchange="updateRekap('${s.nis}','${kelas}','uas',this.value)" style="width:52px;padding:4px 6px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-size:.83rem;"/></td>
+      <td id="na-${s.nis}" style="font-size:1rem;font-weight:800;color:${bc};">${naText}</td>
+      <td><span style="padding:4px 8px;border-radius:4px;font-size:.7rem;font-weight:700;color:${bc};background:${bb};">${na === null ? '-' : lulus ? 'LULUS' : 'REMIDI'}</span></td>
+    </tr>`;
+      }).join('');
+      try { localStorage.setItem('edu_nilai_rekap_' + kelas, JSON.stringify(saved)); } catch (e) { }
+    }
+
+    function updateRekap(nis, kelas, komponen, val) {
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem('edu_nilai_rekap_' + kelas)) || {}; } catch (e) { }
+      if (!saved[nis]) saved[nis] = { tugas: 0, uh: 0, uts: 0, uas: 0 };
+      saved[nis][komponen] = parseInt(val) || 0;
+      const kkm = parseInt(document.getElementById('nilaiKkm')?.value) || 75;
+      const bobot = getBobotConfig();
+      const na = Math.round((saved[nis].tugas * (bobot.tugas / 100)) + (saved[nis].uh * (bobot.uh / 100)) + (saved[nis].uts * (bobot.uts / 100)) + (saved[nis].uas * (bobot.uas / 100)));
+      const el = document.getElementById('na-' + nis);
+      if (el) { el.textContent = na; el.style.color = na >= kkm ? 'var(--success)' : 'var(--danger)'; }
+      try { localStorage.setItem('edu_nilai_rekap_' + kelas, JSON.stringify(saved)); } catch (e) { }
+    }
+
+    function updateBobotTotal() {
+      const t = parseInt(document.getElementById('bobotTugas')?.value) || 0;
+      const u = parseInt(document.getElementById('bobotUH')?.value) || 0;
+      const s = parseInt(document.getElementById('bobotUTS')?.value) || 0;
+      const a = parseInt(document.getElementById('bobotUAS')?.value) || 0;
+      const total = t + u + s + a;
+      const el = document.getElementById('bobotTotalInfo');
+      if (el) {
+        el.textContent = `Total Bobot: ${total}%${total === 100 ? ' ✓' : ' ✗ (harus 100%)'}`;
+        el.style.background = total === 100 ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
+        el.style.color = total === 100 ? 'var(--success)' : 'var(--danger)';
+      }
+      ['Tugas', 'UH', 'UTS', 'UAS'].forEach((id, i) => { const el = document.getElementById('preview' + id); if (el) el.textContent = [t, u, s, a][i]; });
+    }
+
+    function simpanBobot() {
+      const t = parseInt(document.getElementById('bobotTugas')?.value) || 0;
+      const u = parseInt(document.getElementById('bobotUH')?.value) || 0;
+      const s = parseInt(document.getElementById('bobotUTS')?.value) || 0;
+      const a = parseInt(document.getElementById('bobotUAS')?.value) || 0;
+      if (t + u + s + a !== 100) { showToast('Total bobot harus 100%!', 'warning'); return; }
+      localStorage.setItem('edu_bobot', JSON.stringify({ tugas: t, uh: u, uts: s, uas: a }));
+      showToast('Rumus penilaian berhasil disimpan!', 'success');
+    }
+
+    function loadBobotConfig() {
+      const bobot = getBobotConfig();
+      const fields = [{ id: 'bobotTugas', key: 'tugas' }, { id: 'bobotUH', key: 'uh' }, { id: 'bobotUTS', key: 'uts' }, { id: 'bobotUAS', key: 'uas' }];
+      fields.forEach(f => { const el = document.getElementById(f.id); if (el) el.value = bobot[f.key]; });
+      updateBobotTotal();
+      const info = document.getElementById('infoBobotAktif');
+      if (info) { info.style.display = ''; info.innerHTML = `<strong>Rumus Aktif:</strong> Nilai Akhir = (Tugas×${bobot.tugas}%) + (UH×${bobot.uh}%) + (UTS×${bobot.uts}%) + (UAS×${bobot.uas}%)`; }
+    }
+
+    function renderNilai() {
+      const kelas = document.getElementById('nilaiKelas')?.value;
+      const jenis = document.getElementById('nilaiJenis')?.value;
+      const kkmStr = document.getElementById('nilaiKkm')?.value;
+      const kkm = parseInt(kkmStr) || 75;
+      const body = document.getElementById('nilaiBody');
+
+      if (!body) return;
+      if (!kelas || !jenis) {
+        body.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div><div class="empty-state-text">Belum ada data nilai.<br>Pilih kelas dan jenis nilai untuk memulai.</div></div></td></tr>';
+        return;
+      }
+
+      const list = siswaData[kelas];
+      if (!list || list.length === 0) {
+        body.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-text">Belum ada data siswa untuk kelas ini</div></div></td></tr>';
+        return;
+      }
+
+      nilaiSiswa = {};
+      body.innerHTML = list.map(s => {
+        const init = getInitials(s.nama);
+        // Baca dari localStorage jika sudah pernah disimpan
+        let savedNilai = {};
+        try { savedNilai = JSON.parse(localStorage.getItem(`edu_nilai_${kelas}_${jenis}`)) || {}; } catch (e) { }
+        const score = savedNilai[s.nis] !== undefined ? savedNilai[s.nis] : '';
+        const isLulus = score !== '' && parseInt(score) >= kkm;
+        const badgeColor = score === '' ? 'var(--text-muted)' : isLulus ? 'var(--success)' : 'var(--danger)';
+        const badgeBg = score === '' ? 'var(--bg-input)' : isLulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
+        const badgeText = score === '' ? 'Belum diisi' : isLulus ? 'LULUS' : 'REMIDI';
+        nilaiSiswa[s.nis] = score;
+        return `<tr id="nr-${s.nis}">
+      <td style="color:var(--text-muted);">${s.no}</td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div class="student-avatar">${init}</div><span style="color:var(--text-primary);font-weight:600;font-size:.83rem;">${s.nama}</span></div></td>
+      <td style="color:var(--text-muted);">${s.nis}</td>
+      <td><input type="number" id="input-nilai-${s.nis}" value="${score}" min="0" max="100" oninput="updateStatusNilai('${s.nis}','${kelas}','${jenis}')" style="width:60px;padding:5px 8px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-size:.85rem;font-weight:700;"/></td>
+      <td><span id="status-nilai-${s.nis}" style="padding:4px 8px;border-radius:4px;font-size:0.7rem;font-weight:700;color:${badgeColor};background:${badgeBg};">${badgeText}</span></td>
+    </tr>`;
+      }).join('');
+    }
+
+    function updateStatusNilai(nis, kelas, jenis) {
+      const kkmStr = document.getElementById('nilaiKkm')?.value;
+      const kkm = parseInt(kkmStr) || 75;
+      const val = document.getElementById('input-nilai-' + nis)?.value;
+      const score = val !== '' ? parseInt(val) : '';
+      const isLulus = score !== '' && score >= kkm;
+      const badgeColor = score === '' ? 'var(--text-muted)' : isLulus ? 'var(--success)' : 'var(--danger)';
+      const badgeBg = score === '' ? 'var(--bg-input)' : isLulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
+      const badgeText = score === '' ? 'Belum diisi' : isLulus ? 'LULUS' : 'REMIDI';
+      const badge = document.getElementById('status-nilai-' + nis);
+      if (badge) {
+        badge.textContent = badgeText;
+        badge.style.color = badgeColor;
+        badge.style.background = badgeBg;
+      }
+      // Auto-save ke localStorage
+      if (kelas && jenis && score !== '') {
+        let savedNilai = {};
+        try { savedNilai = JSON.parse(localStorage.getItem(`edu_nilai_${kelas}_${jenis}`)) || {}; } catch (e) { }
+        savedNilai[nis] = score;
+        localStorage.setItem(`edu_nilai_${kelas}_${jenis}`, JSON.stringify(savedNilai));
+      }
+    }
+
+    function simpanNilai() {
+      const kelas = document.getElementById('nilaiKelas')?.value;
+      const jenis = document.getElementById('nilaiJenis')?.value;
+      if (!kelas || !jenis) { showToast('Pilih kelas dan jenis nilai dulu', 'info'); return; }
+      showToast('Nilai berhasil disimpan!', 'success');
+    }
+
+    /* ═══ IMPORT NILAI CSV ═══ */
+    function downloadTemplateNilaiCSV() {
+      const kelas = document.getElementById('nilaiKelas')?.value || 'VII';
+      const jenis = document.getElementById('nilaiJenis')?.value || 'uh';
+      // Isi contoh dari siswa kelas yang dipilih
+      const list  = siswaData[kelas] || [];
+      let csvRows = 'NIS,Nama Siswa,Nilai\n';
+      if (list.length > 0) {
+        list.slice(0, 5).forEach(s => { csvRows += `${s.nis},"${s.nama}",85\n`; });
+      } else {
+        csvRows += '1234567890,Contoh Siswa 1,85\n1234567891,Contoh Siswa 2,90\n';
+      }
+      const blob = new Blob(['\uFEFF' + csvRows], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `template_nilai_${kelas}_${jenis}.csv`;
+      a.click();
+      showToast('Template CSV berhasil didownload!', 'success');
+    }
+
+    function handleImportNilaiCSV(input) {
+      const kelas = document.getElementById('nilaiKelas')?.value;
+      const jenis = document.getElementById('nilaiJenis')?.value;
+      if (!kelas || !jenis) {
+        showToast('Pilih kelas dan jenis nilai terlebih dahulu!', 'warning');
+        input.value = '';
+        return;
+      }
+      const file = input.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('csv_file', file);
+
+      showToast('Membaca file CSV...', 'info');
+
+      fetch('../../api/import_nilai_csv.php', {
+        method: 'POST',
+        body: formData
+      })
+        .then(async res => {
+          const text = await res.text();
+          try { return JSON.parse(text); }
+          catch(e) { throw new Error(text.slice(0, 200) || 'Respon server kosong'); }
+        })
+        .then(data => {
+          input.value = ''; // reset file input
+          if (data.status === 'success' && data.data && data.data.length > 0) {
+            showImportNilaiPreview(data.data, data.errors || [], kelas, jenis);
+          } else if (data.status === 'success' && data.total === 0) {
+            showToast('Tidak ada data nilai yang terbaca dari CSV.', 'warning');
+          } else {
+            showToast('Gagal: ' + (data.message || 'Error tidak diketahui'), 'error');
+            if (data.errors && data.errors.length > 0) {
+              console.warn('Import Nilai CSV Errors:', data.errors);
+            }
+          }
+        })
+        .catch(err => {
+          input.value = '';
+          showToast('Error: ' + err.message.slice(0, 150), 'error');
+        });
+    }
+
+    function showImportNilaiPreview(rows, errors, kelas, jenis) {
+      let modal = document.getElementById('modalImportNilai');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalImportNilai';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;';
+        modal.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+        document.body.appendChild(modal);
+      }
+
+      const kkm = parseInt(document.getElementById('nilaiKkm')?.value) || 75;
+      const jenisLabel = { uh: 'Ulangan Harian', cbt: 'CBT', tugas: 'Tugas', uts: 'UTS', uas: 'UAS' };
+
+      const tableRows = rows.map((r, i) => {
+        const lulus = r.nilai >= kkm;
+        const warna = lulus ? '#10b981' : '#ef4444';
+        return `<tr>
+          <td style="color:var(--text-muted);padding:6px 8px;">${i + 1}</td>
+          <td style="font-family:monospace;color:var(--text-muted);padding:6px 8px;">${r.nis}</td>
+          <td style="font-weight:600;padding:6px 8px;">${r.nama || '—'}</td>
+          <td style="text-align:center;font-weight:800;color:${warna};padding:6px 8px;">${r.nilai}</td>
+          <td style="padding:6px 8px;"><span style="padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:700;color:${warna};background:${lulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'};">${lulus ? 'LULUS' : 'REMIDI'}</span></td>
+        </tr>`;
+      }).join('');
+
+      const errorHtml = errors.length > 0
+        ? `<div style="margin-top:10px;padding:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;font-size:.72rem;color:#fca5a5;">
+            <strong style="display:block;margin-bottom:4px;">⚠️ ${errors.length} baris dilewati:</strong>
+            ${errors.slice(0, 5).map(e => `<div>• ${e}</div>`).join('')}
+            ${errors.length > 5 ? `<div style="color:var(--text-muted)">... dan ${errors.length - 5} lainnya</div>` : ''}
+           </div>` : '';
+
+      modal.innerHTML = `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;" onclick="event.stopPropagation()">
+          <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-bottom:4px;">📊 Preview Import Nilai</div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:16px;">Kelas ${kelas} · ${jenisLabel[jenis] || jenis} · ${rows.length} data ditemukan</div>
+          <div style="max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;">
+            <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+              <thead style="position:sticky;top:0;background:var(--bg-card);">
+                <tr style="border-bottom:1px solid var(--border);">
+                  <th style="text-align:left;padding:8px;color:var(--text-muted);font-weight:700;">#</th>
+                  <th style="text-align:left;padding:8px;color:var(--text-muted);font-weight:700;">NIS</th>
+                  <th style="text-align:left;padding:8px;color:var(--text-muted);font-weight:700;">Nama</th>
+                  <th style="text-align:center;padding:8px;color:var(--text-muted);font-weight:700;">Nilai</th>
+                  <th style="text-align:left;padding:8px;color:var(--text-muted);font-weight:700;">Status</th>
+                </tr>
+              </thead>
+              <tbody>${tableRows}</tbody>
+            </table>
+          </div>
+          ${errorHtml}
+          <div style="display:flex;gap:8px;margin-top:18px;">
+            <button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('modalImportNilai').style.display='none'">Batal</button>
+            <button class="btn btn-primary" style="flex:1;" onclick="konfirmasiImportNilai(${JSON.stringify(rows).replace(/</g,'\\u003c')}, '${kelas}', '${jenis}')">
+              ✅ Terapkan ${rows.length} Nilai
+            </button>
+          </div>
+        </div>`;
+
+      modal.style.display = 'flex';
+    }
+
+    function konfirmasiImportNilai(rows, kelas, jenis) {
+      // Simpan ke localStorage dengan format yang sama seperti input manual
+      let savedNilai = {};
+      try { savedNilai = JSON.parse(localStorage.getItem(`edu_nilai_${kelas}_${jenis}`)) || {}; } catch(e) { }
+
+      let applied = 0;
+      rows.forEach(r => {
+        if (r.nis && r.nilai !== undefined) {
+          savedNilai[r.nis] = r.nilai;
+          applied++;
+        }
+      });
+
+      localStorage.setItem(`edu_nilai_${kelas}_${jenis}`, JSON.stringify(savedNilai));
+
+      // Tutup modal
+      document.getElementById('modalImportNilai').style.display = 'none';
+
+      // Refresh tampilan nilai
+      renderNilai();
+
+      showToast(`✅ ${applied} nilai berhasil diimport dan disimpan!`, 'success');
+    }
+
+    // State untuk Compiler CBT
+    let compiledQuestions = [];
+    let compilerMode = 'text';
+    let pdfExamBase64 = null;
+
+    function showCbtCompiler() {
+      document.getElementById('cbtMainPanel').style.display = 'none';
+      document.getElementById('cbtCompilerPanel').style.display = 'flex';
+      setCompilerMode('text');
+    }
+
+    function hideCbtCompiler() {
+      document.getElementById('cbtCompilerPanel').style.display = 'none';
+      document.getElementById('cbtMainPanel').style.display = 'flex';
+    }
+
+    // Toggle compile mode (Teks vs PDF)
+    function setCompilerMode(mode) {
+      compilerMode = mode;
+      const btnText = document.getElementById('btnModeText');
+      const btnPdf = document.getElementById('btnModePdf');
+      const areaTextInput = document.getElementById('textModeInputArea');
+      const areaTextPreview = document.getElementById('textModePreviewArea');
+      const areaPdfInput = document.getElementById('pdfModeInputArea');
+      const areaPdfPreview = document.getElementById('pdfModePreviewArea');
+
+      if (!btnText || !btnPdf) return;
+
+      if (mode === 'pdf') {
+        btnText.className = 'btn btn-ghost btn-sm';
+        btnPdf.className = 'btn btn-primary btn-sm';
+        areaTextInput.style.display = 'none';
+        areaTextPreview.style.display = 'none';
+        areaPdfInput.style.display = 'flex';
+        areaPdfPreview.style.display = 'flex';
+        generatePdfAnswerKeyGrid();
+      } else {
+        btnText.className = 'btn btn-primary btn-sm';
+        btnPdf.className = 'btn btn-ghost btn-sm';
+        areaTextInput.style.display = 'flex';
+        areaTextPreview.style.display = 'flex';
+        areaPdfInput.style.display = 'none';
+        areaPdfPreview.style.display = 'none';
+      }
+    }
+
+    // Handler Upload PDF Lembar Ujian (Mode 2)
+    function handlePdfExamUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById('pdfExamStatusText');
+      statusEl.textContent = 'Mengekstrak PDF...';
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const typedarray = new Uint8Array(this.result);
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+          let maxPages = pdf.numPages;
+          let countPromises = [];
+
+          for (let i = 1; i <= maxPages; i++) {
+            countPromises.push(
+              pdf.getPage(i).then(page => {
+                return page.getTextContent().then(textContent => {
+                  return textContent.items.map(item => item.str).join(' ');
+                });
+              })
+            );
+          }
+
+          Promise.all(countPromises).then(pagesText => {
+            const fullText = pagesText.join('\n\n');
+            const formattedText = cleanPDFText(fullText);
+
+            // Masukkan hasil ekstraksi ke Editor Teks (Mode 1)
+            const textEditor = document.getElementById('compTextEditor');
+            if (textEditor) {
+              textEditor.value = formattedText;
+            }
+
+            // Salin judul, kelas, durasi dari form Mode 2 ke Mode 1
+            const title = document.getElementById('compTitlePdf')?.value || '';
+            const kelas = document.getElementById('compKelasPdf')?.value || 'VII';
+            const duration = document.getElementById('compDurationPdf')?.value || '60';
+
+            const targetTitle = document.getElementById('compTitleText');
+            const targetKelas = document.getElementById('compKelasText');
+            const targetDuration = document.getElementById('compDurationText');
+
+            if (targetTitle && title) targetTitle.value = title;
+            if (targetKelas && kelas) targetKelas.value = kelas;
+            if (targetDuration && duration) targetDuration.value = duration;
+
+            // Jalankan compile preview
+            compileTextToPreview();
+
+            // Pindahkan tampilan secara otomatis ke Mode 1
+            setCompilerMode('text');
+
+            // Reset status Mode 2
+            statusEl.textContent = 'Pilih File PDF Soal';
+            event.target.value = '';
+
+            showToast('PDF berhasil diekstrak menjadi teks soal!', 'success');
+          }).catch(err => {
+            console.error(err);
+            statusEl.textContent = 'Gagal mengekstrak PDF';
+            showToast('Gagal mengekstrak teks PDF.', 'error');
+          });
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Generate dynamic grid for answer keys
+    function generatePdfAnswerKeyGrid() {
+      const countInput = document.getElementById('compPdfSoalCount');
+      if (!countInput) return;
+      let numQ = parseInt(countInput.value) || 10;
+      if (numQ < 1) numQ = 1;
+      if (numQ > 100) numQ = 100;
+      countInput.value = numQ;
+
+      const grid = document.getElementById('pdfAnswerKeyGrid');
+      if (!grid) return;
+
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      let html = '';
+      for (let i = 0; i < numQ; i++) {
+        const optionsHtml = letters.map((l, oIdx) => {
+          return `
+            <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-weight:700;font-size:0.83rem;color:var(--text-secondary);">
+              <input type="radio" name="pdf_key_${i}" value="${oIdx}" style="accent-color:var(--primary);cursor:pointer;" />
+              <span>${l}</span>
+            </label>
+          `;
+        }).join('');
+
+        html += `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);">
+            <span style="font-weight:800;font-size:0.82rem;color:var(--text-primary);">Soal ${i + 1}</span>
+            <div style="display:flex;gap:12px;align-items:center;">
+              ${optionsHtml}
+            </div>
+          </div>
+        `;
+      }
+      grid.innerHTML = html;
+    }
+
+    // Handler Upload PDF menggunakan PDF.js
+    function handlePDFUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById('pdfUploadStatusText');
+      statusEl.textContent = 'Membaca PDF...';
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const typedarray = new Uint8Array(this.result);
+
+        // Inisialisasi pdf.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+          let maxPages = pdf.numPages;
+          let countPromises = [];
+
+          for (let i = 1; i <= maxPages; i++) {
+            countPromises.push(
+              pdf.getPage(i).then(page => {
+                return page.getTextContent().then(textContent => {
+                  return textContent.items.map(item => item.str).join(' ');
+                });
+              })
+            );
+          }
+
+          Promise.all(countPromises).then(pagesText => {
+            const fullText = pagesText.join('\n\n');
+            // Bersihkan sedikit layout pembacaan PDF
+            const formattedText = cleanPDFText(fullText);
+            document.getElementById('compTextEditor').value = formattedText;
+            statusEl.textContent = 'PDF Berhasil Diekstrak!';
+            compileTextToPreview();
+            showToast('PDF berhasil di-scan dan di-compile!', 'success');
+          }).catch(err => {
+            console.error(err);
+            statusEl.textContent = 'Gagal mengekstrak PDF';
+            showToast('Gagal mengekstrak teks PDF.', 'error');
+          });
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function loadContohSoal() {
+      const contoh = `1. Ibu kota negara Republik Indonesia yang sekarang adalah...
+A. Bandung
+*B. Jakarta
+C. Surabaya
+D. Medan
+
+2. Siapakah Presiden pertama Republik Indonesia?
+*A. Ir. Soekarno
+B. Moh. Hatta
+C. B.J. Habibie
+D. Susilo Bambang Yudhoyono
+
+3. Berapakah hasil perhitungan dari 15 + 25?
+A. 30
+*B. 40
+C. 50
+D. 60`;
+      document.getElementById('compTextEditor').value = contoh;
+      compileTextToPreview();
+      showToast('Contoh soal berhasil dimuat!', 'success');
+    }
+
+    // Membersihkan layout pembacaan PDF agar lebih berpola soal
+    function cleanPDFText(text) {
+      // Ganti spasi ganda
+      let clean = text.replace(/ {2,}/g, ' ');
+      // Coba rapikan opsi jawaban agar ganti baris baru
+      clean = clean.replace(/\s+(\*?[A-Ea-e])\./g, '\n$1.');
+      // Coba rapikan penomoran soal agar ganti baris baru
+      clean = clean.replace(/\s+(\d+)\./g, '\n\n$1.');
+      return clean;
+    }
+
+    // Compiler Real-time: Text -> JSON Soal
+    function compileTextToPreview() {
+      const text = document.getElementById('compTextEditor').value;
+      const lines = text.split('\n');
+
+      compiledQuestions = [];
+      let currentSoal = null;
+
+      const soalRegex = /^\s*(\d+)[\.\)\-\s]\s*(.*)/;
+      const opsiRegex = /^\s*\*?\s*\b([A-Ea-e])\b\s*[\.\)\-]?\s*(.*)/;
+
+      lines.forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+
+        // Deteksi baris Soal baru
+        const soalMatch = line.match(soalRegex);
+        if (soalMatch) {
+          if (currentSoal) {
+            compiledQuestions.push(currentSoal);
+          }
+          currentSoal = {
+            soal: soalMatch[2].trim(),
+            opsi: [],
+            jawaban: -1
+          };
+          return;
+        }
+
+        // Deteksi Opsi A, B, C, D
+        const opsiMatch = line.match(opsiRegex);
+        if (opsiMatch && currentSoal) {
+          const isCorrect = trimmed.startsWith('*');
+          const letter = opsiMatch[1].toUpperCase();
+          const content = opsiMatch[2].trim();
+
+          const optionIndex = letter.charCodeAt(0) - 65; // A=0, B=1, C=2, D=3
+          currentSoal.opsi[optionIndex] = content;
+
+          if (isCorrect) {
+            currentSoal.jawaban = optionIndex;
+          }
+          return;
+        }
+
+        // Jika baris biasa dan currentSoal sudah ada, tambahkan ke teks soal (jika soal multi-line)
+        if (currentSoal && currentSoal.opsi.length === 0) {
+          currentSoal.soal += '\n' + trimmed;
+        }
+      });
+
+      // Push soal terakhir
+      if (currentSoal) {
+        compiledQuestions.push(currentSoal);
+      }
+
+      // Filter soal yang tidak valid (tidak ada pertanyaan atau opsi)
+      compiledQuestions = compiledQuestions.filter(q => q.soal && q.opsi.length > 0);
+
+      // Render ke Preview Container
+      const container = document.getElementById('compPreviewContainer');
+      const statsCount = document.getElementById('compStatsCount');
+      statsCount.textContent = `${compiledQuestions.length} Soal Terdeteksi`;
+
+      if (compiledQuestions.length === 0) {
+        container.innerHTML = `<div style="color:var(--text-muted);text-align:center;padding-top:40px;">Mulai mengetik atau unggah PDF soal untuk memicu pratinjau live...</div>`;
+        return;
+      }
+
+      // Update key-status indicator
+      const keyStatus = document.getElementById('compKeyStatus');
+      if (keyStatus) {
+        const noKey = compiledQuestions.filter(q => q.jawaban === -1);
+        if (noKey.length > 0) {
+          keyStatus.style.display = '';
+          keyStatus.textContent = `⚠ ${noKey.length} soal belum punya kunci – klik opsi di bawah untuk memilih`;
+        } else if (compiledQuestions.length > 0) {
+          keyStatus.style.display = '';
+          keyStatus.style.background = 'rgba(16,185,129,0.1)';
+          keyStatus.style.color = 'var(--success)';
+          keyStatus.textContent = `✓ Semua ${compiledQuestions.length} soal sudah punya kunci jawaban`;
+        } else {
+          keyStatus.style.display = 'none';
+        }
+      }
+
+      container.innerHTML = compiledQuestions.map((q, idx) => {
+        const letters = ['A', 'B', 'C', 'D', 'E'];
+        const optionsHtml = q.opsi.map((opt, oIdx) => {
+          const isCorrect = q.jawaban === oIdx;
+          const bg = isCorrect ? 'rgba(16,185,129,0.15)' : 'transparent';
+          const border = isCorrect ? '1.5px solid var(--success)' : '1px solid transparent';
+          const col = isCorrect ? 'var(--success)' : 'var(--text-secondary)';
+          const badge = isCorrect ? '<span style="font-size:.6rem;background:var(--success);color:white;padding:1px 6px;border-radius:4px;margin-left:6px;">KUNCI</span>' : '';
+          return `<div onclick="setCorrectAnswer(${idx},${oIdx})" style="display:flex;align-items:center;gap:8px;padding:6px 10px;margin:3px 0;border-radius:8px;background:${bg};border:${border};color:${col};cursor:pointer;transition:all .15s;" onmouseenter="if(${isCorrect ? 'false' : 'true'})this.style.background='var(--bg-input)'" onmouseleave="if(${isCorrect ? 'false' : 'true'})this.style.background='transparent'">
+        <div style="width:18px;height:18px;border-radius:50%;border:2px solid ${isCorrect ? 'var(--success)' : 'var(--border)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;background:${isCorrect ? 'var(--success)' : 'transparent'};">
+          ${isCorrect ? '<div style="width:6px;height:6px;border-radius:50%;background:white;"></div>' : ''}
+        </div>
+        <span style="font-size:.83rem;font-weight:${isCorrect ? '700' : '400'};">${letters[oIdx]}. ${opt || '(kosong)'}${badge}</span>
+      </div>`;
+        }).join('');
+        const hasKey = q.jawaban !== -1;
+        const soalBorder = hasKey ? 'var(--border)' : 'rgba(239,68,68,0.4)';
+        return `
+      <div style="border:1px solid ${soalBorder};border-radius:10px;padding:12px 14px;margin-bottom:4px;">
+        <div style="font-weight:700;color:var(--text-primary);margin-bottom:8px;font-size:.88rem;">${idx + 1}. ${q.soal}</div>
+        <div>${optionsHtml}</div>
+        ${!hasKey ? '<div style="font-size:.68rem;color:var(--danger);margin-top:6px;">⬆ Klik salah satu opsi untuk menetapkan sebagai kunci jawaban</div>' : ''}
+      </div>`;
+      }).join('');
+    }
+
+    // Set kunci jawaban via klik di preview
+    function setCorrectAnswer(qIdx, oIdx) {
+      if (!compiledQuestions[qIdx]) return;
+      compiledQuestions[qIdx].jawaban = oIdx;
+      compileTextToPreview();  // re-render preview
+    }
+
+    // Simpan paket soal ke localStorage
+    function saveCompiledExam() {
+      let judul, kelas, durasi;
+      let finalSoal = [];
+      let totalSoal = 0;
+      let isPdfExam = false;
+      let pdfData = null;
+
+      if (compilerMode === 'pdf') {
+        const compTitleEl = document.getElementById('compTitlePdf');
+        const compKelasEl = document.getElementById('compKelasPdf');
+        const compDurationEl = document.getElementById('compDurationPdf');
+
+        judul = compTitleEl ? compTitleEl.value.trim() : '';
+        kelas = compKelasEl ? compKelasEl.value : 'VII';
+        durasi = compDurationEl ? (parseInt(compDurationEl.value) || 60) : 60;
+        isPdfExam = true;
+
+        if (!judul) { showToast('Harap isi judul ujian!', 'warning'); return; }
+        if (!pdfExamBase64) { showToast('Harap unggah file PDF soal terlebih dahulu!', 'warning'); return; }
+        pdfData = pdfExamBase64;
+
+        const countInput = document.getElementById('compPdfSoalCount');
+        const numQ = countInput ? (parseInt(countInput.value) || 0) : 0;
+        if (numQ <= 0) { showToast('Jumlah soal minimal 1!', 'warning'); return; }
+
+        // Kumpulkan kunci jawaban
+        for (let i = 0; i < numQ; i++) {
+          const selectedRadio = document.querySelector(`input[name="pdf_key_${i}"]:checked`);
+          if (!selectedRadio) {
+            showToast(`Soal nomor ${i + 1} belum memiliki kunci jawaban!`, 'warning');
+            return;
+          }
+          finalSoal.push({
+            soal: `Silakan baca lembar soal PDF nomor ${i + 1}.`,
+            opsi: ["A", "B", "C", "D", "E"],
+            jawaban: parseInt(selectedRadio.value)
+          });
+        }
+        totalSoal = numQ;
+      } else {
+        const compTitleEl = document.getElementById('compTitleText');
+        const compKelasEl = document.getElementById('compKelasText');
+        const compDurationEl = document.getElementById('compDurationText');
+
+        judul = compTitleEl ? compTitleEl.value.trim() : '';
+        kelas = compKelasEl ? compKelasEl.value : 'VII';
+        durasi = compDurationEl ? (parseInt(compDurationEl.value) || 60) : 60;
+
+        if (!judul) { showToast('Harap isi judul ujian!', 'warning'); return; }
+        if (compiledQuestions.length === 0) { showToast('Belum ada soal yang ter-compile!', 'warning'); return; }
+
+        // Validasi kunci jawaban
+        const missingKeys = compiledQuestions.filter(q => q.jawaban === -1);
+        if (missingKeys.length > 0) {
+          showToast(`${missingKeys.length} soal belum punya kunci jawaban! Klik opsi di preview untuk memilih.`, 'warning');
+          return;
+        }
+
+        // Proses soal: shuffle jika dipilih
+        const doShuffle = document.getElementById('compShuffle')?.checked || false;
+        const doShuffleOpsi = document.getElementById('compShuffleOpsi')?.checked || false;
+
+        finalSoal = compiledQuestions.map(q => ({ ...q, opsi: [...q.opsi] }));
+
+        if (doShuffleOpsi) {
+          finalSoal = finalSoal.map(q => {
+            const jawabanText = q.opsi[q.jawaban];
+            const shuffled = [...q.opsi].sort(() => Math.random() - 0.5);
+            const newJawabanIdx = shuffled.indexOf(jawabanText);
+            return { ...q, opsi: shuffled, jawaban: newJawabanIdx };
+          });
+        }
+
+        if (doShuffle) {
+          finalSoal = finalSoal.sort(() => Math.random() - 0.5);
+        }
+        totalSoal = finalSoal.length;
+      }
+
+      let existing = [];
+      try {
+        existing = JSON.parse(localStorage.getItem('cbt_soal')) || [];
+        if (!Array.isArray(existing)) existing = [];
+      } catch (e) { existing = []; }
+
+      const examId = 'cbt-' + Date.now();
+      const newExam = {
+        id: examId,
+        judul,
+        kelas,
+        durasi,
+        tanggal: new Date().toLocaleDateString('id-ID'),
+        totalSoal: totalSoal,
+        soal: finalSoal,
+        isPdfExam,
+        pdfData
+      };
+
+      existing.push(newExam);
+      localStorage.setItem('cbt_soal', JSON.stringify(existing));
+
+      // Reset Form
+      if (compilerMode === 'pdf') {
+        const compTitleEl = document.getElementById('compTitlePdf');
+        if (compTitleEl) compTitleEl.value = '';
+        const fileInput = document.getElementById('pdfExamFileInput');
+        if (fileInput) fileInput.value = '';
+        const statusText = document.getElementById('pdfExamStatusText');
+        if (statusText) statusText.textContent = 'Pilih File PDF Soal';
+        pdfExamBase64 = null;
+        const countInput = document.getElementById('compPdfSoalCount');
+        if (countInput) countInput.value = 10;
+        generatePdfAnswerKeyGrid();
+      } else {
+        const compTitleEl = document.getElementById('compTitleText');
+        if (compTitleEl) compTitleEl.value = '';
+        const textEditor = document.getElementById('compTextEditor');
+        if (textEditor) textEditor.value = '';
+        const statsEl = document.getElementById('compStatsCount');
+        if (statsEl) statsEl.textContent = '0 Soal Terdeteksi';
+        const statusEl = document.getElementById('pdfUploadStatusText');
+        if (statusEl) statusEl.textContent = 'Unggah File PDF Soal';
+        const fileInput = document.getElementById('pdfUploadInput');
+        if (fileInput) fileInput.value = '';
+        compiledQuestions = [];
+        compileTextToPreview();
+      }
+
+      hideCbtCompiler();
+      showToast('Ujian berhasil dipublikasikan ke siswa!', 'success');
+      loadGuruCBT();
+    }
+
+    // Load data ujian & hasil
+    function loadGuruCBT() {
+      let exams = [];
+      try {
+        exams = JSON.parse(localStorage.getItem('cbt_soal')) || [];
+        if (!Array.isArray(exams)) exams = [];
+      } catch (e) {
+        exams = [];
+      }
+      const listContainer = document.getElementById('cbtListContainer');
+
+      if (exams.length === 0) {
+        listContainer.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon" style="color:var(--text-muted); display:flex; justify-content:center; margin-bottom:8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </div>
+        <div class="empty-state-text">Belum ada ujian yang dibuat.<br>Klik tombol di atas untuk mengunggah PDF atau menulis soal.</div>
+      </div>`;
+      } else {
+        listContainer.innerHTML = `
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border); color:var(--text-secondary); font-size:0.75rem; text-transform:uppercase;">
+              <th style="padding:12px 16px;">Nama Ujian</th>
+              <th style="padding:12px 16px;">Kelas</th>
+              <th style="padding:12px 16px;">Durasi</th>
+              <th style="padding:12px 16px;">Jumlah Soal</th>
+              <th style="padding:12px 16px;">Tanggal Dibuat</th>
+              <th style="padding:12px 16px; text-align:right;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${exams.map(ex => {
+          const totalSoal = ex.soal ? ex.soal.length : 0;
+          return `
+                <tr style="border-bottom:1px solid var(--border); font-size:0.85rem;">
+                  <td style="padding:12px 16px; font-weight:700; color:var(--text-primary);">${ex.judul || 'Tanpa Judul'}</td>
+                  <td style="padding:12px 16px; color:var(--text-secondary);"><span class="badge badge-success">${ex.kelas || '-'}</span></td>
+                  <td style="padding:12px 16px; color:var(--text-secondary);">${ex.durasi || 0} Menit</td>
+                  <td style="padding:12px 16px; color:var(--text-secondary);">${totalSoal} Soal</td>
+                  <td style="padding:12px 16px; color:var(--text-secondary);">${ex.tanggal || '-'}</td>
+                  <td style="padding:12px 16px; text-align:right;">
+                    <button class="btn btn-ghost btn-sm" onclick="deleteExam('${ex.id}')" style="color:var(--danger); padding:6px 12px; font-size:0.75rem;">Hapus</button>
+                  </td>
+                </tr>
+              `;
+        }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+      }
+
+      // Load Hasil Ujian
+      let hasil = [];
+      try {
+        hasil = JSON.parse(localStorage.getItem('cbt_hasil')) || [];
+        if (!Array.isArray(hasil)) hasil = [];
+      } catch (e) {
+        hasil = [];
+      }
+      const hasilBody = document.getElementById('cbtHasilBody');
+
+      if (hasil.length === 0) {
+        hasilBody.innerHTML = `
+      <tr>
+        <td colspan="7" style="padding:24px; text-align:center; color:var(--text-muted);">Belum ada riwayat hasil ujian siswa.</td>
+      </tr>`;
+      } else {
+        const kkm = 75;
+        hasilBody.innerHTML = hasil.map(h => {
+          const nama = h.namaSiswa || 'Siswa';
+          const studentInit = getInitials(nama);
+          const skor = h.skor || 0;
+          const isLulus = skor >= kkm;
+          const scoreColor = isLulus ? 'var(--success)' : 'var(--danger)';
+          const badgeBg = isLulus ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.1)';
+          return `
+        <tr style="border-bottom:1px solid var(--border); font-size:0.85rem;">
+          <td style="padding:12px 16px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="student-avatar" style="width:26px;height:26px;font-size:0.65rem;">${studentInit}</div>
+              <span style="color:var(--text-primary);font-weight:600;">${nama}</span>
+            </div>
+          </td>
+          <td style="padding:12px 16px; color:var(--text-secondary);">${h.kelas || '-'}</td>
+          <td style="padding:12px 16px; color:var(--text-primary); font-weight:500;">${h.examTitle || 'Ujian'}</td>
+          <td style="padding:12px 16px; text-align:center; font-weight:800; color:${scoreColor}; font-size:1rem;">${skor}</td>
+          <td style="padding:12px 16px; text-align:center; color:var(--text-secondary);">${h.benar || 0} / ${h.total || 0}</td>
+          <td style="padding:12px 16px; text-align:center;">
+            <span style="padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:700;color:${scoreColor};background:${badgeBg};">${isLulus ? '✓ LULUS' : '✗ REMIDI'}</span>
+          </td>
+          <td style="padding:12px 16px; color:var(--text-secondary);">${h.tanggal || '-'}</td>
+        </tr>
+      `;
+        }).join('');
+      }
+
+      // Update Stats
+      document.getElementById('statsTotalUjian').textContent = exams.length;
+      document.getElementById('statsSelesaiUjian').textContent = hasil.length;
+
+      if (hasil.length > 0) {
+        const totalSkor = hasil.reduce((acc, curr) => acc + (curr.skor || 0), 0);
+        const avg = Math.round(totalSkor / hasil.length);
+        document.getElementById('statsRataSkor').textContent = avg;
+      } else {
+        document.getElementById('statsRataSkor').textContent = '0';
+      }
+    }
+
+    // Hapus ujian
+    function deleteExam(id) {
+      if (!confirm('Apakah Anda yakin ingin menghapus paket ujian ini?')) return;
+      let exams = [];
+      try {
+        exams = JSON.parse(localStorage.getItem('cbt_soal')) || [];
+        if (!Array.isArray(exams)) exams = [];
+      } catch (e) {
+        exams = [];
+      }
+      exams = exams.filter(ex => ex.id !== id);
+      localStorage.setItem('cbt_soal', JSON.stringify(exams));
+      showToast('Ujian berhasil dihapus!', 'success');
+      loadGuruCBT();
+    }
+
+    // Hapus semua hasil
+    function clearHasilUjian() {
+      if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat ujian siswa?')) return;
+      localStorage.removeItem('cbt_hasil');
+      showToast('Riwayat ujian siswa telah dibersihkan.', 'success');
+      loadGuruCBT();
+    }
+
+    // Export hasil ujian ke CSV
+    function exportHasilCSV() {
+      let hasil = [];
+      try {
+        hasil = JSON.parse(localStorage.getItem('cbt_hasil')) || [];
+        if (!Array.isArray(hasil)) hasil = [];
+      } catch (e) { hasil = []; }
+
+      if (hasil.length === 0) {
+        showToast('Belum ada hasil ujian untuk di-export!', 'warning');
+        return;
+      }
+
+      const header = 'No,Nama Siswa,Kelas,Nama Ujian,Skor,Benar,Total Soal,Status,Tanggal\n';
+      const rows = hasil.map((h, i) => {
+        const status = (h.skor || 0) >= 75 ? 'LULUS' : 'REMIDI';
+        return `${i + 1},"${h.namaSiswa || '-'}","${h.kelas || '-'}","${h.examTitle || '-'}",${h.skor || 0},${h.benar || 0},${h.total || 0},${status},"${h.tanggal || '-'}"`;
+      }).join('\n');
+
+      const csv = '\uFEFF' + header + rows; // BOM for Excel UTF-8
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Rekap_Hasil_Ujian_CBT_${new Date().toLocaleDateString('id-ID').replace(/\//g, '-')}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Rekap hasil ujian berhasil di-export!', 'success');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      const d = document.getElementById('absDate');
+      if (d) d.value = today;
+      loadGuruCBT();
+      renderDaftarTugas();
+      loadBobotConfig();
+      updateDashboardStats();
+      loadGuruJadwal();
+      // Set default deadline ke 1 minggu dari sekarang
+      const td = document.getElementById('tugasDeadline');
+      if (td) {
+        const nw = new Date(); nw.setDate(nw.getDate() + 7);
+        td.value = nw.toISOString().split('T')[0];
+      }
+
+      // Inisialisasi Jurnal Sikap
+      const jsTglInput = document.getElementById('jsTanggal');
+      if (jsTglInput) jsTglInput.value = today;
+      jsLoadLogs();
+
+      // Inisialisasi Rekap Absensi
+      const navRekap = document.getElementById('navRekapAbsensi');
+      if (navRekap) {
+        navRekap.addEventListener('click', () => {
+          renderRekapAbsensi();
+        });
+      }
+    });
+
+    // Helper navigasi halaman (dipakai oleh tombol inline seperti "Atur Rumus Nilai")
+    function showPage(pageId) {
+      const navItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+      if (navItem) navItem.click();
+    }
+
+    /* ════════════════════════════════════════════════
+       MANAJEMEN TUGAS
+    ════════════════════════════════════════════════ */
+
+    // Simpan tugas baru
+    function simpanTugas() {
+      const judul = document.getElementById('tugasJudul')?.value.trim();
+      const mapel = document.getElementById('tugasMapel')?.value.trim();
+      const kelas = document.getElementById('tugasKelas')?.value;
+      const deadline = document.getElementById('tugasDeadline')?.value;
+      const deskripsi = document.getElementById('tugasDeskripsi')?.value.trim();
+
+      if (!judul) { showToast('Judul tugas wajib diisi!', 'warning'); return; }
+      if (!kelas) { showToast('Pilih kelas terlebih dahulu!', 'warning'); return; }
+      if (!deadline) { showToast('Deadline wajib diisi!', 'warning'); return; }
+
+      let daftarTugas = getTugasData();
+
+      const newTugas = {
+        id: 'tugas-' + Date.now(),
+        judul,
+        mapel: mapel || '-',
+        kelas,
+        deadline,
+        deskripsi: deskripsi || '',
+        tanggalBuat: new Date().toLocaleDateString('id-ID'),
+        sudah: [] // array NIS siswa yang sudah mengerjakan
+      };
+
+      daftarTugas.push(newTugas);
+      saveTugasData(daftarTugas);
+
+      // Reset form
+      document.getElementById('tugasJudul').value = '';
+      document.getElementById('tugasMapel').value = '';
+      document.getElementById('tugasKelas').value = '';
+      document.getElementById('tugasDeskripsi').value = '';
+      const nw = new Date(); nw.setDate(nw.getDate() + 7);
+      document.getElementById('tugasDeadline').value = nw.toISOString().split('T')[0];
+
+      showToast(`Tugas "${judul}" berhasil dibuat!`, 'success');
+      renderDaftarTugas();
+    }
+
+    // Render daftar tugas
+    function renderDaftarTugas() {
+      const container = document.getElementById('daftarTugasList');
+      if (!container) return;
+      const filterKelas = document.getElementById('filterTugasKelas')?.value || '';
+      let daftarTugas = getTugasData();
+
+      if (filterKelas) daftarTugas = daftarTugas.filter(t => t.kelas === filterKelas);
+
+      if (daftarTugas.length === 0) {
+        container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon" style="color:var(--text-muted);display:flex;justify-content:center;margin-bottom:8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px;"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div class="empty-state-text">Belum ada tugas yang dibuat.<br>Isi form di atas untuk membuat tugas baru.</div>
+      </div>`;
+        return;
+      }
+
+      container.innerHTML = daftarTugas.map(t => {
+        const totalSiswa = (siswaData[t.kelas] || []).length;
+        const sudahCount = (t.sudah || []).length;
+        const belumCount = totalSiswa - sudahCount;
+        const persen = totalSiswa > 0 ? Math.round((sudahCount / totalSiswa) * 100) : 0;
+        const isLewat = new Date(t.deadline) < new Date();
+        const deadlineStr = new Date(t.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        const barColor = persen === 100 ? 'var(--success)' : persen > 50 ? 'var(--warning)' : 'var(--danger)';
+
+        return `
+      <div style="border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px;background:var(--bg-input);transition:border-color .2s;" onmouseenter="this.style.borderColor='var(--primary)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.88rem;font-weight:800;color:var(--text-primary);margin-bottom:4px;">${t.judul}</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+              <span class="badge badge-success">${t.kelas}</span>
+              <span style="font-size:.72rem;color:var(--text-muted);">${t.mapel}</span>
+              <span style="font-size:.72rem;color:${isLewat ? 'var(--danger)' : 'var(--text-muted)'};">
+                ${isLewat ? '⚠ Lewat deadline' : 'Deadline:'} ${deadlineStr}
+              </span>
+            </div>
+            ${t.deskripsi ? `<div style="font-size:.75rem;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;">${t.deskripsi}</div>` : ''}
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden;">
+                <div style="height:100%;width:${persen}%;background:${barColor};border-radius:99px;transition:width .4s ease;"></div>
+              </div>
+              <span style="font-size:.72rem;font-weight:700;color:${barColor};white-space:nowrap;">${sudahCount}/${totalSiswa} sudah (${persen}%)</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+            <button class="btn btn-primary btn-sm" onclick="openCeklisModal('${t.id}')">Ceklis Pengerjaan</button>
+            <button onclick="hapusTugas('${t.id}')" style="padding:5px 10px;font-size:.72rem;font-weight:700;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--danger);cursor:pointer;">Hapus</button>
+          </div>
+        </div>
+      </div>`;
+      }).join('');
+    }
+
+    // State modal ceklis
+    let ceklisActiveTugasId = null;
+    let ceklisState = {};
+
+    function openCeklisModal(tugasId) {
+      const daftarTugas = getTugasData();
+      const tugas = daftarTugas.find(t => t.id === tugasId);
+      if (!tugas) return;
+
+      ceklisActiveTugasId = tugasId;
+      const siswaList = siswaData[tugas.kelas] || [];
+
+      // Init state dari data tersimpan
+      ceklisState = {};
+      siswaList.forEach(s => {
+        ceklisState[s.nis] = (tugas.sudah || []).includes(s.nis);
+      });
+
+      document.getElementById('ceklisModalJudul').textContent = tugas.judul;
+      document.getElementById('ceklisModalInfo').textContent = `${tugas.kelas} · ${tugas.mapel} · Deadline: ${new Date(tugas.deadline).toLocaleDateString('id-ID')}`;
+
+      renderCeklisBody(siswaList);
+
+      const modal = document.getElementById('ceklisModal');
+      modal.style.display = 'flex';
+    }
+
+    function renderCeklisBody(siswaList) {
+      const body = document.getElementById('ceklisBody');
+      if (!body) return;
+
+      if (!siswaList || siswaList.length === 0) {
+        body.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);">Tidak ada data siswa untuk kelas ini.</div>';
+        return;
+      }
+
+      body.innerHTML = siswaList.map(s => {
+        const isSudah = ceklisState[s.nis] === true;
+        const init = getInitials(s.nama);
+        return `
+      <div id="ceklis-row-${s.nis}" onclick="toggleCeklis('${s.nis}')" style="display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:8px;transition:background .15s;" onmouseenter="this.style.background='var(--bg-input)'" onmouseleave="this.style.background='transparent'">
+        <div class="student-avatar" style="${isSudah ? 'background:var(--success);' : ''}">${init}</div>
+        <div style="flex:1;">
+          <div style="font-size:.83rem;font-weight:700;color:var(--text-primary);">${s.nama}</div>
+          <div style="font-size:.7rem;color:var(--text-muted);">NIS: ${s.nis}</div>
+        </div>
+        <div id="ceklis-badge-${s.nis}" style="display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;padding:5px 10px;border-radius:99px;${isSudah ? 'background:rgba(16,185,129,.15);color:var(--success);border:1px solid var(--success)' : 'background:rgba(239,68,68,.1);color:var(--danger);border:1px solid var(--danger)'}">
+          ${isSudah ? '✓ Sudah' : '✗ Belum'}
+        </div>
+      </div>`;
+      }).join('');
+
+      updateCeklisProgress(siswaList.length);
+    }
+
+    function toggleCeklis(nis) {
+      ceklisState[nis] = !ceklisState[nis];
+      const isSudah = ceklisState[nis];
+
+      const badge = document.getElementById(`ceklis-badge-${nis}`);
+      const row = document.getElementById(`ceklis-row-${nis}`);
+      const avatar = row?.querySelector('.student-avatar');
+
+      if (badge) {
+        badge.textContent = isSudah ? '✓ Sudah' : '✗ Belum';
+        badge.style.cssText = `display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;padding:5px 10px;border-radius:99px;${isSudah ? 'background:rgba(16,185,129,.15);color:var(--success);border:1px solid var(--success)' : 'background:rgba(239,68,68,.1);color:var(--danger);border:1px solid var(--danger)'}`;
+      }
+      if (avatar) {
+        avatar.style.background = isSudah ? 'var(--success)' : '';
+      }
+
+      const total = Object.keys(ceklisState).length;
+      updateCeklisProgress(total);
+    }
+
+    function updateCeklisProgress(total) {
+      const sudahCount = Object.values(ceklisState).filter(v => v).length;
+      const belumCount = total - sudahCount;
+      const persen = total > 0 ? Math.round((sudahCount / total) * 100) : 0;
+
+      const elCount = document.getElementById('ceklisCount');
+      const elBelum = document.getElementById('ceklisBelumCount');
+      const elBar = document.getElementById('ceklisProgressBar');
+
+      if (elCount) elCount.textContent = sudahCount;
+      if (elBelum) elBelum.textContent = belumCount;
+      if (elBar) elBar.style.width = persen + '%';
+    }
+
+    function ceklisSemuaSudah() {
+      Object.keys(ceklisState).forEach(nis => ceklisState[nis] = true);
+      const daftarTugas = getTugasData();
+      const tugas = daftarTugas.find(t => t.id === ceklisActiveTugasId);
+      renderCeklisBody(siswaData[tugas?.kelas] || []);
+    }
+
+    function ceklisSemuaBelum() {
+      Object.keys(ceklisState).forEach(nis => ceklisState[nis] = false);
+      const daftarTugas = getTugasData();
+      const tugas = daftarTugas.find(t => t.id === ceklisActiveTugasId);
+      renderCeklisBody(siswaData[tugas?.kelas] || []);
+    }
+
+    function simpanCeklis() {
+      if (!ceklisActiveTugasId) return;
+
+      let daftarTugas = getTugasData();
+      const idx = daftarTugas.findIndex(t => t.id === ceklisActiveTugasId);
+      if (idx === -1) return;
+
+      daftarTugas[idx].sudah = Object.keys(ceklisState).filter(nis => ceklisState[nis]);
+      saveTugasData(daftarTugas);
+
+      closeCeklisModal();
+      renderDaftarTugas();
+      showToast('Status pengerjaan berhasil disimpan!', 'success');
+    }
+
+    function closeCeklisModal() {
+      document.getElementById('ceklisModal').style.display = 'none';
+      ceklisActiveTugasId = null;
+      ceklisState = {};
+    }
+
+    function hapusTugas(id) {
+      if (!confirm('Hapus tugas ini?')) return;
+      let daftarTugas = getTugasData();
+      daftarTugas = daftarTugas.filter(t => t.id !== id);
+      saveTugasData(daftarTugas);
+      renderDaftarTugas();
+      showToast('Tugas berhasil dihapus!', 'success');
+    }
+
+    function getTugasData() {
+      try { return JSON.parse(localStorage.getItem('edu_tugas')) || []; }
+      catch (e) { return []; }
+    }
+
+    function saveTugasData(data) {
+      localStorage.setItem('edu_tugas', JSON.stringify(data));
+      // Simpan juga versi ringkas untuk dibaca siswa
+      localStorage.setItem('edu_tugas_siswa', JSON.stringify(data.map(t => ({
+        id: t.id, judul: t.judul, mapel: t.mapel, kelas: t.kelas,
+        deadline: t.deadline, deskripsi: t.deskripsi,
+        tanggalBuat: t.tanggalBuat, sudah: t.sudah || []
+      }))));
+    }
+
+    /* ════════════════════════════════════════════════
+       MANAJEMEN JURNAL SIKAP & BUKU INDUK
+    ════════════════════════════════════════════════ */
+
+    // Jurnal Sikap: Load student list for dynamic dropdown
+    function jsLoadSiswaDropdown() {
+      const kelas = document.getElementById('jsKelas').value;
+      const dropdown = document.getElementById('jsSiswa');
+      if (!dropdown) return;
+      dropdown.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+      if (!kelas) return;
+      const list = siswaData[kelas] || [];
+      list.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.nis;
+        opt.textContent = `${s.nama} (${s.nis})`;
+        dropdown.appendChild(opt);
+      });
+    }
+
+    // Jurnal Sikap: Save new entry to backend
+    function jsSimpanJurnal() {
+      const nis = document.getElementById('jsSiswa').value;
+      const tanggal = document.getElementById('jsTanggal').value;
+      const aspek = document.getElementById('jsAspek').value;
+      const nilai = document.getElementById('jsNilai').value;
+      const perilaku = document.getElementById('jsPerilaku').value.trim();
+      const tindak_lanjut = document.getElementById('jsTindakLanjut').value.trim();
+
+      if (!nis || !tanggal || !aspek || !nilai || !perilaku || !tindak_lanjut) {
+        showToast('Semua kolom wajib diisi!', 'warning');
+        return;
+      }
+
+      const btn = document.querySelector('button[onclick="jsSimpanJurnal()"]');
+      const origText = btn ? btn.innerHTML : 'Simpan Jurnal';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Menyimpan...';
+      }
+
+      fetch('../../api/save_jurnal_sikap.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nis, tanggal, aspek, perilaku, tindak_lanjut, nilai })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origText;
+        }
+        if (data.status === 'success') {
+          showToast(data.message, 'success');
+          document.getElementById('jsSiswa').value = '';
+          document.getElementById('jsPerilaku').value = '';
+          document.getElementById('jsTindakLanjut').value = '';
+          jsLoadLogs();
+        } else {
+          showToast(data.message, 'error');
+        }
+      })
+      .catch(err => {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origText;
+        }
+        showToast('Gagal menghubungkan ke server.', 'error');
+      });
+    }
+
+    // Jurnal Sikap: Load entries from database
+    function jsLoadLogs() {
+      const kelas = document.getElementById('jsFilterKelas').value;
+      const body = document.getElementById('jsLogsBody');
+      if (!body) return;
+      body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Memuat data...</td></tr>';
+
+      let url = '../../api/get_jurnal_sikap.php';
+      if (kelas) {
+        url += '?kelas=' + encodeURIComponent(kelas);
+      }
+
+      fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data) || data.length === 0) {
+          body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Belum ada catatan jurnal sikap.</td></tr>';
+          return;
+        }
+        body.innerHTML = data.map((log, index) => {
+          const isPositif = log.nilai === 'positif';
+          const badgeClass = isPositif ? 'badge-success' : 'badge-danger';
+          return `
+            <tr style="font-size: 0.85rem;">
+              <td style="color:var(--text-muted);">${index + 1}</td>
+              <td style="color:var(--text-muted); white-space:nowrap;">${log.tanggal}</td>
+              <td>
+                <div style="font-weight:700;color:var(--text-primary);">${log.nama}</div>
+                <div style="font-size:.72rem;color:var(--text-muted);">NIS: ${log.nis}</div>
+              </td>
+              <td><span class="badge badge-success">${log.kelas}</span></td>
+              <td style="text-transform:capitalize;">${log.aspek}</td>
+              <td style="max-width:220px;word-break:break-word;color:var(--text-secondary);">${log.perilaku}</td>
+              <td style="max-width:200px;word-break:break-word;color:var(--text-secondary);">${log.tindak_lanjut}</td>
+              <td><span class="badge ${badgeClass}">${log.nilai.toUpperCase()}</span></td>
+              <td>
+                <button class="btn btn-ghost btn-sm" onclick="jsHapusJurnal(${log.id})" style="color:var(--danger);padding:4px 8px;font-size:0.75rem;">Hapus</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      })
+      .catch(err => {
+        body.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--danger);padding:24px;">Gagal memuat data jurnal sikap.</td></tr>';
+      });
+    }
+
+    // Jurnal Sikap: Delete entry
+    function jsHapusJurnal(id) {
+      if (!confirm('Apakah Anda yakin ingin menghapus catatan jurnal sikap ini?')) return;
+      fetch('../../api/delete_jurnal_sikap.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          showToast(data.message, 'success');
+          jsLoadLogs();
+        } else {
+          showToast(data.message, 'error');
+        }
+      })
+      .catch(err => {
+        showToast('Gagal menghubungkan ke server.', 'error');
+      });
+    }
+
+
+  </script>
+
+  <!-- ══════════════════════════════════════
+       MODAL: IMPORT ABSENSI VIA EXCEL
+  ══════════════════════════════════════ -->
+  <div id="importAbsensiModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9500;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px 32px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeInContent 0.25s ease;" onclick="event.stopPropagation()">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div>
+          <div style="font-size:1rem;font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:var(--primary-light)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import Absensi via Excel
+          </div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-top:4px;">Upload file CSV/Excel untuk import absensi massal</div>
+        </div>
+        <button onclick="closeImportAbsensiModal()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;border-radius:8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Template Download Info -->
+      <div style="background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.2);border-radius:12px;padding:14px 16px;margin-bottom:18px;">
+        <div style="font-size:.82rem;font-weight:700;color:var(--primary-light);margin-bottom:6px;">📋 Format File CSV yang Dibutuhkan</div>
+        <div style="font-size:.75rem;color:var(--text-secondary);line-height:1.8;">
+          Mendukung format Excel standar (Header di baris 2):<br>
+          <code style="background:rgba(0,0,0,0.2);padding:1px 5px;border-radius:4px;">NO, NAMA SISWA, NISN, Status, Keterangan</code><br>
+          Status yang valid: <strong>H</strong> (Hadir) &nbsp;|&nbsp; <strong>S</strong> (Sakit) &nbsp;|&nbsp; <strong>I</strong> (Izin) &nbsp;|&nbsp; <strong>A</strong> (Alpha)<br>
+          Kolom NISN <em>boleh kosong</em> (nama akan dicocokkan otomatis).
+        </div>
+        <button onclick="downloadTemplateAbsensi()" style="margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:.78rem;font-weight:700;cursor:pointer;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Template CSV
+        </button>
+      </div>
+
+      <!-- Form -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="font-size:.8rem;font-weight:700;color:var(--text-secondary);display:block;margin-bottom:6px;">Kelas</label>
+          <select id="importAbsKelas" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);font-size:.85rem;">
+            <option value="">-- Pilih Kelas --</option>
+            <option value="VII">Kelas VII</option>
+            <option value="VIII">Kelas VIII</option>
+            <option value="IX">Kelas IX</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.8rem;font-weight:700;color:var(--text-secondary);display:block;margin-bottom:6px;">Tanggal Absensi</label>
+          <input type="date" id="importAbsTanggal" style="width:100%;padding:9px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);font-size:.85rem;box-sizing:border-box;" />
+        </div>
+        <div>
+          <label style="font-size:.8rem;font-weight:700;color:var(--text-secondary);display:block;margin-bottom:6px;">File CSV</label>
+          <div id="importAbsDropzone" onclick="document.getElementById('importAbsFile').click()"
+            style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;color:var(--text-muted);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;margin:0 auto 8px;display:block;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div id="importAbsDropzoneText" style="font-size:.82rem;font-weight:600;">Klik atau drag file ke sini</div>
+            <div style="font-size:.73rem;margin-top:4px;">Format: .csv — maks 5MB</div>
+          </div>
+          <input type="file" id="importAbsFile" accept=".csv" style="display:none;" onchange="onImportAbsFileChange(this)" />
+        </div>
+      </div>
+
+      <!-- Result area -->
+      <div id="importAbsResult" style="display:none;margin-top:14px;"></div>
+
+      <!-- Actions -->
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button onclick="closeImportAbsensiModal()" style="flex:1;padding:10px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;color:var(--text-secondary);font-size:.85rem;font-weight:700;cursor:pointer;">Batal</button>
+        <button id="importAbsBtn" onclick="submitImportAbsensi()" style="flex:2;padding:10px;background:var(--primary);color:white;border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload & Import
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ══════════════════════════════════════
+       IMPORT ABSENSI EXCEL – Functions
+    ══════════════════════════════════════ */
+
+    function openImportAbsensiModal() {
+      const modal = document.getElementById('importAbsensiModal');
+      modal.style.display = 'flex';
+      // Sinkronisasi kelas & tanggal dari form absensi utama
+      const kelas = document.getElementById('absKelas')?.value || '';
+      const tgl   = document.getElementById('absDate')?.value || new Date().toISOString().split('T')[0];
+      const selKelas = document.getElementById('importAbsKelas');
+      const selTgl   = document.getElementById('importAbsTanggal');
+      if (selKelas && kelas) selKelas.value = kelas;
+      if (selTgl) selTgl.value = tgl;
+      document.getElementById('importAbsResult').style.display = 'none';
+      document.getElementById('importAbsResult').innerHTML = '';
+      document.getElementById('importAbsDropzoneText').textContent = 'Klik atau drag file ke sini';
+      document.getElementById('importAbsFile').value = '';
+    }
+
+    function closeImportAbsensiModal() {
+      document.getElementById('importAbsensiModal').style.display = 'none';
+    }
+
+    // Tutup modal saat klik backdrop
+    document.getElementById('importAbsensiModal').addEventListener('click', closeImportAbsensiModal);
+
+    function onImportAbsFileChange(input) {
+      if (input.files && input.files[0]) {
+        const f = input.files[0];
+        document.getElementById('importAbsDropzoneText').textContent = '📄 ' + f.name;
+        document.getElementById('importAbsDropzone').style.borderColor = 'var(--primary)';
+        document.getElementById('importAbsDropzone').style.color = 'var(--primary-light)';
+      }
+    }
+
+    function downloadTemplateAbsensi() {
+      // Ambil data siswa dari kelas yang dipilih untuk isi template
+      const kelas   = document.getElementById('importAbsKelas')?.value || '';
+      const tanggal = document.getElementById('importAbsTanggal')?.value || new Date().toISOString().split('T')[0];
+      const siswaAll = JSON.parse(localStorage.getItem('edu_siswa_data') || '{}');
+      const siswaList = kelas && siswaAll[kelas] ? siswaAll[kelas] : [];
+
+      let csvContent = `Kelas ${kelas || 'IX'},,,,\n`;
+      csvContent += 'NO,NAMA SISWA,NISN,Status,Keterangan\n';
+      
+      if (siswaList.length > 0) {
+        siswaList.forEach((s, idx) => {
+          const name = s.nama || '';
+          const nis = s.nis || '';
+          csvContent += `"${idx + 1}","${name}","${nis}","H","Hadir"\n`;
+        });
+      } else {
+        // Baris contoh jika tidak ada data
+        csvContent += '1,"Futuhat Makkiyah Mobiyan","3119283411","H","Hadir"\n2,"Keanna Kiyomi Lateisha","116876774","H","Hadir"\n3,"Rizky Langit Ramadan","","A","Alpha"\n4,"Ahmad Alatas","","I","Izin"\n';
+      }
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `template_absensi_${kelas || 'kelas'}_${tanggal}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Template CSV berhasil didownload!', 'success');
+    }
+
+    async function submitImportAbsensi() {
+      const kelas   = document.getElementById('importAbsKelas')?.value;
+      const tanggal = document.getElementById('importAbsTanggal')?.value;
+      const fileInp = document.getElementById('importAbsFile');
+      const btn     = document.getElementById('importAbsBtn');
+      const result  = document.getElementById('importAbsResult');
+
+      if (!kelas)   { showToast('Pilih kelas terlebih dahulu', 'error'); return; }
+      if (!tanggal) { showToast('Isi tanggal absensi', 'error'); return; }
+      if (!fileInp.files || !fileInp.files[0]) { showToast('Pilih file untuk diupload', 'error'); return; }
+
+      const file = fileInp.files[0];
+      if (file.size > 5 * 1024 * 1024) { showToast('File terlalu besar (maks 5MB)', 'error'); return; }
+
+      // UI loading
+      btn.disabled = true;
+      btn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;margin-right:6px;"></span>Mengimport...';
+      result.style.display = 'none';
+
+      const formData = new FormData();
+      formData.append('excel_file', file);
+      formData.append('kelas', kelas);
+      formData.append('tanggal', tanggal);
+
+      try {
+        const res  = await fetch('../../api/import_absensi_excel.php', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        result.style.display = 'block';
+        if (data.status === 'success') {
+          let html = `<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:12px 16px;">
+            <div style="font-size:.85rem;font-weight:700;color:var(--success);margin-bottom:4px;">✅ ${data.message}</div>`;
+          if (data.errors && data.errors.length > 0) {
+            html += `<div style="font-size:.75rem;color:var(--warning);margin-top:8px;"><strong>⚠️ Peringatan (${data.errors.length} baris dilewati):</strong><ul style="margin:4px 0 0 16px;line-height:1.8;">`;
+            data.errors.slice(0, 5).forEach(e => { html += `<li>${e}</li>`; });
+            if (data.errors.length > 5) html += `<li>...dan ${data.errors.length - 5} lainnya</li>`;
+            html += `</ul></div>`;
+          }
+          html += `</div>`;
+          result.innerHTML = html;
+          showToast(data.message, 'success');
+          // Sinkronisasi ulang rekap
+          if (typeof renderRekapAbsensi === 'function') {
+            setTimeout(() => { renderRekapAbsensi(); updateDashboardStats(); }, 500);
+          }
+        } else {
+          let html = `<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;">
+            <div style="font-size:.85rem;font-weight:700;color:var(--danger);margin-bottom:4px;">❌ ${data.message}</div>`;
+          if (data.errors && data.errors.length > 0) {
+            html += `<ul style="margin:6px 0 0 16px;font-size:.75rem;color:var(--text-secondary);line-height:1.8;">`;
+            data.errors.slice(0, 5).forEach(e => { html += `<li>${e}</li>`; });
+            html += `</ul>`;
+          }
+          html += `</div>`;
+          result.innerHTML = html;
+          showToast(data.message || 'Gagal mengimport data', 'error');
+        }
+      } catch (err) {
+        result.style.display = 'block';
+        result.innerHTML = `<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;font-size:.82rem;color:var(--danger);">❌ Tidak bisa terhubung ke server. Pastikan XAMPP aktif.</div>`;
+        showToast('Gagal terhubung ke server.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload & Import';
+      }
+    }
+
+    // Drag-and-drop support
+    (function initImportDropzone() {
+      const dz = document.getElementById('importAbsDropzone');
+      if (!dz) return;
+      dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor = 'var(--primary)'; });
+      dz.addEventListener('dragleave', () => { dz.style.borderColor = 'var(--border)'; });
+      dz.addEventListener('drop', e => {
+        e.preventDefault();
+        dz.style.borderColor = 'var(--border)';
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          const inp = document.getElementById('importAbsFile');
+          const dt  = new DataTransfer();
+          dt.items.add(file);
+          inp.files = dt.files;
+          onImportAbsFileChange(inp);
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>
